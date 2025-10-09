@@ -16,7 +16,7 @@
     "react-scripts": "5.0.1"
   },
   "devDependencies": {
-    "wrangler": "^3.0.0"
+    "wrangler": "^3.114.15"
   },
   "browserslist": {
     "production": [

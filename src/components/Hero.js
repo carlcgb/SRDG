@@ -46,7 +46,7 @@ const Hero = () => {
             <span className="animator-name">CARL GB</span>
           </div>
           <div className="mascot-placeholder">
-            <img src="./style/cgb.jpg" alt="La Soirée du Rire de Granby" className="mascot" />
+            <img src={process.env.PUBLIC_URL + "/style/cgb.jpg"} alt="La Soirée du Rire de Granby" className="mascot" />
           </div>
         </div>
       </div>

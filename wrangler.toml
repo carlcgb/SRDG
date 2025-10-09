@@ -1,10 +1,3 @@
 name = "soiree-du-rire-granby"
 compatibility_date = "2024-01-01"
-
-[env.production]
-name = "soiree-du-rire-granby"
-
-[[pages_builds]]
-command = "npm run build"
-cwd = "."
-watch_dir = "src"
+pages_build_output_dir = "build"
