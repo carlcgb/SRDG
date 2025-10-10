@@ -12,8 +12,10 @@ export const useScrollEffects = () => {
           if (navbar) {
             if (window.scrollY > 100) {
               navbar.classList.add('scrolled');
+              navbar.classList.remove('hidden');
             } else {
               navbar.classList.remove('scrolled');
+              navbar.classList.add('hidden');
             }
           }
           isScrolling = false;

@@ -509,16 +509,10 @@ body {
     text-align: center;
 }
 
-.contact-info h3 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--primary-color);
-    margin-bottom: 20px;
-}
+
 
 .contact-info p {
-    font-size: 1.3rem;
+    font-size: 1.8rem;
     color: var(--text-secondary);
     margin-bottom: 40px;
 }

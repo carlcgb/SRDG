@@ -4,7 +4,6 @@ const Contact = () => {
   return (
     <section id="contact" className="contact-section">
       <div className="container">
-        <h2 className="section-title">Contactez-nous</h2>
         <div className="contact-content">
           <div className="contact-info">
             <h3>Restons en contact !</h3>
@@ -20,14 +19,14 @@ const Contact = () => {
                 Messenger
               </a>
               <a 
-                href="mailto:info@sdrg.ca" 
+                href="mailto:info@lasoireedurire.ca" 
                 className="contact-btn email-btn"
               >
                 <span className="contact-icon">✉️</span>
                 Email
               </a>
               <a 
-                href="tel:+14501234567" 
+                href="tel:+4509913336" 
                 className="contact-btn phone-btn"
               >
                 <span className="contact-icon">📞</span>

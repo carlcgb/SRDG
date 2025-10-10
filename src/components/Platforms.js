@@ -6,25 +6,20 @@ const Platforms = () => {
       icon: "📘",
       title: "Facebook",
       description: "Restez informés de nos événements",
-      href: "#"
+      href: "https://www.facebook.com/lsdrg/"
     },
     {
       icon: "📷",
       title: "Instagram",
       description: "Photos et vidéos de nos spectacles",
-      href: "#"
+      href: "https://www.instagram.com/lsdrdg/"
     },
-    {
-      icon: "🐦",
-      title: "Twitter",
-      description: "Actualités et blagues du jour",
-      href: "#"
-    },
+
     {
       icon: "📺",
-      title: "YouTube",
-      description: "Extraits de nos meilleurs moments",
-      href: "#"
+      title: "TikTok",
+      description: "Des clips de nos meilleurs moments",
+      href: "https://www.tiktok.com/@carl.cgb"
     }
   ];
 
