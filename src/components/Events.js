@@ -31,7 +31,7 @@ const Events = () => {
       description: "Après la diffusion du court métrage de Carl avant le spectacle, le 11 on a un autre mystère à découvrir!",
       time: "20h00",
       location: "Le Social Bar et Cie",
-      facebookUrl: "https://www.facebook.com/events/your-event-id-2",
+      facebookUrl: "https://www.facebook.com/share/17MsjAdxdH/",
       guests: [
         { name: "Rolly Assal", url: "https://www.instagram.com/rollyassal/" },
         { name: "Joe Guerin", url: "https://www.instagram.com/joeguerinn/" },
@@ -50,7 +50,7 @@ const Events = () => {
       description: "C'est la dernière de 2025! On va se souhaiter Joyeux Noël deux mois d'avance  🎅🏻",
       time: "20h00",
       location: "Le Social Bar et Cie",
-      facebookUrl: "https://www.facebook.com/events/your-event-id-3",
+      facebookUrl: "https://www.facebook.com/lsdrg",
       guests: [
         { name: "Jacob Ospian", url: "https://www.instagram.com/jacobospian/" },
         { name: "Mathieu Bougie", url: "https://www.instagram.com/mathbougie/" },
@@ -107,7 +107,7 @@ const Events = () => {
       description: "Humour adapté à toute la famille, des enfants aux grands-parents.",
       time: "20h00",
       location: "Le Social Bar et Cie",
-      facebookUrl: "https://www.facebook.com/events/your-event-id-6",
+      facebookUrl: "https://www.facebook.com/lsdrg",
       guests: [
         { name: "À déterminer", url: "#" },
         { name: "À déterminer", url: "#" },
