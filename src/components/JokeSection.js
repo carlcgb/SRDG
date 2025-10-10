@@ -8,7 +8,7 @@ const JokeSection = ({ onOpenModal }) => {
           <h2 className="section-title">Racontez-nous une blague !</h2>
           <p className="joke-description">
             Durant le spectacle, peut-être que votre blague pourrait être 
-            utilisée pour avec vous... ou de VOUS! Nous avons accès LIVE
+            utilisée pour rire avec vous... ou de VOUS! Nous avons accès LIVE
              à ce que vous écrivez, on pourrait s'en servir pour nous amuser, qui sait? 😏
           </p>
           <button 
