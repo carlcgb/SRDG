@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const Events = () => {
-  // State to control calendar button visibility
-  const [showCalendarButton, setShowCalendarButton] = useState(true);
   const events = [
     {
       day: "20",
@@ -143,10 +141,20 @@ const Events = () => {
   // Manual control flags - you can easily toggle these to control which events are greyed out or highlighted
   // Simply change true/false values in the events array above
 
-  // Calendar functionality
+  // Calendar functionality - Apple devices only
   const addToCalendar = (event, e) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isIOS = /iphone|ipad|ipod/.test(userAgent);
+    const isMac = /macintosh|mac os x/.test(userAgent);
+    
+    // Only work on Apple devices
+    if (!isIOS && !isMac) {
+      alert('Cette fonctionnalité est disponible uniquement sur les appareils Apple.');
+      return;
+    }
     
     const startDate = new Date(`${event.calendarDate}T${event.calendarTime}:00`);
     const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000); // Add 2 hours
@@ -160,9 +168,6 @@ const Events = () => {
     const location = encodeURIComponent(event.location);
     const start = formatDate(startDate);
     const end = formatDate(endDate);
-    
-    // Google Calendar URL
-    const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${details}&location=${location}`;
     
     // Apple Calendar (ICS file)
     const icsContent = `BEGIN:VCALENDAR
@@ -180,32 +185,14 @@ URL:${event.facebookUrl}
 END:VEVENT
 END:VCALENDAR`;
     
-    // Create a modal or dropdown to let user choose calendar type
-    const userAgent = navigator.userAgent.toLowerCase();
-    const isIOS = /iphone|ipad|ipod/.test(userAgent);
-    const isMac = /macintosh|mac os x/.test(userAgent);
-    
-    if (isIOS || isMac) {
-      // For Apple devices, offer both options
-      const choice = window.confirm(
-        'Choisissez votre calendrier:\n\nApple = Apple Calendar\nAnnuler = Google Calendar'
-      );
-      
-      if (choice) {
-        // Apple Calendar - create ICS file
-        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `${event.title.replace(/\s+/g, '_')}.ics`;
-        link.click();
-      } else {
-        // Google Calendar
-        window.open(googleUrl, '_blank');
-      }
-    } else {
-      // For other devices, default to Google Calendar
-      window.open(googleUrl, '_blank');
-    }
+    // Create and download ICS file for Apple Calendar
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${event.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -213,27 +200,12 @@ END:VCALENDAR`;
       <div className="container">
         <div className="section-header">
           <h2 className="section-title">Prochains Événements</h2>
-          <div className="calendar-toggle">
-            <label className="toggle-label">
-              <input
-                type="checkbox"
-                checked={showCalendarButton}
-                onChange={(e) => setShowCalendarButton(e.target.checked)}
-                className="toggle-input"
-              />
-              <span className="toggle-slider"></span>
-              <span className="toggle-text">Bouton calendrier</span>
-            </label>
-          </div>
         </div>
         <div className="events-grid">
           {events.map((event, index) => {
             return (
-              <a 
+              <div 
                 key={index} 
-                href={event.facebookUrl} 
-                target="_blank" 
-                rel="noopener noreferrer"
                 className={`event-card-link ${event.isPast ? 'past-event' : ''} ${event.isNext ? 'next-event' : ''}`}
               >
                 <div className="event-card tilted-card-figure">
@@ -257,7 +229,6 @@ END:VCALENDAR`;
                               target="_blank"
                               rel="noopener noreferrer"
                               className="guest-name"
-                              onClick={(e) => e.stopPropagation()}
                             >
                               {guest.name}
                             </a>
@@ -268,21 +239,28 @@ END:VCALENDAR`;
                         <span className="event-time">{event.time}</span>
                         <span className="event-location">{event.location}</span>
                       </div>
-                      {showCalendarButton && (
-                        <div className="event-actions">
-                          <button 
-                            className="calendar-btn"
-                            onClick={(e) => addToCalendar(event, e)}
-                            title="Ajouter au calendrier"
-                          >
-                            📅 Ajouter au calendrier
-                          </button>
-                        </div>
-                      )}
+                      <div className="event-actions">
+                        <button 
+                          className="calendar-btn"
+                          onClick={(e) => addToCalendar(event, e)}
+                          title="Ajouter au calendrier (Apple uniquement)"
+                        >
+                          Ajouter au calendrier
+                        </button>
+                        <a
+                          href={event.facebookUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="facebook-btn"
+                          title="Voir l'événement sur Facebook"
+                        >
+                          Facebook
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </a>
+              </div>
             );
           })}
         </div>
