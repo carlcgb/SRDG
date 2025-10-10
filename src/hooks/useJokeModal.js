@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { submitJokeToSheets } from '../services/googleSheetsService';
 
 export const useJokeModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,12 +14,33 @@ export const useJokeModal = () => {
     document.body.style.overflow = 'auto';
   };
 
-  const handleJokeSubmission = (jokeData) => {
-    // Simulation d'envoi (remplacer par vraie logique)
-    console.log('Blague soumise:', jokeData);
-    
-    // Afficher message de confirmation
-    showNotification('Merci pour votre blague ! Nous la lirons lors de nos prochains spectacles.', 'success');
+  const handleJokeSubmission = async (jokeData) => {
+    try {
+      console.log('🎭 Joke submission started in modal hook');
+      console.log('📋 Joke data in modal:', jokeData);
+      
+      // Afficher un message de chargement
+      showNotification('Envoi de votre blague en cours...', 'info');
+      
+      // Soumettre à Google Sheets
+      console.log('📤 Calling submitJokeToSheets...');
+      const result = await submitJokeToSheets(jokeData);
+      console.log('📥 Result from submitJokeToSheets:', result);
+      
+      if (result.success) {
+        // Afficher message de confirmation
+        showNotification('Merci pour votre blague ! Nous la lirons lors de nos prochains spectacles.', 'success');
+        console.log('✅ Joke submitted successfully!');
+      } else {
+        // Afficher message d'erreur
+        showNotification('Erreur lors de l\'envoi. Veuillez réessayer.', 'error');
+        console.log('❌ Joke submission failed:', result.error);
+      }
+    } catch (error) {
+      // Afficher message d'erreur
+      showNotification('Erreur lors de l\'envoi. Veuillez réessayer.', 'error');
+      console.log('💥 Error in handleJokeSubmission:', error);
+    }
     
     // Fermer le modal
     closeModal();
@@ -30,11 +52,20 @@ export const useJokeModal = () => {
     notification.textContent = message;
     
     // Styles de la notification
+    const getBackgroundColor = (type) => {
+      switch (type) {
+        case 'success': return '#4CAF50';
+        case 'error': return '#F64A3E';
+        case 'info': return '#2196F3';
+        default: return '#2196F3';
+      }
+    };
+
     notification.style.cssText = `
       position: fixed;
       top: 20px;
       right: 20px;
-      background: ${type === 'success' ? '#4CAF50' : '#F64A3E'};
+      background: ${getBackgroundColor(type)};
       color: white;
       padding: 15px 25px;
       border-radius: 10px;
