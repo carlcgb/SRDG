@@ -188,7 +188,7 @@ END:VCALENDAR`;
     if (isIOS || isMac) {
       // For Apple devices, offer both options
       const choice = window.confirm(
-        'Choisissez votre calendrier:\n\nOK = Apple Calendar\nAnnuler = Google Calendar'
+        'Choisissez votre calendrier:\n\nApple = Apple Calendar\nAnnuler = Google Calendar'
       );
       
       if (choice) {

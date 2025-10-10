@@ -32,7 +32,7 @@ body {
 .container {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: 0 80px;
+    padding: 0 0px;
 }
 
 /* Navigation */
@@ -43,13 +43,13 @@ body {
     right: 0;
     background: transparent;
     z-index: 1000;
-    padding: 12px 0;
+    padding: 0px 0;
     transition: all var(--transition-duration) var(--transition-easing);
 }
 
 .navbar.scrolled {
     background: rgba(255, 225, 175, 0.95);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
 }
 
 .navbar.hidden {
@@ -59,7 +59,7 @@ body {
 .nav-container {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: 0 80px;
+    padding: 0 0px;
     display: flex;
     justify-content: space-between;
     align-items: center;

@@ -426,7 +426,7 @@ body {
 
 /* Événements Section */
 .events-section {
-    padding: var(--section-padding);
+    padding: 50px;
     background: var(--accent-light);
 }
 
