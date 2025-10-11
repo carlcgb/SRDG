@@ -20,8 +20,8 @@ const Hero = () => {
           <h1 className="hero-title">La Soirée du Rire</h1>
           <h2 className="hero-subtitle">de Granby</h2>
           <p className="hero-description">
-            Découvrez les meilleurs spectacles d'humour à Granby ! Des soirées inoubliables 
-            avec les humoristes québécois les plus talentueux au Social Bar et Cie. 
+            Découvrez les meilleurs <a href="#evenements" className="internal-link" onClick={(e) => handleNavClick(e, '#evenements')}>spectacles d'humour à Granby</a> ! Des soirées inoubliables 
+            avec les humoristes québécois les plus talentueux au <a href="#contact" className="internal-link" onClick={(e) => handleNavClick(e, '#contact')}>Social Bar et Cie</a>. 
             Réservez vos billets pour des moments de pure joie et de fous rires.
           </p>
           <div className="hero-buttons">

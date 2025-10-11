@@ -208,8 +208,9 @@ END:VCALENDAR`;
         <div className="section-header">
           <h2 className="section-title">Prochains Spectacles d'Humour à Granby</h2>
           <p className="section-description">
-            Découvrez notre programmation de spectacles d'humour mensuels au Social Bar et Cie de Granby. 
-            Des humoristes québécois de talent vous attendent pour des soirées mémorables !
+            Découvrez notre programmation de <a href="#evenements" className="internal-link">spectacles d'humour mensuels</a> au <a href="#contact" className="internal-link">Social Bar et Cie de Granby</a>. 
+            Des humoristes québécois de talent vous attendent pour des soirées mémorables ! 
+            <a href="#corporate" className="internal-link">Animation corporative</a> disponible pour vos événements d'entreprise.
           </p>
         </div>
         <div className="events-grid">
@@ -229,6 +230,8 @@ END:VCALENDAR`;
                       <h3 className="event-title">{event.title}</h3>
                       <p className="event-description">
                         {event.description}
+                        <br />
+                        <a href="#contact" className="internal-link">Réservez vos billets</a> ou découvrez nos <a href="#corporate" className="internal-link">services d'animation corporative</a>.
                       </p>
                       <div className="event-guests">
                         <h4 className="guests-title">Invités:</h4>

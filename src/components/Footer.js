@@ -35,10 +35,16 @@ const Footer = () => {
               Contact
             </a>
             <a 
-              href="#blague"
-              onClick={(e) => handleNavClick(e, '#blague')}
+              href="#blagues"
+              onClick={(e) => handleNavClick(e, '#blagues')}
             >
               Partager une blague
+            </a>
+            <a 
+              href="#corporate"
+              onClick={(e) => handleNavClick(e, '#corporate')}
+            >
+              Événements corporatifs
             </a>
           </div>
         </div>

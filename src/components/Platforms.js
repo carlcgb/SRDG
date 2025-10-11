@@ -27,6 +27,11 @@ const Platforms = () => {
     <section className="platforms-section">
       <div className="container">
         <h2 className="section-title">Suivez-nous</h2>
+        <p className="platforms-description">
+          Restez connectés avec <a href="#evenements" className="internal-link">La Soirée du Rire</a> ! 
+          Découvrez nos <a href="#evenements" className="internal-link">prochains spectacles d'humour</a> et 
+          nos <a href="#corporate" className="internal-link">services d'animation corporative</a>.
+        </p>
         <div className="platforms-grid">
           {platforms.map((platform, index) => (
             <a key={index} href={platform.href} className="platform-card">
