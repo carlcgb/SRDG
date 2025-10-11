@@ -52,38 +52,241 @@
     
     <link rel="icon" type="image/svg+xml" href="%PUBLIC_URL%/favicon.svg">
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+    <!-- Preconnect to external domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://www.googletagmanager.com">
     
     <!-- Preload critical resources -->
-    <link rel="preload" href="%PUBLIC_URL%/style/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="%PUBLIC_URL%/style/cgb.jpg" as="image">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Bebas+Neue&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     
     <!-- Critical CSS inline for above-the-fold content -->
     <style>
       /* Critical CSS for above-the-fold content */
-      body { margin: 0; font-family: 'Teko', sans-serif; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { 
+        margin: 0; 
+        font-family: 'Teko', sans-serif; 
+        background-color: #FFE1AF;
+        color: #F64A3E;
+        line-height: 1.2;
+        letter-spacing: 0.02em;
+      }
       #root { min-height: 100vh; }
-      .hero-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: rgba(255, 225, 175, 0.95);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        padding: 12px 0;
+        min-height: 60px;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease-in-out;
+      }
+      .nav-container {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 0 80px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 60px;
+      }
+      .logo h1 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #F64A3E;
+        margin: 0;
+      }
+      .logo span {
+        font-size: 0.85rem;
+        font-weight: 400;
+        color: #333333;
+        display: block;
+        margin-top: -3px;
+      }
+      .nav-menu {
+        display: flex;
+        gap: 40px;
+        align-items: center;
+      }
+      .nav-link {
+        color: #F64A3E;
+        text-decoration: none;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 1rem;
+        transition: all 0.3s ease-out;
+        position: relative;
+      }
+      .nav-tickets-btn {
+        background: #F64A3E;
+        color: #FFFFFF;
+        padding: 8px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        transition: all 0.3s ease-out;
+        border: 2px solid #F64A3E;
+        white-space: nowrap;
+        box-shadow: 0 4px 15px rgba(246, 74, 62, 0.3);
+      }
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 120px 80px;
+        background: linear-gradient(135deg, #FFE1AF 0%, #FFF5E6 100%);
+      }
+      .hero-content {
+        max-width: 1440px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        align-items: center;
+      }
+      .hero-title {
+        font-size: 12rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #F64A3E;
+        line-height: 0.9;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      }
+      .hero-subtitle {
+        font-size: 6rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #333333;
+        line-height: 0.9;
+        margin-bottom: 40px;
+      }
+      .hero-description {
+        font-size: 1.5rem;
+        color: #333333;
+        margin-bottom: 60px;
+        line-height: 1.4;
+        font-weight: 400;
+      }
+      .hero-buttons {
+        display: flex;
+        gap: 30px;
+      }
+      .btn {
+        display: inline-block;
+        padding: 12px 32px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 1.1rem;
+        transition: all 0.3s ease-out;
+        cursor: pointer;
+        border: none;
+        font-family: inherit;
+      }
+      .btn-primary {
+        background-color: #FFFFFF;
+        color: #F64A3E;
+        border: 2px solid #F64A3E;
+      }
+      .btn-secondary {
+        background-color: transparent;
+        color: #F64A3E;
+        border: 2px solid #F64A3E;
+      }
+      .btn-large {
+        padding: 16px 48px;
+        font-size: 1.3rem;
+      }
+      /* Mobile critical styles */
+      @media (max-width: 768px) {
+        .nav-container {
+          padding: 0 20px;
+          flex-direction: column;
+          gap: 15px;
+          justify-content: center;
+          width: 100%;
+          max-width: 100%;
+        }
+        .nav-menu {
+          gap: 20px;
+        }
+        .logo h1, .logo span {
+          display: none !important;
+          visibility: hidden !important;
+          opacity: 0 !important;
+        }
+        .navbar {
+          padding: 12px 0 !important;
+          min-height: 60px !important;
+          display: flex !important;
+          align-items: center !important;
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          right: 0 !important;
+          z-index: 1000 !important;
+        }
+        .nav-link {
+          font-size: 0.9rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          transform: none !important;
+        }
+        .nav-tickets-btn {
+          font-size: 0.8rem;
+          padding: 6px 16px;
+          font-weight: 700;
+          text-transform: uppercase;
+          transform: none !important;
+        }
+        .hero {
+          padding: 120px 20px 80px;
+        }
+        .hero-content {
+          grid-template-columns: 1fr;
+          gap: 40px;
+          text-align: center;
+        }
+        .hero-title {
+          font-size: 5rem;
+        }
+        .hero-subtitle {
+          font-size: 3rem;
+        }
+        .hero-buttons {
+          flex-direction: column;
+          align-items: center;
+        }
+      }
     </style>
     
-    <!-- Non-critical CSS -->
-    <link rel="stylesheet" href="%PUBLIC_URL%/style/main.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="%PUBLIC_URL%/style/tilted.css" media="print" onload="this.media='all'">
+    <!-- Load fonts asynchronously -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Bebas+Neue&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Bebas+Neue&display=swap"></noscript>
+    
+    <!-- Load CSS asynchronously -->
+    <link rel="preload" href="%PUBLIC_URL%/style/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="%PUBLIC_URL%/style/tilted.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+      <link rel="stylesheet" href="%PUBLIC_URL%/style/main.css">
+      <link rel="stylesheet" href="%PUBLIC_URL%/style/tilted.css">
+    </noscript>
     
     <!-- DNS prefetch for external resources -->
     <link rel="dns-prefetch" href="//fonts.googleapis.com">
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link rel="dns-prefetch" href="//www.googletagmanager.com">
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-NLR44QK8');</script>
-    <!-- End Google Tag Manager -->
 </head>
 <body>
     <!-- Google Tag Manager (noscript) -->
@@ -91,7 +294,20 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <!-- Structured Data JSON-LD -->
+    
+    <noscript>Vous devez activer JavaScript pour exécuter cette application.</noscript>
+    <div id="root"></div>
+    
+    <!-- Google Tag Manager - Loaded at bottom to prevent render blocking -->
+    <script>
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-NLR44QK8');
+    </script>
+    
+    <!-- Structured Data JSON-LD - Loaded at bottom to prevent render blocking -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -263,8 +479,5 @@
       ]
     }
     </script>
-    
-    <noscript>Vous devez activer JavaScript pour exécuter cette application.</noscript>
-    <div id="root"></div>
 </body>
 </html>
