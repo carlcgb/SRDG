@@ -1,277 +1,276 @@
-# 🎭 Event Website Template - React.js
+# 🎭 Modèle de Site Web d'Événement - React.js
 
-A modern, responsive event website template built with React.js, perfect for comedy shows, concerts, conferences, and any type of event. This template is designed to be easily customizable and ready for production deployment.
+Un modèle de site web d'événement moderne et réactif construit avec React.js, parfait pour les spectacles d'humour, concerts, conférences et tout type d'événement. Ce modèle est conçu pour être facilement personnalisable et prêt pour le déploiement en production.
 
-## ✨ Features
+## ✨ Fonctionnalités
 
-- **🎨 Modern Design**: Clean, professional layout with custom animations
-- **📱 Fully Responsive**: Works perfectly on desktop, tablet, and mobile
-- **🎪 Interactive Elements**: 3D tilt effects, smooth animations, and engaging UI
-- **📝 Contact Forms**: Built-in joke submission form with Google Sheets integration
-- **📅 Event Management**: Easy-to-customize event cards and information
-- **🔗 Social Integration**: Ready-to-use social media links and contact options
-- **⚡ Fast Performance**: Optimized React components and efficient rendering
-- **🚀 Easy Deployment**: Ready for Cloudflare Pages, Netlify, Vercel, and more
+- **🎨 Design Moderne**: Mise en page propre et professionnelle avec animations personnalisées
+- **📱 Entièrement Réactif**: Fonctionne parfaitement sur ordinateur, tablette et mobile
+- **🎪 Éléments Interactifs**: Effets d'inclinaison 3D, animations fluides et interface engageante
+- **📝 Formulaires de Contact**: Formulaire de soumission de blagues intégré avec intégration Google Sheets
+- **📅 Gestion d'Événements**: Cartes d'événements et informations facilement personnalisables
+- **🔗 Intégration Sociale**: Liens de médias sociaux et options de contact prêts à utiliser
+- **⚡ Performance Rapide**: Composants React optimisés et rendu efficace
+- **🚀 Déploiement Facile**: Prêt pour Cloudflare Pages, Netlify, Vercel et plus
 
-## 🚀 Quick Start
+## 🚀 Démarrage Rapide
 
-### Prerequisites
-- Node.js (version 18 or higher)
-- npm or yarn
+### Prérequis
+- Node.js (version 18 ou supérieure)
+- npm ou yarn
 - Git
 
 ### Installation
 ```bash
-# Clone the repository
+# Cloner le dépôt
 git clone https://github.com/yourusername/event-website-template.git
 
-# Navigate to the project directory
+# Naviguer vers le répertoire du projet
 cd event-website-template
 
-# Install dependencies
+# Installer les dépendances
 npm install
 
-# Start development server
+# Démarrer le serveur de développement
 npm start
 ```
 
-The website will be available at `http://localhost:3000`
+Le site web sera accessible à l'adresse `http://localhost:3000`
 
-### Production Build
+### Build de Production
 ```bash
-# Create optimized production build
+# Créer un build de production optimisé
 npm run build
 
-# The build files will be in the 'build' directory
+# Les fichiers de build seront dans le répertoire 'build'
 ```
 
-## 🎯 Perfect For
+## 🎯 Parfait Pour
 
-- **Comedy Shows** & Stand-up Events
-- **Concerts** & Music Events  
-- **Conferences** & Business Events
-- **Weddings** & Private Events
-- **Festivals** & Community Events
-- **Workshops** & Educational Events
+- **Spectacles d'Humour** & Stand-up
+- **Concerts** & Événements Musicaux  
+- **Conférences** & Événements d'Affaires
+- **Mariages** & Événements Privés
+- **Festivals** & Événements Communautaires
+- **Ateliers** & Événements Éducatifs
 
-## 📁 Project Structure
+## 📁 Structure du Projet
 
 ```
 src/
-├── components/              # React Components
-│   ├── Navigation.js        # Navigation bar
-│   ├── Hero.js             # Hero section with mascot
-│   ├── Events.js           # Events section
-│   ├── Platforms.js        # Social media platforms
-│   ├── JokeSection.js      # Joke submission section
-│   ├── Contact.js          # Contact information
-│   ├── Footer.js           # Footer component
-│   └── JokeModal.js        # Joke submission modal
-├── hooks/                  # Custom React Hooks
-│   ├── useScrollEffects.js # Scroll animations
-│   ├── useMascotTilt.js    # Mascot tilt animation
-│   ├── useJokeModal.js     # Modal management
-│   ├── useEventCards.js    # Event card animations
-│   ├── useButtonAnimations.js # Button animations
-│   └── useParallax.js      # Parallax effects
-├── services/               # External Services
-│   └── googleSheetsService.js # Google Sheets integration
-├── App.js                  # Main App component
-└── index.js                # Entry point
+├── components/              # Composants React
+│   ├── Navigation.js        # Barre de navigation
+│   ├── Hero.js             # Section hero avec mascotte
+│   ├── Events.js           # Section événements
+│   ├── Platforms.js        # Plateformes de médias sociaux
+│   ├── JokeSection.js      # Section soumission de blagues
+│   ├── Contact.js          # Informations de contact
+│   ├── Footer.js           # Composant pied de page
+│   └── JokeModal.js        # Modal de soumission de blagues
+├── hooks/                  # Hooks React Personnalisés
+│   ├── useScrollEffects.js # Animations de défilement
+│   ├── useMascotTilt.js    # Animation d'inclinaison de la mascotte
+│   ├── useJokeModal.js     # Gestion du modal
+│   ├── useEventCards.js    # Animations des cartes d'événements
+│   ├── useButtonAnimations.js # Animations des boutons
+│   └── useParallax.js      # Effets de parallaxe
+├── services/               # Services Externes
+│   └── googleSheetsService.js # Intégration Google Sheets
+├── App.js                  # Composant App principal
+└── index.js                # Point d'entrée
 
 public/
-├── style/                  # CSS Files
-│   ├── main.css           # Main styles
-│   ├── tilted.css         # 3D tilt effects
-│   └── PillNav.css        # Navigation styles
-├── assets/                 # Images and resources
-└── index.html              # HTML template
+├── style/                  # Fichiers CSS
+│   ├── main.css           # Styles principaux
+│   ├── tilted.css         # Effets d'inclinaison 3D
+│   └── PillNav.css        # Styles de navigation
+├── assets/                 # Images et ressources
+└── index.html              # Template HTML
 
-google-apps-script-*.js     # Google Apps Script files for form handling
+google-apps-script-*.js     # Fichiers Google Apps Script pour la gestion des formulaires
 ```
 
-## 🎨 Design System
+## 🎨 Système de Design
 
-The template uses a modern design system with:
-- **Colors**: Customizable color scheme (easily changeable in CSS)
-- **Typography**: Modern fonts with excellent readability
-- **Animations**: Smooth transitions and 3D effects
-- **Layout**: Responsive grid system with consistent spacing
+Le modèle utilise un système de design moderne avec :
+- **Couleurs**: Palette de couleurs personnalisable (facilement modifiable en CSS)
+- **Typographie**: Polices modernes avec excellente lisibilité
+- **Animations**: Transitions fluides et effets 3D
+- **Mise en Page**: Système de grille réactif avec espacement cohérent
 
-## 🔧 Customization Guide
+## 🔧 Guide de Personnalisation
 
-### 1. Basic Information
-Update the following files with your event information:
+### 1. Informations de Base
+Mettez à jour les fichiers suivants avec les informations de votre événement :
 
-**Hero Section** (`src/components/Hero.js`):
+**Section Hero** (`src/components/Hero.js`):
 ```javascript
-// Update event name, date, and description
-const eventName = "Your Event Name";
-const eventDate = "December 25, 2024";
-const eventDescription = "Your event description...";
+// Mettre à jour le nom, la date et la description de l'événement
+const eventName = "Nom de Votre Événement";
+const eventDate = "25 décembre 2024";
+const eventDescription = "Description de votre événement...";
 ```
 
-**Contact Information** (`src/components/Contact.js`):
+**Informations de Contact** (`src/components/Contact.js`):
 ```javascript
-// Update contact details
+// Mettre à jour les détails de contact
 const contactInfo = {
   phone: "+1-234-567-8900",
-  email: "contact@yourevent.com",
-  messenger: "https://m.me/yourpage"
+  email: "contact@votre-evenement.com",
+  messenger: "https://m.me/votrepage"
 };
 ```
 
-### 2. Events Management
-**Events Section** (`src/components/Events.js`):
+### 2. Gestion des Événements
+**Section Événements** (`src/components/Events.js`):
 ```javascript
-// Add/remove/modify events
+// Ajouter/supprimer/modifier les événements
 const events = [
   {
     id: 1,
-    title: "Event Title",
+    title: "Titre de l'Événement",
     date: "2024-12-25",
-    time: "8:00 PM",
-    location: "Venue Name",
-    price: "$25",
-    description: "Event description..."
+    time: "20h00",
+    location: "Nom du Lieu",
+    price: "25$",
+    description: "Description de l'événement..."
   }
-  // Add more events...
+  // Ajouter plus d'événements...
 ];
 ```
 
-### 3. Social Media Links
-**Platforms Section** (`src/components/Platforms.js`):
+### 3. Liens de Médias Sociaux
+**Section Plateformes** (`src/components/Platforms.js`):
 ```javascript
-// Update social media links
+// Mettre à jour les liens de médias sociaux
 const platforms = [
-  { name: "Facebook", url: "https://facebook.com/yourpage", icon: "facebook" },
-  { name: "Instagram", url: "https://instagram.com/yourpage", icon: "instagram" }
-  // Add more platforms...
+  { name: "Facebook", url: "https://facebook.com/votrepage", icon: "facebook" },
+  { name: "Instagram", url: "https://instagram.com/votrepage", icon: "instagram" }
+  // Ajouter plus de plateformes...
 ];
 ```
 
-### 4. Colors and Styling
-**Main Styles** (`public/style/main.css`):
+### 4. Couleurs et Styles
+**Styles Principaux** (`public/style/main.css`):
 ```css
 :root {
-  --primary-color: #F64A3E;    /* Main brand color */
-  --secondary-color: #FFE1AF;  /* Background color */
-  --accent-color: #2C3E50;     /* Text color */
-  /* Add more custom colors... */
+  --primary-color: #F64A3E;    /* Couleur principale de la marque */
+  --secondary-color: #FFE1AF;  /* Couleur de fond */
+  --accent-color: #2C3E50;     /* Couleur du texte */
+  /* Ajouter plus de couleurs personnalisées... */
 }
 ```
 
-### 5. Images and Assets
-Replace images in `public/assets/`:
-- `mascot.png` - Your mascot/logo
-- `background.jpg` - Hero background
-- `event-placeholder.jpg` - Default event image
+### 5. Images et Ressources
+Remplacer les images dans `public/assets/` :
+- `mascot.png` - Votre mascotte/logo
+- `background.jpg` - Arrière-plan hero
+- `event-placeholder.jpg` - Image d'événement par défaut
 
-## 🚀 Deployment Options
+## 🚀 Options de Déploiement
 
-### Cloudflare Pages (Recommended)
+### Cloudflare Pages (Recommandé)
 ```bash
-# Build the project
+# Construire le projet
 npm run build
 
-# Deploy to Cloudflare Pages
-npx wrangler pages deploy build --project-name=your-event-site
+# Déployer sur Cloudflare Pages
+npx wrangler pages deploy build --project-name=votre-site-evenement
 ```
 
 ### Netlify
 ```bash
-# Build the project
+# Construire le projet
 npm run build
 
-# Deploy to Netlify (drag and drop the build folder)
-# Or connect your GitHub repository for automatic deployments
+# Déployer sur Netlify (glisser-déposer le dossier build)
+# Ou connecter votre dépôt GitHub pour des déploiements automatiques
 ```
 
 ### Vercel
 ```bash
-# Install Vercel CLI
+# Installer Vercel CLI
 npm i -g vercel
 
-# Deploy
+# Déployer
 vercel --prod
 ```
 
 ### GitHub Pages
 ```bash
-# Install gh-pages
+# Installer gh-pages
 npm install --save-dev gh-pages
 
-# Add to package.json scripts:
+# Ajouter aux scripts package.json :
 # "predeploy": "npm run build",
 # "deploy": "gh-pages -d build"
 
-# Deploy
+# Déployer
 npm run deploy
 ```
 
-## 📱 Responsive Design
+## 📱 Design Réactif
 
-The template automatically adapts to all screen sizes:
-- **Desktop**: Full grid layout with complete 3D effects
-- **Tablet**: Optimized font sizes and spacing
-- **Mobile**: Vertical layout with simplified navigation
+Le modèle s'adapte automatiquement à toutes les tailles d'écran :
+- **Ordinateur**: Mise en page en grille complète avec effets 3D complets
+- **Tablette**: Tailles de police et espacement optimisés
+- **Mobile**: Mise en page verticale avec navigation simplifiée
 
-## 🎪 Animations & Effects
+## 🎪 Animations et Effets
 
-- **Mascot**: Entrance animation from bottom + tilt effect on hover
-- **Event Cards**: 3D tilt effect on hover
-- **Buttons**: Lift animation on hover
-- **Scroll**: Smooth appearance animations
-- **Parallax**: Subtle background movement effects
+- **Mascotte**: Animation d'entrée du bas + effet d'inclinaison au survol
+- **Cartes d'Événements**: Effet d'inclinaison 3D au survol
+- **Boutons**: Animation de soulèvement au survol
+- **Défilement**: Animations d'apparition fluides
+- **Parallaxe**: Effets de mouvement d'arrière-plan subtils
 
-## 📊 Google Sheets Integration
+## 📊 Intégration Google Sheets
 
-The template includes a complete form submission system:
+Le modèle inclut un système complet de soumission de formulaires :
 
-1. **Setup Google Apps Script**:
-   - Copy the code from `google-apps-script-form.js`
-   - Create a new Google Apps Script project
-   - Deploy as a web app with "Anyone" access
-   - Update the script URL in `src/services/googleSheetsService.js`
+1. **Configuration Google Apps Script** :
+   - Copier le code de `google-apps-script-form.js`
+   - Créer un nouveau projet Google Apps Script
+   - Déployer comme application web avec accès "Tout le monde"
+   - Mettre à jour l'URL du script dans `src/services/googleSheetsService.js`
 
-2. **Configure Google Sheets**:
-   - Create a new Google Sheet
-   - Update the spreadsheet ID in the Google Apps Script
-   - Form submissions will automatically populate the sheet
+2. **Configuration Google Sheets** :
+   - Créer une nouvelle feuille Google
+   - Mettre à jour l'ID de la feuille dans le Google Apps Script
+   - Les soumissions de formulaires peupleront automatiquement la feuille
 
-## 💼 Business Model
+## 💼 Modèle d'Affaires
 
-This template is perfect for:
-- **Web Design Agencies**: Offer as a premium service to clients
-- **Event Organizers**: Create professional event websites quickly
-- **Freelancers**: Provide high-quality websites to clients
-- **Template Marketplaces**: Sell on platforms like ThemeForest, Creative Market
+Ce modèle est parfait pour :
+- **Agences de Design Web**: Offrir comme service premium aux clients
+- **Organisateurs d'Événements**: Créer des sites web d'événements professionnels rapidement
+- **Freelances**: Fournir des sites web de haute qualité aux clients
+- **Marchés de Modèles**: Vendre sur des plateformes comme ThemeForest, Creative Market
 
-### Pricing Suggestions
-- **Basic Setup**: $200-500 (includes customization)
-- **Premium Package**: $500-1000 (includes hosting, domain, maintenance)
-- **White-label License**: $50-100 per use
+### Suggestions de Tarification
+- **Configuration de Base**: 200-500$ (inclut la personnalisation)
+- **Forfait Premium**: 500-1000$ (inclut l'hébergement, domaine, maintenance)
+- **Licence White-label**: 50-100$ par utilisation
 
-## 🛠️ Technical Features
+## 🛠️ Fonctionnalités Techniques
 
-- **React 18**: Latest React features and optimizations
-- **Modern JavaScript**: ES6+ features and async/await
-- **CSS3 Animations**: Hardware-accelerated animations
-- **Mobile-First**: Responsive design from the ground up
-- **SEO Ready**: Semantic HTML and meta tags
-- **Performance Optimized**: Lazy loading and efficient rendering
+- **React 18**: Dernières fonctionnalités React et optimisations
+- **JavaScript Moderne**: Fonctionnalités ES6+ et async/await
+- **Animations CSS3**: Animations accélérées par le matériel
+- **Mobile-First**: Design réactif dès le départ
+- **Prêt pour le SEO**: HTML sémantique et balises meta
+- **Performance Optimisée**: Chargement paresseux et rendu efficace
 
-## 📞 Support & Customization
+## 📞 Support et Personnalisation
 
-For custom modifications or support:
-- **Email**: support@yourcompany.com
-- **Documentation**: [Full documentation available]
-- **Custom Development**: Available upon request
+Pour des modifications personnalisées ou du support :
+- **Courriel**: info@lasoireedurire.com
+- **Développement Personnalisé**: Disponible sur demande
 
-## 📄 License
+## 📄 Licence
 
-MIT License - Feel free to use for personal and commercial projects.
+Licence MIT - Libre d'utilisation pour des projets personnels et commerciaux.
 
 ---
 
-**Ready to create amazing event websites?** Clone this template and start building! 🚀
+**Prêt à créer des sites web d'événements incroyables ?** Clonez ce modèle et commencez à construire ! 🚀
