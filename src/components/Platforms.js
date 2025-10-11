@@ -24,9 +24,9 @@ const Platforms = () => {
   ];
 
   return (
-    <section className="platforms-section">
+    <section id="plateformes" className="platforms-section">
       <div className="container">
-        <h2 className="section-title">Suivez-nous</h2>
+        <h2 className="section-title">Suivez-nous sur les réseaux sociaux</h2>
         <div className="platforms-grid">
           {platforms.map((platform, index) => (
             <a key={index} href={platform.href} className="platform-card">
