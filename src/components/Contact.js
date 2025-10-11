@@ -19,7 +19,7 @@ const Contact = () => {
                 Messenger
               </a>
               <a 
-                href="mailto:info@lasoireedurire.ca" 
+                href="mailto:info@lasoireedurire.com" 
                 className="contact-btn email-btn"
               >
                 <span className="contact-icon">✉️</span>
