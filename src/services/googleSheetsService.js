@@ -8,12 +8,19 @@ export const submitJokeToSheets = async (jokeData) => {
     console.log('🚀 Starting joke submission via iframe...');
     console.log('📝 Joke data received:', jokeData);
     
-    // Create a hidden iframe to submit the data
-    return new Promise((resolve) => {
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.style.width = '0';
-      iframe.style.height = '0';
+      // Create a hidden iframe to submit the data
+      return new Promise((resolve) => {
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.style.width = '0';
+        iframe.style.height = '0';
+        iframe.style.border = 'none';
+        iframe.style.position = 'absolute';
+        iframe.style.left = '-9999px';
+        iframe.style.top = '-9999px';
+        // Add sandbox attributes to prevent any window opening
+        iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts');
+        iframe.setAttribute('loading', 'lazy');
       
       // Create form data
       const formData = new FormData();
@@ -28,6 +35,9 @@ export const submitJokeToSheets = async (jokeData) => {
       form.action = GOOGLE_SCRIPT_URL;
       form.target = 'hidden-iframe';
       form.style.display = 'none';
+      form.style.position = 'absolute';
+      form.style.left = '-9999px';
+      form.style.top = '-9999px';
       
       // Add form fields
       const fields = {
@@ -55,15 +65,33 @@ export const submitJokeToSheets = async (jokeData) => {
       // Handle iframe load
       iframe.onload = () => {
         console.log('✅ Form submitted successfully via iframe');
-        document.body.removeChild(form);
-        document.body.removeChild(iframe);
+        // Clean up elements safely
+        try {
+          if (document.body.contains(form)) {
+            document.body.removeChild(form);
+          }
+          if (document.body.contains(iframe)) {
+            document.body.removeChild(iframe);
+          }
+        } catch (cleanupError) {
+          console.warn('Cleanup error:', cleanupError);
+        }
         resolve({ success: true, data: { message: 'Joke submitted via iframe' } });
       };
       
       iframe.onerror = () => {
         console.log('❌ Error submitting form via iframe');
-        document.body.removeChild(form);
-        document.body.removeChild(iframe);
+        // Clean up elements safely
+        try {
+          if (document.body.contains(form)) {
+            document.body.removeChild(form);
+          }
+          if (document.body.contains(iframe)) {
+            document.body.removeChild(iframe);
+          }
+        } catch (cleanupError) {
+          console.warn('Cleanup error:', cleanupError);
+        }
         resolve({ success: false, error: 'Iframe submission failed' });
       };
       
@@ -74,8 +102,17 @@ export const submitJokeToSheets = async (jokeData) => {
       setTimeout(() => {
         if (document.body.contains(iframe)) {
           console.log('⏰ Form submission timeout, assuming success');
-          document.body.removeChild(form);
-          document.body.removeChild(iframe);
+          // Clean up elements safely
+          try {
+            if (document.body.contains(form)) {
+              document.body.removeChild(form);
+            }
+            if (document.body.contains(iframe)) {
+              document.body.removeChild(iframe);
+            }
+          } catch (cleanupError) {
+            console.warn('Cleanup error in timeout:', cleanupError);
+          }
           resolve({ success: true, data: { message: 'Joke submitted (timeout fallback)' } });
         }
       }, 5000);

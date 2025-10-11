@@ -26,16 +26,21 @@ function doPost(e) {
     console.log('Adding row:', newRow);
     sheet.appendRow(newRow);
     
-    // Return a simple HTML response
+    // Return a minimal HTML response that won't open any windows
     return HtmlService.createHtmlOutput(`
       <html>
-        <body>
-          <h1>Success!</h1>
-          <p>Your joke has been submitted successfully.</p>
+        <head>
+          <title>Success</title>
+        </head>
+        <body style="margin:0;padding:0;background:transparent;">
           <script>
-            // Close the window if opened in a popup
+            // Send success message to parent if in iframe
+            if (window.parent !== window) {
+              window.parent.postMessage('joke-submitted-success', '*');
+            }
+            // Close window if opened in popup (though this shouldn't happen with iframe)
             if (window.opener) {
-              window.opener.postMessage('success', '*');
+              window.opener.postMessage('joke-submitted-success', '*');
               window.close();
             }
           </script>
@@ -47,9 +52,21 @@ function doPost(e) {
     console.error('Error in doPost:', error);
     return HtmlService.createHtmlOutput(`
       <html>
-        <body>
-          <h1>Error</h1>
-          <p>There was an error submitting your joke: ${error.toString()}</p>
+        <head>
+          <title>Error</title>
+        </head>
+        <body style="margin:0;padding:0;background:transparent;">
+          <script>
+            // Send error message to parent if in iframe
+            if (window.parent !== window) {
+              window.parent.postMessage('joke-submitted-error', '*');
+            }
+            // Close window if opened in popup (though this shouldn't happen with iframe)
+            if (window.opener) {
+              window.opener.postMessage('joke-submitted-error', '*');
+              window.close();
+            }
+          </script>
         </body>
       </html>
     `);
