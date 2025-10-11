@@ -1,6 +1,8 @@
 import React from 'react';
+import { useCorporateScroll } from '../hooks/useCorporateScroll';
 
 const Navigation = () => {
+  const isCorporateInView = useCorporateScroll();
   const handleNavClick = (e, targetId) => {
     e.preventDefault();
     const targetElement = document.querySelector(targetId);
@@ -14,7 +16,7 @@ const Navigation = () => {
   };
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${isCorporateInView ? 'corporate-theme' : ''}`}>
       <div className="nav-container">
         <div className="logo">
           <h1>La Soirée du Rire</h1>

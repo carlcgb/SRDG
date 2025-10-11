@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>La Soirée du Rire de Granby | Spectacles d'humour et comédie stand-up</title>
-    <meta name="description" content="Découvrez La Soirée du Rire de Granby ! Des spectacles d'humour mensuels avec les meilleurs humoristes du Québec. Services d'animation corporative pour événements d'entreprise, team building et soirées corporatives. Événements au Social Bar et Cie.">
+    <meta name="description" content="La Soirée du Rire de Granby - Spectacles d'humour mensuels avec les meilleurs humoristes du Québec. Services d'animation corporative professionnels pour événements d'entreprise, team building et soirées corporatives. Billets disponibles pour nos spectacles au Social Bar et Cie. Animation comédie pour conférences et événements professionnels.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="spectacles humoristiques Granby, La Soirée du Rire, humour Québec, comédie stand-up Granby, événements Granby, Social Bar et Cie, humoristes québécois, billets spectacle Granby, rire Granby, comédie locale, animation corporative, événements d'entreprise, team building, soirée corporative, humour d'entreprise, animation conférence, événement professionnel, comédien corporatif, animation Québec, fête d'entreprise">
+    <meta name="keywords" content="spectacles humoristiques Granby, La Soirée du Rire, humour Québec, comédie stand-up Granby, événements Granby, Social Bar et Cie, humoristes québécois, billets spectacle Granby, rire Granby, comédie locale, animation corporative, événements d'entreprise, team building, soirée corporative, humour d'entreprise, animation conférence, événement professionnel, comédien corporatif, animation Québec, fête d'entreprise, spectacle comédie, événement humour, comédien Granby, animation team building, événement corporatif Québec, humour d'entreprise Montréal, animation conférence corporative, soirée d'entreprise, événement professionnel, comédie corporative">
     <meta name="author" content="Carl GB">
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
@@ -66,7 +66,8 @@
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "La Soirée du Rire de Granby",
-      "description": "Organisateur de spectacles d'humour mensuels à Granby avec les meilleurs humoristes du Québec",
+      "alternateName": "LSDRG",
+      "description": "Organisateur de spectacles d'humour mensuels à Granby avec les meilleurs humoristes du Québec. Services d'animation corporative pour événements d'entreprise, team building et soirées corporatives.",
       "url": "https://lasoireedurire.ca",
       "logo": "https://lasoireedurire.ca/style/cgb.jpg",
       "image": "https://lasoireedurire.ca/style/cgb.jpg",
@@ -76,12 +77,21 @@
         "addressRegion": "QC",
         "addressCountry": "CA"
       },
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+1-450-991-3336",
-        "contactType": "customer service",
-        "email": "info@lasoireedurire.ca"
-      },
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "telephone": "+1-450-991-3336",
+          "contactType": "customer service",
+          "email": "info@lasoireedurire.ca",
+          "availableLanguage": "French"
+        },
+        {
+          "@type": "ContactPoint",
+          "email": "info@lasoireedurire.ca",
+          "contactType": "business inquiries",
+          "availableLanguage": "French"
+        }
+      ],
       "sameAs": [
         "https://www.facebook.com/lsdrg"
       ],
@@ -89,7 +99,66 @@
       "founder": {
         "@type": "Person",
         "name": "Carl GB"
+      },
+      "serviceArea": {
+        "@type": "GeoCircle",
+        "geoMidpoint": {
+          "@type": "GeoCoordinates",
+          "latitude": 45.4,
+          "longitude": -72.73
+        },
+        "geoRadius": "50000"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Services d'animation et spectacles",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Spectacles d'humour mensuels",
+              "description": "Spectacles d'humour mensuels avec les meilleurs humoristes du Québec"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Animation corporative",
+              "description": "Services d'animation pour événements d'entreprise, team building et soirées corporatives"
+            }
+          }
+        ]
       }
+    }
+    </script>
+    
+    <!-- Additional Structured Data for Events -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EventSeries",
+      "name": "La Soirée du Rire de Granby",
+      "description": "Série de spectacles d'humour mensuels à Granby",
+      "url": "https://lasoireedurire.ca/#evenements",
+      "organizer": {
+        "@type": "Organization",
+        "name": "La Soirée du Rire de Granby",
+        "url": "https://lasoireedurire.ca"
+      },
+      "location": {
+        "@type": "Place",
+        "name": "Social Bar et Cie",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Granby",
+          "addressRegion": "QC",
+          "addressCountry": "CA"
+        }
+      },
+      "eventStatus": "https://schema.org/EventScheduled",
+      "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode"
     }
     </script>
     

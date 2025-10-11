@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import CorporateStructuredData from './CorporateStructuredData';
+import { sendCorporateFormEmail } from '../services/emailService';
 
 const CorporateSection = () => {
   const sectionRef = useRef(null);
@@ -17,6 +18,7 @@ const CorporateSection = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState('');
+  const [successTimer, setSuccessTimer] = useState(null);
 
   // Splash cursor effect will be rendered globally
 
@@ -46,24 +48,52 @@ const CorporateSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitStatus('');
     
-    // Simulation d'envoi (à remplacer par votre logique d'envoi)
-    setTimeout(() => {
+    try {
+      // Send email automatically using EmailJS
+      const result = await sendCorporateFormEmail(formData);
+      
+      if (result.success) {
+        setSubmitStatus('success');
+        // Reset form after successful submission
+        setFormData({
+          company: '',
+          contactName: '',
+          email: '',
+          phone: '',
+          eventType: '',
+          eventDate: '',
+          budget: '',
+          guestCount: '',
+          specialRequests: ''
+        });
+        
+        // Set timer to hide success message after 20 seconds
+        const timer = setTimeout(() => {
+          setSubmitStatus('');
+        }, 20000);
+        setSuccessTimer(timer);
+      } else {
+        setSubmitStatus('error');
+        console.error('Email sending failed:', result.error);
+      }
+    } catch (error) {
+      console.error('Error in form submission:', error);
+      setSubmitStatus('error');
+    } finally {
       setIsSubmitting(false);
-      setSubmitStatus('success');
-      setFormData({
-        company: '',
-        contactName: '',
-        email: '',
-        phone: '',
-        eventType: '',
-        eventDate: '',
-        budget: '',
-        guestCount: '',
-        specialRequests: ''
-      });
-    }, 2000);
+    }
   };
+
+  // Cleanup timer on component unmount
+  React.useEffect(() => {
+    return () => {
+      if (successTimer) {
+        clearTimeout(successTimer);
+      }
+    };
+  }, [successTimer]);
 
   return (
     <>
@@ -334,7 +364,29 @@ const CorporateSection = () => {
                 {submitStatus === 'success' && (
                   <div className="success-message">
                     <span className="success-icon">✅</span>
-                    Merci ! Nous vous contacterons dans les 24h pour discuter de votre événement.
+                    <span className="success-text">
+                      Merci ! Votre demande a été envoyée à info@lasoireedurire.ca. Nous vous contacterons dans les 24h pour discuter de votre événement.
+                    </span>
+                    <button 
+                      className="success-close-btn"
+                      onClick={() => {
+                        setSubmitStatus('');
+                        if (successTimer) {
+                          clearTimeout(successTimer);
+                          setSuccessTimer(null);
+                        }
+                      }}
+                      aria-label="Fermer le message de succès"
+                    >
+                      ×
+                    </button>
+                  </div>
+                )}
+                
+                {submitStatus === 'error' && (
+                  <div className="error-message">
+                    <span className="error-icon">❌</span>
+                    Une erreur s'est produite lors de l'envoi. Veuillez réessayer ou nous contacter directement.
                   </div>
                 )}
               </form>

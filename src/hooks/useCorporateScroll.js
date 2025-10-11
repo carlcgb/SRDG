@@ -1,0 +1,34 @@
+import { useEffect, useState } from 'react';
+
+export const useCorporateScroll = () => {
+  const [isCorporateInView, setIsCorporateInView] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const corporateSection = document.querySelector('#corporate');
+      if (!corporateSection) return;
+
+      const rect = corporateSection.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      
+      // Check if the corporate section is in viewport
+      // (section top is at or above the top of viewport and bottom is below the top)
+      const isInViewport = rect.top <= viewportHeight && rect.bottom > 0;
+      
+      setIsCorporateInView(isInViewport);
+    };
+
+    // Initial check
+    handleScroll();
+
+    // Add scroll listener
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  return isCorporateInView;
+};

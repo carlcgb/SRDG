@@ -45,6 +45,123 @@ body {
     backdrop-filter: blur(10px);
     z-index: 1000;
     padding: 12px 0;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Corporate theme navbar */
+.navbar.corporate-theme {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 25%, #2c3e50 50%, #34495e 75%, #2c3e50 100%);
+    background-size: 400% 400%;
+    animation: corporateBackgroundShift 8s ease-in-out infinite;
+    box-shadow: 0 4px 20px rgba(44, 62, 80, 0.3);
+    /* Ensure no layout shift */
+    padding: 12px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.navbar.corporate-theme::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(246, 74, 62, 0.15) 0%, transparent 60%),
+        radial-gradient(circle at 80% 20%, rgba(255, 107, 157, 0.15) 0%, transparent 60%),
+        radial-gradient(circle at 50% 50%, rgba(196, 69, 105, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+    animation: corporateGlow 6s ease-in-out infinite alternate;
+    z-index: -1;
+}
+
+.navbar.corporate-theme .logo h1 {
+    color: white !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 1.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.navbar.corporate-theme .logo span {
+    color: white !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 0.85rem;
+    font-weight: 400;
+    display: block;
+    margin-top: -3px;
+}
+
+.navbar.corporate-theme .nav-link {
+    color: white !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 1rem;
+}
+
+.navbar.corporate-theme .nav-link {
+    position: relative;
+    text-decoration: none;
+    /* Ensure consistent positioning and prevent movement */
+    display: block;
+    transform: none;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.navbar.corporate-theme .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(45deg, #f8b500, #ff6b9d, #c44569, #f8b500);
+    background-size: 300% 300%;
+    animation: gradientShift 3s ease-in-out infinite;
+    transition: width 0.3s ease;
+    box-shadow: 0 1px 3px rgba(248, 181, 0, 0.4);
+}
+
+.navbar.corporate-theme .nav-link:hover {
+    color: #f8b500 !important;
+    text-shadow: 0 2px 8px rgba(248, 181, 0, 0.5);
+    transform: none;
+}
+
+.navbar.corporate-theme .nav-link:hover::after {
+    width: 100%;
+}
+
+.navbar.corporate-theme .nav-tickets-btn {
+    background: linear-gradient(45deg, #f8b500, #ff6b9d, #c44569, #f8b500);
+    background-size: 300% 300%;
+    color: white !important;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(248, 181, 0, 0.4);
+    animation: gradientShift 3s ease-in-out infinite;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    padding: 8px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    /* Prevent movement */
+    transform: none;
+}
+
+.navbar.corporate-theme .nav-tickets-btn:hover {
+    transform: none;
+    box-shadow: 0 6px 20px rgba(248, 181, 0, 0.6);
+    border-color: rgba(255, 255, 255, 0.6);
 }
 
 
@@ -1879,8 +1996,71 @@ body {
     100% { transform: rotate(360deg); }
 }
 
+.success-message, .error-message {
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    animation: slideInUp 0.5s ease-out;
+}
+
 .success-message {
     background: linear-gradient(45deg, #28a745, #20c997);
+    color: white;
+    padding: 20px;
+    border-radius: 25px;
+    text-align: center;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 20px;
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+    position: relative;
+}
+
+.success-text {
+    flex: 1;
+    text-align: center;
+}
+
+.success-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.success-close-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.success-close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.success-close-btn:active {
+    transform: scale(0.95);
+}
+
+.error-message {
+    background: linear-gradient(45deg, #dc3545, #e74c3c);
     color: white;
     padding: 20px;
     border-radius: 25px;
@@ -1891,10 +2071,10 @@ body {
     justify-content: center;
     gap: 10px;
     margin-top: 20px;
-    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
 }
 
-.success-icon {
+.error-icon {
     font-size: 1.2rem;
 }
 
