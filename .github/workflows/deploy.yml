@@ -23,18 +23,67 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '20'
         cache: 'npm'
         
     - name: Install dependencies
-      run: npm ci
-      
-    - name: Build with environment variables
-      run: npm run build:prod
+      run: |
+        npm ci
+        npm --version
+        node --version
+        
+    - name: Verify environment variables
+      run: |
+        echo "Checking environment variables..."
+        if [ -z "$EMAILJS_SERVICE_ID" ]; then
+          echo "WARNING: EMAILJS_SERVICE_ID is not set"
+        else
+          echo "EMAILJS_SERVICE_ID is set"
+        fi
+        if [ -z "$EMAILJS_TEMPLATE_ID" ]; then
+          echo "WARNING: EMAILJS_TEMPLATE_ID is not set"
+        else
+          echo "EMAILJS_TEMPLATE_ID is set"
+        fi
+        if [ -z "$EMAILJS_PUBLIC_KEY" ]; then
+          echo "WARNING: EMAILJS_PUBLIC_KEY is not set"
+        else
+          echo "EMAILJS_PUBLIC_KEY is set"
+        fi
       env:
         EMAILJS_SERVICE_ID: ${{ secrets.EMAILJS_SERVICE_ID }}
         EMAILJS_TEMPLATE_ID: ${{ secrets.EMAILJS_TEMPLATE_ID }}
         EMAILJS_PUBLIC_KEY: ${{ secrets.EMAILJS_PUBLIC_KEY }}
+        
+    - name: Build with environment variables
+      run: |
+        echo "Starting build process..."
+        npm run build:prod
+        echo "Build completed successfully"
+        ls -la build/
+      env:
+        EMAILJS_SERVICE_ID: ${{ secrets.EMAILJS_SERVICE_ID }}
+        EMAILJS_TEMPLATE_ID: ${{ secrets.EMAILJS_TEMPLATE_ID }}
+        EMAILJS_PUBLIC_KEY: ${{ secrets.EMAILJS_PUBLIC_KEY }}
+        
+    - name: Verify Cloudflare credentials
+      run: |
+        echo "Verifying Cloudflare credentials..."
+        if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+          echo "ERROR: CLOUDFLARE_API_TOKEN is not set"
+          exit 1
+        else
+          echo "CLOUDFLARE_API_TOKEN is set"
+        fi
+        if [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+          echo "ERROR: CLOUDFLARE_ACCOUNT_ID is not set"
+          exit 1
+        else
+          echo "CLOUDFLARE_ACCOUNT_ID is set"
+        fi
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         
     - name: Deploy to Cloudflare Pages
       uses: cloudflare/pages-action@v1
@@ -43,3 +92,4 @@ jobs:
         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         projectName: srdg
         directory: build
+        wranglerVersion: '3'
