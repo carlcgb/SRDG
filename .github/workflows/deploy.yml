@@ -10,6 +10,12 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     
+    permissions:
+      contents: read
+      deployments: write
+      pages: write
+      id-token: write
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -37,4 +43,3 @@ jobs:
         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         projectName: srdg
         directory: build
-        gitHubToken: ${{ secrets.GITHUB_TOKEN }}
