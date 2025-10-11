@@ -45,12 +45,19 @@ const Navigation = () => {
             Blague
           </a>
           <a 
+            href="#corporate" 
+            className="nav-link"
+            onClick={(e) => handleNavClick(e, '#corporate')}
+          >
+          Corporatif
+          </a>
+          <a 
             href="https://app.tixigo.com/TOffice?token=sNozI5aN0tE7QVy3zaUxCFBQFtB%2Bg7sW0cWMhItujXo%3D&fbclid=IwY2xjawJNWLxleHRuA2FlbQIxMAABHTuOYmPpzVBIIiAXos2mv-ElAtqrkM9IknwJp84I-jt4sU0Ouc6RFQdqOA_aem_F6YCpxptwl6T8vrqwoyuxg" 
             target="_blank" 
             rel="noopener noreferrer"
             className="nav-tickets-btn"
           >
-            Acheter des billets
+            BILLETS
           </a>
         </div>
       </div>

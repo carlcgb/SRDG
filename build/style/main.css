@@ -2,31 +2,40 @@
 
 /* Internal Links - No hover animations */
 .internal-link {
-  color: #667eea;
+  background: linear-gradient(45deg, var(--primary-color), #ff6b9d, #c44569, #f8b500);
+  background-size: 300% 300%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   text-decoration: underline;
-  text-decoration-color: rgba(102, 126, 234, 0.3);
+  text-decoration-color: transparent;
   text-underline-offset: 2px;
-  transition: none !important;
-  font-weight: 500;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  position: relative;
 }
 
 .internal-link:hover {
-  color: #5a67d8;
-  text-decoration-color: #5a67d8;
+  background: linear-gradient(45deg, #e63946, #ff6b9d, #c44569, #f8b500);
+  background-size: 300% 300%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-decoration-color: #ff6b9d;
   text-decoration-thickness: 2px;
   transform: none !important;
   box-shadow: none !important;
-  background: none !important;
+  animation: gradientShift 2s ease-in-out infinite;
 }
 
 .internal-link:focus {
-  outline: 2px solid #667eea;
+  outline: 2px solid var(--primary-color);
   outline-offset: 2px;
   border-radius: 2px;
 }
 
 .internal-link:active {
-  color: #4c51bf;
+  color: var(--primary-color);
   transform: none !important;
 }
 
@@ -1329,12 +1338,12 @@ body {
     
     .nav-link {
         font-size: 0.9rem;
+        padding: 8px 12px;
     }
     
     .nav-tickets-btn {
-        font-size: 0.8rem;
-        padding: 6px 16px;
-        margin-top: 10px;
+        font-size: 0.9rem;
+        padding: 8px 16px;
     }
     
     .hero {

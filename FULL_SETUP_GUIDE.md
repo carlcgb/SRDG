@@ -319,7 +319,26 @@ Le sitemap inclut toutes les sections importantes :
 
 ## Fonctionnalités Avancées
 
-### 1. Formulaire Corporatif Automatique
+### 1. Navigation Intelligente
+
+#### Fonctionnalités
+- **Liens internes stylisés** avec défilement fluide
+- **Design cohérent** avec le thème glorious
+- **Navigation mobile optimisée** avec boutons adaptés
+- **Liens dans le contenu** pour améliorer l'expérience utilisateur
+
+#### Composants de Navigation
+- **Navigation principale** (`Navigation.js`) - Barre de navigation fixe
+- **Footer** (`Footer.js`) - Liens secondaires
+- **Liens internes** dans le contenu des sections
+
+#### Styles des Liens Internes
+- **Gradient glorious** : `var(--primary-color)`, `#ff6b9d`, `#c44569`, `#f8b500`
+- **Animation au survol** avec `gradientShift`
+- **Transitions fluides** pour une expérience premium
+- **Responsive design** adapté à tous les écrans
+
+### 2. Formulaire Corporatif Automatique
 
 #### Fonctionnalités
 - **Envoi automatique d'emails** vers `info@lasoireedurire.ca`

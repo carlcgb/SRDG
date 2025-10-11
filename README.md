@@ -4,10 +4,11 @@ Site web moderne et réactif pour La Soirée du Rire de Granby, construit avec R
 
 ## ✨ Fonctionnalités
 
-- **🎨 Design Moderne**: Interface propre avec animations personnalisées
-- **📱 Entièrement Réactif**: Optimisé pour tous les appareils
+- **🎨 Design Moderne**: Interface propre avec animations personnalisées et liens internes stylisés
+- **📱 Entièrement Réactif**: Optimisé pour tous les appareils avec navigation mobile adaptée
 - **📧 Emails Automatiques**: Formulaire corporatif avec envoi automatique via EmailJS
 - **🏢 Section Corporative**: Services d'animation pour événements d'entreprise
+- **🔗 Navigation Intelligente**: Liens internes avec défilement fluide et design cohérent
 - **📝 Formulaires Intégrés**: Soumission de blagues avec Google Sheets
 - **🔍 SEO Optimisé**: Référencement complet et données structurées
 - **⚡ Performance**: Chargement rapide et optimisé
@@ -94,6 +95,8 @@ Modifier `public/style/main.css` pour personnaliser :
 ### Contenu
 - **Événements** : `src/components/Events.js`
 - **Contact** : `src/components/Contact.js`
+- **Navigation** : `src/components/Navigation.js` - Liens internes avec défilement fluide
+- **Footer** : `src/components/Footer.js` - Navigation secondaire
 - **Médias sociaux** : `src/components/Platforms.js`
 - **Images** : `public/assets/`
 
