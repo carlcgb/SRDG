@@ -26,7 +26,7 @@ const Contact = () => {
                 Email
               </a>
               <a 
-                href="tel:+4509913336" 
+                href="tel:+14509913336" 
                 className="contact-btn phone-btn"
               >
                 <span className="contact-icon">📞</span>
