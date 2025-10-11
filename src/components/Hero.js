@@ -17,8 +17,8 @@ const Hero = () => {
     <section className="hero">
       <div className="hero-content">
         <div className="hero-text">
-          <h1 className="hero-title">La Soirée du Rire de Granby</h1>
-          <p className="hero-subtitle">Spectacles d'humour mensuels au Social Bar et Cie</p>
+          <h1 className="hero-title">La Soirée du Rire</h1>
+          <h2 className="hero-subtitle">de Granby</h2>
           <p className="hero-description">
             Découvrez les meilleurs spectacles d'humour à Granby ! Des soirées inoubliables 
             avec les humoristes québécois les plus talentueux au Social Bar et Cie. 

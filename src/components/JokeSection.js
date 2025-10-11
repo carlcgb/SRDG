@@ -10,9 +10,6 @@ const JokeSection = ({ onOpenModal }) => {
             Durant le spectacle, peut-être que votre blague pourrait être 
             utilisée pour rire avec vous... ou de VOUS! Nous avons accès LIVE
              à ce que vous écrivez, on pourrait s'en servir pour nous amuser, qui sait? 😏
-            <br />
-            <a href="#evenements" className="internal-link">Découvrez nos prochains spectacles</a> ou 
-            <a href="#contact" className="internal-link">contactez-nous</a> pour plus d'informations.
           </p>
           <button 
             className="btn btn-primary btn-large" 

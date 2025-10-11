@@ -121,9 +121,7 @@ const CorporateSection = () => {
               Parce que même les PDG ont besoin de rire ! 
               <br />
               <span className="corporate-tagline">
-                Transformez votre événement d'entreprise en soirée mémorable avec nos services d'animation corporative personnalisés. 
-                <a href="#evenements" className="internal-link">Découvrez aussi nos spectacles publics</a> ou 
-                <a href="#contact" className="internal-link">contactez-nous</a> pour un devis personnalisé.
+                Transformez votre événement d'entreprise en soirée mémorable avec nos services d'animation corporative personnalisés
               </span>
             </p>
           </header>

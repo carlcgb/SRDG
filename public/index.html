@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>La Soirée du Rire de Granby | Spectacles d'humour et comédie stand-up</title>
-    <meta name="description" content="La Soirée du Rire de Granby - Spectacles d'humour mensuels avec les meilleurs humoristes du Québec. Services d'animation corporative professionnels pour événements d'entreprise, team building et soirées corporatives. Billets disponibles pour nos spectacles au Social Bar et Cie. Animation comédie pour conférences et événements professionnels.">
+    <meta name="description" content="🎭 La Soirée du Rire de Granby - Spectacles d'humour mensuels au Social Bar et Cie. Animation corporative professionnelle pour événements d'entreprise, team building et conférences. Humoristes québécois, comédie stand-up, billets disponibles. Contact: info@lasoireedurire.ca">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="spectacles humoristiques Granby, La Soirée du Rire, humour Québec, comédie stand-up Granby, événements Granby, Social Bar et Cie, humoristes québécois, billets spectacle Granby, rire Granby, comédie locale, animation corporative, événements d'entreprise, team building, soirée corporative, humour d'entreprise, animation conférence, événement professionnel, comédien corporatif, animation Québec, fête d'entreprise, spectacle comédie, événement humour, comédien Granby, animation team building, événement corporatif Québec, humour d'entreprise Montréal, animation conférence corporative, soirée d'entreprise, événement professionnel, comédie corporative">
+    <meta name="keywords" content="spectacle humour Granby, La Soirée du Rire, comédie stand-up Québec, événements Granby, Social Bar et Cie, humoristes québécois, billets spectacle, animation corporative, team building, événements d'entreprise, conférence humour, comédien corporatif, animation Québec, fête d'entreprise, spectacle comédie, événement humour, comédien Granby, animation team building, événement corporatif, humour d'entreprise Montréal, soirée d'entreprise, comédie corporative, stand-up Granby, humour local, événement comédie, animation conférence, team building humour, événement professionnel, spectacle mensuel, humour Québec, comédie locale">
     <meta name="author" content="Carl GB">
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
@@ -16,11 +16,27 @@
     <meta name="geo.position" content="45.4;-72.73">
     <meta name="ICBM" content="45.4, -72.73">
     
+    <!-- Additional SEO Meta Tags -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="msapplication-TileColor" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="La Soirée du Rire">
+    <meta name="application-name" content="La Soirée du Rire">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=yes">
+    <meta name="revisit-after" content="7 days">
+    <meta name="rating" content="general">
+    <meta name="distribution" content="global">
+    <meta name="target" content="all">
+    <meta name="HandheldFriendly" content="true">
+    <meta name="MobileOptimized" content="320">
+    
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://lasoireedurire.ca/">
     <meta property="og:title" content="La Soirée du Rire de Granby | Spectacles d'humour et comédie stand-up">
-    <meta property="og:description" content="Découvrez La Soirée du Rire de Granby ! Des spectacles d'humour mensuels avec les meilleurs humoristes du Québec. Services d'animation corporative pour événements d'entreprise, team building et soirées corporatives. Événements au Social Bar et Cie.">
+    <meta property="og:description" content="🎭 Spectacles d'humour mensuels à Granby avec les meilleurs humoristes du Québec. Animation corporative professionnelle pour événements d'entreprise, team building et conférences. Au Social Bar et Cie. Billets disponibles !">
     <meta property="og:image" content="https://lasoireedurire.ca/style/cgb.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -31,7 +47,7 @@
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://lasoireedurire.ca/">
     <meta property="twitter:title" content="La Soirée du Rire de Granby | Spectacles d'humour">
-    <meta property="twitter:description" content="Des spectacles d'humour mensuels avec les meilleurs humoristes du Québec à Granby.">
+    <meta property="twitter:description" content="🎭 Spectacles d'humour mensuels à Granby + Animation corporative pour entreprises. Humoristes québécois, comédie stand-up, team building. Au Social Bar et Cie.">
     <meta property="twitter:image" content="https://lasoireedurire.ca/style/cgb.jpg">
     
     <link rel="icon" type="image/svg+xml" href="%PUBLIC_URL%/favicon.svg">
@@ -41,11 +57,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
     
     <!-- Preload critical resources -->
-    <link rel="preload" href="%PUBLIC_URL%/style/main.css" as="style">
+    <link rel="preload" href="%PUBLIC_URL%/style/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="%PUBLIC_URL%/style/cgb.jpg" as="image">
-    <link rel="stylesheet" href="%PUBLIC_URL%/style/main.css">
-    <link rel="stylesheet" href="%PUBLIC_URL%/style/tilted.css">
-    <link rel="stylesheet" href="%PUBLIC_URL%/style/PillNav.css">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Bebas+Neue&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- Critical CSS inline for above-the-fold content -->
+    <style>
+      /* Critical CSS for above-the-fold content */
+      body { margin: 0; font-family: 'Teko', sans-serif; }
+      #root { min-height: 100vh; }
+      .hero-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    </style>
+    
+    <!-- Non-critical CSS -->
+    <link rel="stylesheet" href="%PUBLIC_URL%/style/main.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="%PUBLIC_URL%/style/tilted.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="%PUBLIC_URL%/style/PillNav.css" media="print" onload="this.media='all'">
+    
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="dns-prefetch" href="//www.googletagmanager.com">
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -140,12 +172,14 @@
       "@context": "https://schema.org",
       "@type": "EventSeries",
       "name": "La Soirée du Rire de Granby",
-      "description": "Série de spectacles d'humour mensuels à Granby",
+      "description": "Série de spectacles d'humour mensuels à Granby avec les meilleurs humoristes du Québec",
       "url": "https://lasoireedurire.ca/#evenements",
       "organizer": {
         "@type": "Organization",
         "name": "La Soirée du Rire de Granby",
-        "url": "https://lasoireedurire.ca"
+        "url": "https://lasoireedurire.ca",
+        "email": "info@lasoireedurire.ca",
+        "telephone": "+1-450-991-3336"
       },
       "location": {
         "@type": "Place",
@@ -158,7 +192,76 @@
         }
       },
       "eventStatus": "https://schema.org/EventScheduled",
-      "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode"
+      "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+      "category": "Comedy",
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "General Public"
+      }
+    }
+    </script>
+    
+    <!-- Structured Data for Local Business -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "@id": "https://lasoireedurire.ca/#business",
+      "name": "La Soirée du Rire de Granby",
+      "image": "https://lasoireedurire.ca/style/cgb.jpg",
+      "description": "Organisateur de spectacles d'humour mensuels et services d'animation corporative à Granby",
+      "url": "https://lasoireedurire.ca",
+      "telephone": "+1-450-991-3336",
+      "email": "info@lasoireedurire.ca",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Granby",
+        "addressRegion": "QC",
+        "addressCountry": "CA"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 45.4,
+        "longitude": -72.73
+      },
+      "openingHours": "Mo-Su 19:00-23:00",
+      "priceRange": "$$",
+      "paymentAccepted": "Cash, Credit Card",
+      "currenciesAccepted": "CAD"
+    }
+    </script>
+    
+    <!-- Structured Data for FAQ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Quand ont lieu les spectacles de La Soirée du Rire ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Les spectacles ont lieu mensuellement au Social Bar et Cie à Granby. Consultez notre section événements pour les dates exactes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Proposez-vous des services d'animation corporative ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Oui, nous offrons des services d'animation corporative professionnels pour événements d'entreprise, team building, conférences et soirées corporatives."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Comment réserver des billets ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Vous pouvez réserver vos billets en nous contactant par téléphone au 450-991-3336 ou par email à info@lasoireedurire.ca"
+          }
+        }
+      ]
     }
     </script>
     

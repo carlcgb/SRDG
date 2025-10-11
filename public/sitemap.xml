@@ -7,7 +7,7 @@
   <!-- Page d'accueil -->
   <url>
     <loc>https://lasoireedurire.ca/</loc>
-    <lastmod>2024-12-19</lastmod>
+    <lastmod>2025-10-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -15,7 +15,15 @@
   <!-- Section événements -->
   <url>
     <loc>https://lasoireedurire.ca/#evenements</loc>
-    <lastmod>2024-12-19</lastmod>
+    <lastmod>2025-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Section corporative -->
+  <url>
+    <loc>https://lasoireedurire.ca/#corporate</loc>
+    <lastmod>2025-10-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -23,7 +31,15 @@
   <!-- Section contact -->
   <url>
     <loc>https://lasoireedurire.ca/#contact</loc>
-    <lastmod>2024-12-19</lastmod>
+    <lastmod>2025-10-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Section hero -->
+  <url>
+    <loc>https://lasoireedurire.ca/#hero</loc>
+    <lastmod>2025-10-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -31,7 +47,7 @@
   <!-- Section plateformes -->
   <url>
     <loc>https://lasoireedurire.ca/#plateformes</loc>
-    <lastmod>2024-12-19</lastmod>
+    <lastmod>2025-10-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -39,25 +55,9 @@
   <!-- Section blagues -->
   <url>
     <loc>https://lasoireedurire.ca/#blagues</loc>
-    <lastmod>2024-12-19</lastmod>
+    <lastmod>2025-10-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-  </url>
-  
-  <!-- Section corporative -->
-  <url>
-    <loc>https://lasoireedurire.ca/#corporate</loc>
-    <lastmod>2024-12-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  
-  <!-- Section hero -->
-  <url>
-    <loc>https://lasoireedurire.ca/#hero</loc>
-    <lastmod>2024-12-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   
 </urlset>
