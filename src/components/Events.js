@@ -69,9 +69,9 @@ const Events = () => {
       location: "Le Social Bar et Cie",
       facebookUrl: "https://www.facebook.com/lsdrg",
       guests: [
-        { name: "À déterminer", url: "#" },
-        { name: "À déterminer", url: "#" },
-        { name: "À déterminer", url: "#" }
+        { name: "À déterminer", url: "" },
+        { name: "À déterminer", url: "" },
+        { name: "À déterminer", url: "" }
       ],
       isPast: false,  // Set to true to grey out this event
       isNext: false,   // Set to true to highlight this as the next event
@@ -88,9 +88,9 @@ const Events = () => {
       location: "Le Social Bar et Cie",
       facebookUrl: "https://www.facebook.com/lsdrg",
       guests: [
-        { name: "À déterminer", url: "#" },
-        { name: "À déterminer", url: "#" },
-        { name: "À déterminer", url: "#" }
+        { name: "À déterminer", url: "" },
+        { name: "À déterminer", url: "" },
+        { name: "À déterminer", url: "" }
       ],
       isPast: false,  // Set to true to grey out this event
       isNext: false,   // Set to true to highlight this as the next event
@@ -107,9 +107,9 @@ const Events = () => {
       location: "Le Social Bar et Cie",
       facebookUrl: "https://www.facebook.com/lsdrg",
       guests: [
-        { name: "À déterminer", url: "#" },
-        { name: "À déterminer", url: "#" },
-        { name: "À déterminer", url: "#" }
+        { name: "À déterminer", url: "" },
+        { name: "À déterminer", url: "" },
+        { name: "À déterminer", url: "" }
       ],
       isPast: false,  // Set to true to grey out this event
       isNext: false,   // Set to true to highlight this as the next event
@@ -126,9 +126,9 @@ const Events = () => {
       location: "Le Social Bar et Cie",
       facebookUrl: "https://www.facebook.com/lsdrg",
       guests: [
-        { name: "À déterminer", url: "#" },
-        { name: "À déterminer", url: "#" },
-        { name: "À déterminer", url: "#" }
+        { name: "À déterminer", url: "" },
+        { name: "À déterminer", url: "" },
+        { name: "À déterminer", url: "" }
       ],
       isPast: false,  // Set to true to grey out this event
       isNext: false,   // Set to true to highlight this as the next event
@@ -254,7 +254,7 @@ END:VCALENDAR`;
                           className="facebook-btn"
                           title="Voir l'événement sur Facebook"
                         >
-                          Facebook
+                          {event.isNext ? "ÉVÉNEMENT" : "Facebook"}
                         </a>
                       </div>
                     </div>

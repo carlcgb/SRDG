@@ -42,7 +42,13 @@ const Hero = () => {
         </div>
         <div className="hero-visual">
           <div className="mascot-placeholder">
-            <img src={process.env.PUBLIC_URL + "/style/cgb.jpg"} alt="La Soirée du Rire de Granby" className="mascot" />
+            <img src={process.env.PUBLIC_URL + "/style/cgb.jpg"} alt="La Soirée du Rire de Granby" className="mascot" 
+            style={{
+              border:"3px solid red",
+              boxShadow:"0 4px 10px 0 rgba(168, 53, 53, 1)",
+            }}
+            
+            />
           </div>
           <div className="animator-credit">
             <span className="animator-text">Animé par</span>
