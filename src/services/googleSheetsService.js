@@ -5,8 +5,6 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzkPj42gMV3uh
 
 export const submitJokeToSheets = async (jokeData) => {
   try {
-    console.log('🚀 Starting joke submission via iframe...');
-    console.log('📝 Joke data received:', jokeData);
     
       // Create a hidden iframe to submit the data
       return new Promise((resolve) => {
@@ -64,7 +62,6 @@ export const submitJokeToSheets = async (jokeData) => {
       
       // Handle iframe load
       iframe.onload = () => {
-        console.log('✅ Form submitted successfully via iframe');
         // Clean up elements safely
         try {
           if (document.body.contains(form)) {
@@ -80,7 +77,6 @@ export const submitJokeToSheets = async (jokeData) => {
       };
       
       iframe.onerror = () => {
-        console.log('❌ Error submitting form via iframe');
         // Clean up elements safely
         try {
           if (document.body.contains(form)) {
@@ -101,7 +97,6 @@ export const submitJokeToSheets = async (jokeData) => {
       // Fallback timeout
       setTimeout(() => {
         if (document.body.contains(iframe)) {
-          console.log('⏰ Form submission timeout, assuming success');
           // Clean up elements safely
           try {
             if (document.body.contains(form)) {

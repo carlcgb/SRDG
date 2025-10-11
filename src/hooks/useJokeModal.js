@@ -16,30 +16,23 @@ export const useJokeModal = () => {
 
   const handleJokeSubmission = async (jokeData) => {
     try {
-      console.log('🎭 Joke submission started in modal hook');
-      console.log('📋 Joke data in modal:', jokeData);
       
       // Afficher un message de chargement
       showNotification('Envoi de votre blague en cours...', 'info');
       
       // Soumettre à Google Sheets
-      console.log('📤 Calling submitJokeToSheets...');
       const result = await submitJokeToSheets(jokeData);
-      console.log('📥 Result from submitJokeToSheets:', result);
       
       if (result.success) {
         // Afficher message de confirmation
         showNotification('Merci pour votre blague ! Nous la lirons lors de nos prochains spectacles.', 'success');
-        console.log('✅ Joke submitted successfully!');
       } else {
         // Afficher message d'erreur
         showNotification('Erreur lors de l\'envoi. Veuillez réessayer.', 'error');
-        console.log('❌ Joke submission failed:', result.error);
       }
     } catch (error) {
       // Afficher message d'erreur
       showNotification('Erreur lors de l\'envoi. Veuillez réessayer.', 'error');
-      console.log('💥 Error in handleJokeSubmission:', error);
     }
     
     // Fermer le modal

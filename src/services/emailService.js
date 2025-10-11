@@ -19,7 +19,6 @@ if (isEmailJSConfigured) {
 // Main EmailJS method for automatic email sending
 export const sendCorporateFormEmail = async (formData) => {
   try {
-    console.log('📧 Sending corporate form email automatically...');
 
     // Check if EmailJS is configured
     if (!isEmailJSConfigured) {
@@ -58,7 +57,6 @@ export const sendCorporateFormEmail = async (formData) => {
       emailData
     );
 
-    console.log('✅ Email sent successfully:', response);
     return { 
       success: true, 
       message: 'Email envoyé automatiquement avec succès',
@@ -68,7 +66,6 @@ export const sendCorporateFormEmail = async (formData) => {
   } catch (error) {
     console.error('❌ Error sending email:', error);
     // Fallback to mailto if EmailJS fails
-    console.log('🔄 Falling back to mailto method...');
     return await sendCorporateFormEmailFallback(formData);
   }
 };
@@ -76,7 +73,6 @@ export const sendCorporateFormEmail = async (formData) => {
 // Fallback method using mailto link
 export const sendCorporateFormEmailFallback = (formData) => {
   try {
-    console.log('📧 Creating mailto fallback...');
     
     const subject = `Demande de devis corporatif - ${formData.company}`;
     

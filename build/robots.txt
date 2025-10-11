@@ -7,12 +7,20 @@ Sitemap: https://lasoireedurire.ca/sitemap.xml
 # Crawl-delay
 Crawl-delay: 1
 
-# Disallow certain file types
+# Disallow certain file types and directories
 Disallow: /static/
 Disallow: /*.js$
 Disallow: /*.css$
 Disallow: /*.map$
+Disallow: /node_modules/
+Disallow: /src/
 
-# Allow important directories
+# Allow important directories and files
 Allow: /style/
 Allow: /favicon.svg
+Allow: /manifest.json
+Allow: /robots.txt
+Allow: /sitemap.xml
+
+# Host directive
+Host: https://lasoireedurire.ca
