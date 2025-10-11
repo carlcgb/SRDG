@@ -7,7 +7,12 @@ const Contact = () => {
         <div className="contact-content">
           <div className="contact-info">
             <h2 className="section-title">Restons en contact !</h2>
-            <p>Pour toute question, suggestion ou pour réserver vos places :</p>
+            <p>
+              Pour toute question, suggestion ou pour réserver vos places. 
+              <a href="#evenements" className="internal-link">Découvrez nos prochains événements</a>, 
+              <a href="#corporate" className="internal-link">informez-vous sur nos services corporatifs</a> ou 
+              <a href="#blague" className="internal-link">partagez une blague</a> avec nous !
+            </p>
             <div className="contact-methods">
               <a 
                 href="https://m.me/182580584934456" 
