@@ -20,8 +20,9 @@ const Hero = () => {
           <h1 className="hero-title">La Soirée du Rire</h1>
           <h2 className="hero-subtitle">de Granby</h2>
           <p className="hero-description">
-            Venez rire avec nous ! Des soirées inoubliables remplies d'humour, 
-            de bonne humeur et de moments de pure joie à Granby.
+            Découvrez les meilleurs spectacles d'humour à Granby ! Des soirées inoubliables 
+            avec les humoristes québécois les plus talentueux au Social Bar et Cie. 
+            Réservez vos billets pour des moments de pure joie et de fous rires.
           </p>
           <div className="hero-buttons">
             <a 
@@ -42,7 +43,7 @@ const Hero = () => {
         </div>
         <div className="hero-visual">
           <div className="mascot-placeholder">
-            <img src={process.env.PUBLIC_URL + "/style/cgb.jpg"} alt="La Soirée du Rire de Granby" className="mascot" 
+            <img src={process.env.PUBLIC_URL + "/style/cgb.jpg"} alt="La Soirée du Rire de Granby - Spectacles d'humour et comédie stand-up au Social Bar et Cie" className="mascot" 
             style={{
               border:"3px solid red",
               boxShadow:"0 4px 10px 0 rgba(168, 53, 53, 1)",

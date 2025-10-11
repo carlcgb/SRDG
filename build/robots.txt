@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://lasoireedurire.ca/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Disallow certain file types
+Disallow: /static/
+Disallow: /*.js$
+Disallow: /*.css$
+Disallow: /*.map$
+
+# Allow important directories
+Allow: /style/
+Allow: /favicon.svg

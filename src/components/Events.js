@@ -1,12 +1,12 @@
 import React from 'react';
 
-const Events = () => {
+const Events = ({ onEventsLoad }) => {
   const events = [
     {
       day: "20",
       month: "SEPT",
       title: "ÉPISODE 1 - SAISON 4",
-      description: "C'est le lancement officiel de la saison 4!! Plein de surprise et un line-up en feux!!! 🔥",
+      description: "On revient en force ! 🔥 La saison 4 de La Soirée du Rire débarque à Granby avec un line-up de malade au Social Bar et Cie. Des humoristes québécois qui vont vous faire péter de rire ! Des surprises à en perdre la tête, pis on vous garantit que vous allez en manger une maudite bonne !",
       time: "20h00",
       location: "Le Social Bar et Cie",
       facebookUrl: "https://www.facebook.com/share/1FWLB3CGjy/",
@@ -26,7 +26,7 @@ const Events = () => {
       day: "11",
       month: "OCT",
       title: "ÉPISODE 2 - SAISON 4",
-      description: "Après la diffusion du court métrage de Carl avant le spectacle, le 11 on a un autre mystère à découvrir!",
+      description: "On a encore des trucs bizarres ! 😈 Après le court métrage de Carl (qui va vous faire capoter), on a un mystère qui va vous faire péter... de rire ! Des humoristes québécois qui vont vous faire rire aux éclats au Social Bar et Cie. Une soirée de malade qui va vous faire oublier que c'est l'automne !",
       time: "20h00",
       location: "Le Social Bar et Cie",
       facebookUrl: "https://www.facebook.com/share/17MsjAdxdH/",
@@ -45,7 +45,7 @@ const Events = () => {
       day: "8",
       month: "NOV",
       title: "ÉPISODE 3 - SAISON 4",
-      description: "C'est la dernière de 2025! On va se souhaiter Joyeux Noël deux mois d'avance  🎅🏻",
+      description: "C'est déjà la dernière de 2024 ! 🎅🏻 On finit l'année en beauté avec des humoristes québécois qui vont vous faire péter de rire au Social Bar et Cie. On va se souhaiter Joyeux Noël deux mois d'avance pis on va se gâter comme des rois ! Des fous rires garantis ou on vous rembourse... en bières !",
       time: "20h00",
       location: "Le Social Bar et Cie",
       facebookUrl: "https://www.facebook.com/lsdrg",
@@ -64,7 +64,7 @@ const Events = () => {
       day: "10",
       month: "JAN",
       title: "ÉPISODE 4 - SAISON 4",
-      description: "C'est la première de 2026!!! C'est le temps des résolutions... ou pas 😅",
+      description: "On est en 2025 ! 😅 Nouvelle année, nouveaux fous rires avec des humoristes québécois qui vont vous faire péter de rire au Social Bar et Cie. C'est le temps des résolutions... ou pas ! (On sait ben que vous allez les briser anyway) Une soirée de malade pour bien commencer l'année pis oublier que vous avez encore pas tenu vos promesses !",
       time: "20h00",
       location: "Le Social Bar et Cie",
       facebookUrl: "https://www.facebook.com/lsdrg",
@@ -83,7 +83,7 @@ const Events = () => {
       day: "7",
       month: "FEV",
       title: "ÉPISODE 5 - SAISON 4",
-      description: "Grand festival de 3 jours avec des têtes d'affiche nationales.",
+      description: "Grosse soirée encore une fois ! 🔥 Des têtes d'affiche nationales pis des humoristes québécois de malade au Social Bar et Cie. Un événement de malade qui va vous faire péter de rire ! Pis si vous manquez ça, on va vous faire sentir coupable jusqu'à la prochaine fois !",
       time: "20h00",
       location: "Le Social Bar et Cie",
       facebookUrl: "https://www.facebook.com/lsdrg",
@@ -102,7 +102,7 @@ const Events = () => {
       day: "14",
       month: "MARS",
       title: "ÉPISODE 6 - SAISON 4",
-      description: "Humour adapté à toute la famille, des enfants aux grands-parents.",
+      description: "On est en mars pis on a encore des trucs de malade ! 😂 Des humoristes québécois qui vont vous faire péter de rire au Social Bar et Cie. Une soirée de comédie stand-up exceptionnelle qui va vous faire oublier que l'hiver finit jamais ! Venez rire avec nous, pis si vous riez pas, on vous rembourse... en jokes !",
       time: "20h00",
       location: "Le Social Bar et Cie",
       facebookUrl: "https://www.facebook.com/lsdrg",
@@ -121,7 +121,7 @@ const Events = () => {
       day: "18",
       month: "AVRIL",
       title: "ÉPISODE 7 - SAISON 4",
-      description: "C'est la première de 2026!!! C'est le temps des résolutions... ou pas 😅",
+      description: "C'est le printemps ! 🌸 (Enfin, on espère !) Des humoristes québécois exceptionnels qui vont vous faire péter de rire au Social Bar et Cie. C'est le temps des résolutions... ou pas ! (On sait ben que vous les avez déjà brisées) Une soirée de malade pour célébrer que la neige fond enfin... ou pas ! 😅",
       time: "20h00",
       location: "Le Social Bar et Cie",
       facebookUrl: "https://www.facebook.com/lsdrg",
@@ -137,6 +137,13 @@ const Events = () => {
       calendarDuration: "2h" // Duration for calendar
     }
   ];
+
+  // Pass events data to parent component for structured data
+  React.useEffect(() => {
+    if (onEventsLoad) {
+      onEventsLoad(events);
+    }
+  }, [events, onEventsLoad]);
 
   // Manual control flags - you can easily toggle these to control which events are greyed out or highlighted
   // Simply change true/false values in the events array above
@@ -199,7 +206,11 @@ END:VCALENDAR`;
     <section id="evenements" className="events-section">
       <div className="container">
         <div className="section-header">
-          <h2 className="section-title">Prochains Événements</h2>
+          <h2 className="section-title">Prochains Spectacles d'Humour à Granby</h2>
+          <p className="section-description">
+            Découvrez notre programmation de spectacles d'humour mensuels au Social Bar et Cie de Granby. 
+            Des humoristes québécois de talent vous attendent pour des soirées mémorables !
+          </p>
         </div>
         <div className="events-grid">
           {events.map((event, index) => {

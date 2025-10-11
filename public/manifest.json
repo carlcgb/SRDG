@@ -1,0 +1,19 @@
+{
+  "short_name": "La Soirée du Rire",
+  "name": "La Soirée du Rire de Granby - Spectacles d'humour",
+  "description": "Découvrez les meilleurs spectacles d'humour à Granby avec La Soirée du Rire. Des humoristes québécois de talent au Social Bar et Cie.",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#a83535",
+  "background_color": "#ffffff",
+  "lang": "fr-CA",
+  "scope": "/",
+  "orientation": "portrait-primary"
+}
