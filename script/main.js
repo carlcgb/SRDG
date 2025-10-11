@@ -67,6 +67,14 @@ function initializeScrollEffects() {
 
 // Effet de tilt pour les cartes d'événements
 function initializeEventCards() {
+    // Check if device is mobile
+    const isMobile = window.innerWidth <= 768;
+    
+    // Don't apply tilt effects on mobile devices
+    if (isMobile) {
+        return;
+    }
+    
     const eventCards = document.querySelectorAll('.event-card');
     
     eventCards.forEach(card => {
@@ -291,6 +299,14 @@ function debug(message, data = null) {
 
 // Effet de tilt pour la mascotte
 function initializeMascotTilt() {
+    // Check if device is mobile
+    const isMobile = window.innerWidth <= 768;
+    
+    // Don't apply tilt effects on mobile devices
+    if (isMobile) {
+        return;
+    }
+    
     const mascotPlaceholder = document.querySelector('.mascot-placeholder');
     const mascot = document.querySelector('.mascot');
     

@@ -17,14 +17,25 @@
     display: none;
   }
   
-  @media (max-width: 640px) {
-    .tilted-card-mobile-alert {
-      display: block;
-    }
-    .tilted-card-caption {
-      display: none;
-    }
+@media (max-width: 640px) {
+  .tilted-card-mobile-alert {
+    display: block;
   }
+  .tilted-card-caption {
+    display: none;
+  }
+  
+  /* Disable tilted effects on mobile */
+  .tilted-card-figure {
+    perspective: none !important;
+    transform: none !important;
+  }
+  
+  .tilted-card-inner {
+    transform: none !important;
+    transform-style: flat !important;
+  }
+}
   
   .tilted-card-inner {
     position: relative;

@@ -2,6 +2,14 @@ import { useEffect } from 'react';
 
 export const useEventCards = () => {
   useEffect(() => {
+    // Check if device is mobile
+    const isMobile = window.innerWidth <= 768;
+    
+    // Don't apply tilt effects on mobile devices
+    if (isMobile) {
+      return;
+    }
+    
     const eventCards = document.querySelectorAll('.event-card');
     
     eventCards.forEach(card => {

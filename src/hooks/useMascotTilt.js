@@ -2,6 +2,14 @@ import { useEffect } from 'react';
 
 export const useMascotTilt = () => {
   useEffect(() => {
+    // Check if device is mobile
+    const isMobile = window.innerWidth <= 768;
+    
+    // Don't apply tilt effects on mobile devices
+    if (isMobile) {
+      return;
+    }
+    
     const mascotPlaceholder = document.querySelector('.mascot-placeholder');
     const mascot = document.querySelector('.mascot');
     

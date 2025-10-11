@@ -231,7 +231,6 @@ END:VCALENDAR`;
                       <p className="event-description">
                         {event.description}
                         <br />
-                        <a href="#contact" className="internal-link">Réservez vos billets</a> ou découvrez nos <a href="#corporate" className="internal-link">services d'animation corporative</a>.
                       </p>
                       <div className="event-guests">
                         <h4 className="guests-title">Invités:</h4>
@@ -252,6 +251,9 @@ END:VCALENDAR`;
                       <div className="event-details">
                         <span className="event-time">{event.time}</span>
                         <span className="event-location">{event.location}</span>
+                        <p className="event-booking-text">
+                          <a href="#contact" className="internal-link">Réservez vos billets</a> ou découvrez nos <a href="#corporate" className="internal-link">services d'animation corporative</a>.
+                        </p>
                       </div>
                       <div className="event-actions">
                         <button 

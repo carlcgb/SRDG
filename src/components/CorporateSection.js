@@ -115,7 +115,7 @@ const CorporateSection = () => {
               className="corporate-title"
               itemProp="name"
             >
-              🎭 <span className="highlight">Événements Corporatifs</span> 🎭
+               <span className="highlight">Événements Corporatifs</span> 
             </h2>
             <p className="corporate-subtitle" itemProp="description">
               Parce que même les PDG ont besoin de rire ! 
