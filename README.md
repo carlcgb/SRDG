@@ -265,7 +265,7 @@ Ce modèle est parfait pour :
 
 Pour des modifications personnalisées ou du support :
 - **Courriel**: info@lasoireedurire.com
-- **Développement Personnalisé**: Disponible sur demande
+- **Développement Personnalisé**: Écris-moi sur facebook ou Instagram 👉🏻 Carl GB
 
 ## 📄 Licence
 
