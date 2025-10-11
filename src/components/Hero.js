@@ -41,12 +41,12 @@ const Hero = () => {
           </div>
         </div>
         <div className="hero-visual">
-          <div className="animator-credit">
-            <span className="animator-text">Animé par</span>
-            <span className="animator-name">CARL GB</span>
-          </div>
           <div className="mascot-placeholder">
             <img src={process.env.PUBLIC_URL + "/style/cgb.jpg"} alt="La Soirée du Rire de Granby" className="mascot" />
+          </div>
+          <div className="animator-credit">
+            <span className="animator-text">Animé par</span>
+            <span className="animator-name">Carl GB</span>
           </div>
         </div>
       </div>
