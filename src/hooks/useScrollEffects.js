@@ -4,25 +4,7 @@ export const useScrollEffects = () => {
   useEffect(() => {
     let isScrolling = false;
 
-    // Navigation scroll effect
-    const handleScroll = () => {
-      if (!isScrolling) {
-        requestAnimationFrame(() => {
-          const navbar = document.querySelector('.navbar');
-          if (navbar) {
-            if (window.scrollY > 100) {
-              navbar.classList.add('scrolled');
-              navbar.classList.remove('hidden');
-            } else {
-              navbar.classList.remove('scrolled');
-              navbar.classList.add('hidden');
-            }
-          }
-          isScrolling = false;
-        });
-        isScrolling = true;
-      }
-    };
+    // Navigation scroll effect - removed to keep navbar static
 
     // Observer pour les animations d'apparition
     const observerOptions = {
@@ -68,12 +50,10 @@ export const useScrollEffects = () => {
     };
 
     // Event listeners
-    window.addEventListener('scroll', handleScroll);
     window.addEventListener('load', handleLoad);
 
     // Cleanup
     return () => {
-      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('load', handleLoad);
       observer.disconnect();
     };

@@ -5,7 +5,7 @@ const Navigation = () => {
     e.preventDefault();
     const targetElement = document.querySelector(targetId);
     if (targetElement) {
-      const offsetTop = targetElement.offsetTop - 100;
+      const offsetTop = targetElement.offsetTop;
       window.scrollTo({
         top: offsetTop,
         behavior: 'smooth'
