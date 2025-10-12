@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useMemo, useCallback } from 'react';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import Events from './components/Events';
@@ -19,7 +19,7 @@ import { useParallax } from './hooks/useParallax';
 const JokeModal = lazy(() => import('./components/JokeModal'));
 
 function App() {
-  // Hooks personnalisés
+  // Hooks personnalisés - only run once on mount
   useScrollEffects();
   useMascotTilt();
   useEventCards();
@@ -30,13 +30,17 @@ function App() {
   // State for events data (for structured data)
   const [events, setEvents] = React.useState([]);
   
-  const handleEventsLoad = (eventsData) => {
+  // Memoize the events handler to prevent unnecessary re-renders
+  const handleEventsLoad = useCallback((eventsData) => {
     setEvents(eventsData);
-  };
+  }, []);
+  
+  // Memoize the structured data to prevent re-renders
+  const structuredData = useMemo(() => <StructuredData events={events} />, [events]);
 
   return (
     <div className="App">
-      <StructuredData events={events} />
+      {structuredData}
       <Navigation />
       <Hero />
       <Events onEventsLoad={handleEventsLoad} />
