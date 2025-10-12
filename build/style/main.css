@@ -1,5 +1,21 @@
 /* Reset et base */
 
+/* Performance optimizations to prevent layout shifts */
+* {
+  font-display: swap;
+}
+
+/* Optimize button rendering to prevent layout shifts */
+.btn {
+  /* Prevent layout shift by reserving space */
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Use transform instead of changing dimensions for hover effects */
+  will-change: transform;
+}
+
 /* Internal Links - No hover animations */
 .internal-link {
   color: var(--primary-color);
@@ -403,6 +419,9 @@ body {
 .hero-buttons {
     display: flex;
     gap: 30px;
+    /* Prevent layout shift by reserving space */
+    min-height: 60px;
+    align-items: center;
 }
 
 .hero-visual {
@@ -469,6 +488,9 @@ body {
     animation: slideUp 1.5s ease-out forwards;
     opacity: 0;
     transform: translateY(100px);
+    /* Prevent layout shift by reserving space */
+    min-width: 400px;
+    min-height: 400px;
 }
 
 .mascot {
@@ -2056,7 +2078,7 @@ body {
 
 .corporate-form-container {
     background: transparent;
-    padding: 30px 30px 0px 12px;
+    padding: 40px;
     border-radius: 0;
     box-shadow: none;
     position: relative;
@@ -2382,6 +2404,13 @@ body {
     font-size: 1.2rem;
 }
 
+/* Desktop-specific styles for corporate form */
+@media (min-width: 1025px) {
+    .corporate-form-container {
+        padding: 50px;
+    }
+}
+
 /* Responsive Design for Corporate Section */
 @media (max-width: 1024px) {
     .corporate-grid {
@@ -2391,6 +2420,10 @@ body {
     
     .corporate-title {
         font-size: 3rem;
+    }
+    
+    .corporate-form-container {
+        padding: 40px;
     }
 }
 
@@ -2412,7 +2445,7 @@ body {
     }
     
     .corporate-form-container {
-        padding: 30px 20px;
+        padding: 30px;
         max-width: 100%;
     }
     
@@ -2450,7 +2483,7 @@ body {
     }
     
     .corporate-form-container {
-        padding: 30px 30px 30px 30px;
+        padding: 30px;
         max-width: 100%;
     }
     

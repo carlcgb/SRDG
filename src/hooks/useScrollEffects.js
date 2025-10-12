@@ -2,60 +2,70 @@ import { useEffect } from 'react';
 
 export const useScrollEffects = () => {
   useEffect(() => {
-    let isScrolling = false;
+    // Use requestAnimationFrame to batch DOM operations
+    const initScrollEffects = () => {
+      requestAnimationFrame(() => {
+        // Observer pour les animations d'apparition
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+        };
 
-    // Navigation scroll effect - removed to keep navbar static
+        const observer = new IntersectionObserver((entries) => {
+          // Use requestAnimationFrame to batch style changes
+          requestAnimationFrame(() => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+              }
+            });
+          });
+        }, observerOptions);
 
-    // Observer pour les animations d'apparition
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
+        // Batch DOM queries
+        const eventCards = document.querySelectorAll('.event-card');
+        const platformCards = document.querySelectorAll('.platform-card');
+        
+        // Apply styles and observe in batches
+        [...eventCards, ...platformCards].forEach(card => {
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(50px)';
+          card.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+          observer.observe(card);
+        });
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = 'translateY(0)';
-        }
+        // Store observer for cleanup
+        window.scrollObserver = observer;
       });
-    }, observerOptions);
-
-    // Observer les cartes d'événements
-    const eventCards = document.querySelectorAll('.event-card');
-    eventCards.forEach(card => {
-      card.style.opacity = '0';
-      card.style.transform = 'translateY(50px)';
-      card.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-      observer.observe(card);
-    });
-
-    // Observer les cartes de plateformes
-    const platformCards = document.querySelectorAll('.platform-card');
-    platformCards.forEach(card => {
-      card.style.opacity = '0';
-      card.style.transform = 'translateY(50px)';
-      card.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-      observer.observe(card);
-    });
-
-    // Animation de chargement de la page
-    const handleLoad = () => {
-      document.body.style.opacity = '0';
-      document.body.style.transition = 'opacity 0.5s ease-in';
-      
-      setTimeout(() => {
-        document.body.style.opacity = '1';
-      }, 100);
     };
 
-    // Event listeners
+    // Animation de chargement de la page - optimized
+    const handleLoad = () => {
+      requestAnimationFrame(() => {
+        document.body.style.opacity = '0';
+        document.body.style.transition = 'opacity 0.5s ease-in';
+        
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            document.body.style.opacity = '1';
+          }, 100);
+        });
+      });
+    };
+
+    // Initialize effects after a short delay to prevent blocking
+    const timeoutId = setTimeout(initScrollEffects, 100);
     window.addEventListener('load', handleLoad);
 
     // Cleanup
     return () => {
+      clearTimeout(timeoutId);
       window.removeEventListener('load', handleLoad);
-      observer.disconnect();
+      if (window.scrollObserver) {
+        window.scrollObserver.disconnect();
+        delete window.scrollObserver;
+      }
     };
   }, []);
 };

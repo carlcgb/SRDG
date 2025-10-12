@@ -43,12 +43,19 @@ const Hero = () => {
         </div>
         <div className="hero-visual">
           <div className="mascot-placeholder">
-            <img src={process.env.PUBLIC_URL + "/style/cgb.jpg"} alt="La Soirée du Rire de Granby - Spectacles d'humour et comédie stand-up au Social Bar et Cie" className="mascot" 
-            style={{
-              border:"3px solid red",
-              boxShadow:"0 4px 10px 0 rgba(168, 53, 53, 1)",
-            }}
-            
+            <img 
+              src={process.env.PUBLIC_URL + "/style/cgb.jpg"} 
+              alt="La Soirée du Rire de Granby - Spectacles d'humour et comédie stand-up au Social Bar et Cie" 
+              className="mascot" 
+              style={{
+                border:"3px solid red",
+                boxShadow:"0 4px 10px 0 rgba(168, 53, 53, 1)",
+              }}
+              loading="eager"
+              width="300"
+              height="300"
+              decoding="async"
+              fetchPriority="high"
             />
           </div>
           <div className="animator-credit">

@@ -271,11 +271,11 @@
       }
     </style>
     
-    <!-- Load fonts asynchronously -->
+    <!-- Load fonts asynchronously with font-display swap -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Bebas+Neue&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Bebas+Neue&display=swap"></noscript>
     
-    <!-- Load CSS asynchronously -->
+    <!-- Load CSS asynchronously with media queries for better loading -->
     <link rel="preload" href="%PUBLIC_URL%/style/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="%PUBLIC_URL%/style/tilted.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
@@ -283,20 +283,20 @@
       <link rel="stylesheet" href="%PUBLIC_URL%/style/tilted.css">
     </noscript>
     
+    <!-- Critical CSS for above-the-fold content is already inline -->
+    
     <!-- DNS prefetch for external resources -->
     <link rel="dns-prefetch" href="//fonts.googleapis.com">
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link rel="dns-prefetch" href="//www.googletagmanager.com">
     
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-174Z686352"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-174Z686352');
-    </script>
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://www.googletagmanager.com/gtm.js?id=GTM-NLR44QK8" as="script">
+    
+    <!-- Cache control headers for better performance -->
+    <meta http-equiv="Cache-Control" content="public, max-age=31536000">
+    
+    <!-- Google Analytics is handled by GTM below -->
 </head>
 <body>
     <!-- Google Tag Manager (noscript) -->
@@ -315,6 +315,21 @@
       j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
       })(window,document,'script','dataLayer','GTM-NLR44QK8');
+    </script>
+    
+    <!-- Service Worker Registration for better caching -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+              console.log('SW registered: ', registration);
+            })
+            .catch(function(registrationError) {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
     </script>
     
     <!-- Structured Data JSON-LD - Loaded at bottom to prevent render blocking -->
