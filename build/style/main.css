@@ -546,8 +546,8 @@ body {
 }
 
 .btn-large {
-    padding: 16px 48px;
-    font-size: 1.3rem;
+    padding: 6px 28px;
+    font-size: 1.1rem;
 }
 
 /* Sections */
@@ -1211,6 +1211,14 @@ body {
 
 .contact-icon {
     font-size: 1.5rem;
+}
+
+.contact-additional-info {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-top: 30px;
+    text-align: center;
+    line-height: 1.5;
 }
 
 .messenger-btn:hover {
@@ -2016,7 +2024,7 @@ body {
 
 .corporate-form-container {
     background: transparent;
-    padding: 32px 40px;
+    padding: 30px 30px 0px 12px;
     border-radius: 0;
     box-shadow: none;
     position: relative;
@@ -2410,7 +2418,7 @@ body {
     }
     
     .corporate-form-container {
-        padding: 22px 12px;
+        padding: 30px 30px 30px 30px;
         max-width: 100%;
     }
     
