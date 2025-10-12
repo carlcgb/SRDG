@@ -35,8 +35,8 @@ const Events = ({ onEventsLoad }) => {
         { name: "Joe Guerin", url: "https://www.instagram.com/joeguerinn/" },
         { name: "???", url: "https://media.istockphoto.com/id/483558444/fr/photo/de-ch%C3%A8vre.jpg?s=612x612&w=0&k=20&c=yt7YGp6upLi_hDBYtHyhqxCyTYoY0je6oGoblmsd2L4=" }
       ],
-      isPast: false,  // Set to true to grey out this event
-      isNext: true,    // Set to true to highlight this as the next event
+      isPast: true,  // Set to true to grey out this event
+      isNext: false,    // Set to true to highlight this as the next event
       calendarDate: "2024-10-11", // Date for calendar (YYYY-MM-DD format)
       calendarTime: "20:00", // Time for calendar (24h format)
       calendarDuration: "2h" // Duration for calendar
@@ -55,7 +55,7 @@ const Events = ({ onEventsLoad }) => {
         { name: "Pier-Luc Pomerleau", url: "https://www.facebook.com/PLPomerleau" }
       ],
       isPast: false,  // Set to true to grey out this event
-      isNext: false,   // Set to true to highlight this as the next event
+      isNext: true,   // Set to true to highlight this as the next event
       calendarDate: "2024-11-08", // Date for calendar (YYYY-MM-DD format)
       calendarTime: "20:00", // Time for calendar (24h format)
       calendarDuration: "2h" // Duration for calendar
@@ -209,7 +209,7 @@ END:VCALENDAR`;
           <h2 className="section-title">Prochains Spectacles d'Humour à Granby</h2>
           <p className="section-description">
             Découvrez notre programmation de <a href="#evenements" className="internal-link">spectacles d'humour mensuels</a> au <a href="#contact" className="internal-link">Social Bar et Cie de Granby</a>. 
-            Des humoristes québécois de talent vous attendent pour des soirées mémorables ! 
+            Des humoristes de talent vous attendent pour des soirées mémorables ! 
             <a href="#corporate" className="internal-link">Animation corporative</a> disponible pour vos événements d'entreprise.
           </p>
         </div>

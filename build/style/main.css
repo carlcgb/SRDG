@@ -1663,20 +1663,7 @@ body {
     }
 }
 
-/* Mobile-specific rules to disable tilted effects */
-@media (max-width: 768px) {
-    /* Disable tilted effects for event cards */
-    .event-card-link:hover .event-card {
-        transform: translateY(-5px) !important;
-        box-shadow: 0 15px 30px rgba(246, 74, 62, 0.2) !important;
-    }
-    
-    /* Disable tilted effects for corporate cards */
-    .corporate-benefits-card:hover {
-        transform: translateY(-5px) !important;
-        box-shadow: 0 15px 30px rgba(246, 74, 62, 0.2) !important;
-    }
-    
+
     .corporate-testimonial-card:hover {
         transform: translateY(-5px) !important;
         box-shadow: 0 15px 30px rgba(246, 74, 62, 0.2) !important;
