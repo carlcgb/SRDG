@@ -193,7 +193,7 @@ body {
     font-weight: 700;
     text-transform: uppercase;
     font-size: 0.9rem;
-    padding: 8px 20px;
+    padding: 6px 14px;
     border-radius: 25px;
     text-decoration: none;
     white-space: nowrap;
@@ -259,7 +259,7 @@ body {
         font-weight: 700 !important;
         text-transform: uppercase !important;
         font-size: 0.9rem !important;
-        padding: 8px 20px !important;
+        padding: 6px 14px !important;
         border-radius: 25px !important;
         text-decoration: none !important;
         white-space: nowrap !important;
@@ -335,7 +335,7 @@ body {
 .nav-tickets-btn {
     background: var(--primary-color);
     color: var(--accent-light);
-    padding: 8px 20px;
+    padding: 6px 14px;
     border-radius: 25px;
     text-decoration: none;
     font-weight: 700;
@@ -1459,6 +1459,22 @@ body {
         transform: none !important;
     }
     
+    /* Corporate theme mobile overrides - ensure font sizes and padding stay consistent */
+    .navbar.corporate-theme .nav-link {
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        transform: none !important;
+    }
+    
+    .navbar.corporate-theme .nav-tickets-btn {
+        font-size: 0.8rem !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        padding: 6px 16px !important;
+        transform: none !important;
+    }
+    
     .hero {
         padding: 120px 20px 80px;
     }
@@ -1599,6 +1615,22 @@ body {
         padding: 6px 14px;
         font-weight: 700;
         text-transform: uppercase;
+        transform: none !important;
+    }
+    
+    /* Corporate theme small mobile overrides - ensure font sizes and padding stay consistent */
+    .navbar.corporate-theme .nav-link {
+        font-size: 0.85rem !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        transform: none !important;
+    }
+    
+    .navbar.corporate-theme .nav-tickets-btn {
+        font-size: 0.75rem !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        padding: 6px 14px !important;
         transform: none !important;
     }
     
@@ -2475,4 +2507,4 @@ body {
         padding: 15px 30px;
         font-size: 1rem;
     }
-}
+
