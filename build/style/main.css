@@ -1174,7 +1174,7 @@ body {
 
 /* Racontez-nous Section */
 .joke-section {
-    padding: var(--section-padding);
+    padding: 120px 80px;
     background: var(--accent-light);
     text-align: center;
 }
@@ -1187,14 +1187,14 @@ body {
 .joke-description {
     font-size: 1.3rem;
     color: var(--text-secondary);
-    margin-bottom: 40px;
+    margin-bottom: 60px;
     line-height: 1.4;
 }
 
 .joke-contact-text {
     font-size: 1.1rem;
     color: var(--text-secondary);
-    margin-top: 30px;
+    margin-top: 50px;
     text-align: center;
     line-height: 1.4;
 }
@@ -1613,6 +1613,33 @@ body {
         align-items: center;
     }
     
+    .joke-section {
+        padding: 80px 20px;
+    }
+    
+    .joke-content {
+        max-width: 100%;
+        padding: 0 10px;
+    }
+    
+    .joke-description {
+        font-size: 1.1rem;
+        line-height: 1.3;
+        margin-bottom: 50px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
+    }
+    
+    .joke-contact-text {
+        font-size: 1rem;
+        line-height: 1.3;
+        margin-top: 40px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
+    }
+    
     .footer-content {
         flex-direction: column;
         gap: 30px;
@@ -1841,6 +1868,26 @@ body {
         width: 100%;
         height: 100%;
     }
+    
+    .joke-section {
+        padding: 60px 15px;
+    }
+    
+    .joke-content {
+        padding: 0 5px;
+    }
+    
+    .joke-description {
+        font-size: 1rem;
+        line-height: 1.25;
+        margin-bottom: 40px;
+    }
+    
+    .joke-contact-text {
+        font-size: 0.9rem;
+        line-height: 1.25;
+        margin-top: 35px;
+    }
 }
 
 /* Very narrow screens (300px and below) */
@@ -1960,6 +2007,26 @@ body {
     .mascot {
         width: 100%;
         height: 100%;
+    }
+    
+    .joke-section {
+        padding: 50px 10px;
+    }
+    
+    .joke-content {
+        padding: 0;
+    }
+    
+    .joke-description {
+        font-size: 0.85rem;
+        line-height: 1.2;
+        margin-bottom: 35px;
+    }
+    
+    .joke-contact-text {
+        font-size: 0.8rem;
+        line-height: 1.2;
+        margin-top: 30px;
     }
 }
 

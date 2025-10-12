@@ -5,9 +5,9 @@ const JokeSection = ({ onOpenModal }) => {
     <section id="blague" className="joke-section">
       <div className="container">
         <div className="joke-content">
-          <h2 className="section-title">Racontez-nous une blague !</h2>
+          <h2 className="section-title">Racontez-nous une blague!</h2>
           <p className="joke-description">
-            Durant le <a href="#evenements" className="internal-link">spectacle</a>, peut-être que votre blague pourrait être 
+            <br/>Durant le <a href="#evenements" className="internal-link">spectacle</a>, peut-être que votre blague pourrait être 
             utilisée pour rire avec vous... ou de VOUS! Nous avons accès LIVE
              à ce que vous écrivez, on pourrait s'en servir pour nous amuser, qui sait? 😏
           </p>
