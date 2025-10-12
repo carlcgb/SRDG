@@ -56,6 +56,8 @@ const Hero = () => {
               height="300"
               decoding="async"
               fetchPriority="high"
+              sizes="(max-width: 768px) 200px, 300px"
+              srcSet={`${process.env.PUBLIC_URL}/style/cgb.jpg 1x, ${process.env.PUBLIC_URL}/style/cgb.jpg 2x`}
             />
           </div>
           <div className="animator-credit">

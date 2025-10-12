@@ -58,7 +58,11 @@
     <link rel="preconnect" href="https://www.googletagmanager.com">
     
     <!-- Preload critical resources -->
-    <link rel="preload" href="%PUBLIC_URL%/style/cgb.jpg" as="image">
+    <link rel="preload" href="%PUBLIC_URL%/style/cgb.jpg" as="image" type="image/jpeg">
+    
+    <!-- Image optimization hints -->
+    <meta name="image-optimization" content="enabled">
+    <meta name="image-lazy-loading" content="enabled">
     
     <!-- Critical CSS inline for above-the-fold content -->
     <style>
@@ -271,11 +275,11 @@
       }
     </style>
     
-    <!-- Load fonts asynchronously with font-display swap -->
+    <!-- Load fonts asynchronously with font-display swap and better caching -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Bebas+Neue&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Bebas+Neue&display=swap"></noscript>
     
-    <!-- Load CSS asynchronously with media queries for better loading -->
+    <!-- Load CSS asynchronously with media queries for better loading and caching -->
     <link rel="preload" href="%PUBLIC_URL%/style/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="%PUBLIC_URL%/style/tilted.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
@@ -294,7 +298,10 @@
     <link rel="preload" href="https://www.googletagmanager.com/gtm.js?id=GTM-NLR44QK8" as="script">
     
     <!-- Cache control headers for better performance -->
-    <meta http-equiv="Cache-Control" content="public, max-age=31536000">
+    <meta http-equiv="Cache-Control" content="public, max-age=31536000, immutable">
+    <meta http-equiv="Expires" content="Thu, 31 Dec 2025 23:59:59 GMT">
+    <meta http-equiv="Last-Modified" content="Thu, 01 Jan 2025 00:00:00 GMT">
+    <meta http-equiv="ETag" content="W/&quot;v1.0.0&quot;">
     
     <!-- Google Analytics is handled by GTM below -->
 </head>

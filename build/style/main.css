@@ -5,6 +5,25 @@
   font-display: swap;
 }
 
+/* Image optimization */
+img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: optimize-quality;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Lazy loading optimization */
+img[loading="lazy"] {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+img[loading="lazy"].loaded {
+  opacity: 1;
+}
+
 /* Optimize button rendering to prevent layout shifts */
 .btn {
   /* Prevent layout shift by reserving space */
@@ -501,6 +520,11 @@ body {
     filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
     transition: all 0.3s ease-out;
     transform-style: preserve-3d;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: optimize-quality;
+    backface-visibility: hidden;
+    will-change: transform;
 }
 
 .mascot-placeholder:hover {
