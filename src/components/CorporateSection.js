@@ -158,7 +158,8 @@ const CorporateSection = () => {
                   </div>
                 </div>
               </div>
-
+              
+//*************le code va ici *************
               <div className="corporate-testimonial-card tilted-card-figure">
                 <div className="tilted-card-inner">
                   <div className="corporate-testimonial" itemScope itemType="https://schema.org/Review">
@@ -178,6 +179,7 @@ const CorporateSection = () => {
                 </div>
               </div>
             </div>
+  //*************le code va ici *************
 
             <div className="corporate-form-card tilted-card-figure">
               <div className="tilted-card-inner">
@@ -356,7 +358,7 @@ const CorporateSection = () => {
                     </>
                   ) : (
                     <>
-                      <span className="btn-icon">🚀</span>
+                      <span className="btn-icon"></span>
                       Demander un devis gratuit
                     </>
                   )}
