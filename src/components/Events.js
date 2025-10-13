@@ -45,10 +45,10 @@ const Events = ({ onEventsLoad }) => {
       day: "8",
       month: "NOV",
       title: "ÉPISODE 3 - SAISON 4",
-      description: "C'est déjà la dernière de 2024 ! 🎅🏻 On finit l'année en beauté avec des humoristes québécois qui vont vous faire péter de rire au Social Bar et Cie. On va se souhaiter Joyeux Noël deux mois d'avance pis on va se gâter comme des rois ! Des fous rires garantis ou on vous rembourse... en bières !",
+      description: "C'est déjà la dernière de 2024 ! 🎅🏻 On finit l'année en beauté avec des humoristes qui vont vous faire péter de rire au Social Bar et Cie. On va se souhaiter Joyeux Noël deux mois d'avance pis on va se gâter comme des rois ! Des fous rires garantis ou on vous rembourse... en bières !",
       time: "20h00",
       location: "Le Social Bar et Cie",
-      facebookUrl: "https://www.facebook.com/lsdrg",
+      facebookUrl: "https://www.facebook.com/share/17QxSaNfbA/",
       guests: [
         { name: "Jacob Ospian", url: "https://www.instagram.com/jacobospian/" },
         { name: "Mathieu Bougie", url: "https://www.instagram.com/mathbougie/" },
