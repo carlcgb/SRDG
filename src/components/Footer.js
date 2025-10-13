@@ -36,7 +36,7 @@ const Footer = () => {
             </a>
             <a 
               href="#blagues"
-              onClick={(e) => handleNavClick(e, '#blagues')}
+              onClick={(e) => handleNavClick(e, '#blague')}
             >
               Partager une blague
             </a>
