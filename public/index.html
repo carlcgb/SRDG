@@ -182,10 +182,21 @@
         margin-bottom: 60px;
         line-height: 1.4;
         font-weight: 400;
-        /* LCP optimization */
+        /* LCP optimization - Critical fixes */
         contain: layout style paint;
         will-change: auto;
         transform: translateZ(0);
+        /* Force immediate rendering */
+        opacity: 1;
+        visibility: visible;
+        /* Prevent layout thrashing */
+        min-height: 4.5rem;
+        /* Optimize font rendering */
+        font-display: swap;
+        text-rendering: optimizeSpeed;
+        /* Force hardware acceleration */
+        backface-visibility: hidden;
+        perspective: 1000px;
       }
       .hero-buttons {
         display: flex;
@@ -218,6 +229,12 @@
         padding: 16px 48px;
         font-size: 1.3rem;
       }
+      /* LCP Critical - Disable animations during initial load */
+      .hero-description {
+        animation: none !important;
+        transition: none !important;
+      }
+      
       /* Mobile critical styles */
       @media (max-width: 768px) {
         .nav-container {

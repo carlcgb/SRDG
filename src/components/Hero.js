@@ -19,7 +19,12 @@ const Hero = memo(() => {
         <div className="hero-text">
           <h1 className="hero-title">La Soirée du Rire</h1>
           <h2 className="hero-subtitle">de Granby</h2>
-          <p className="hero-description">
+          <p className="hero-description" style={{
+            opacity: 1,
+            visibility: 'visible',
+            transform: 'translateZ(0)',
+            willChange: 'auto'
+          }}>
             Découvrez les meilleurs <a href="#evenements" className="internal-link" onClick={(e) => handleNavClick(e, '#evenements')}>spectacles d'humour à Granby</a> ! Des soirées inoubliables 
             avec les humoristes québécois les plus talentueux au <a href="#contact" className="internal-link" onClick={(e) => handleNavClick(e, '#contact')}>Social Bar et Cie</a>. 
             Réservez vos billets pour des moments de pure joie et de fous rires.
