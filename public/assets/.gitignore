@@ -1,0 +1,22 @@
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Image processing temporary files
+*.psd
+*.ai
+*.sketch
+
+# CSS preprocessing temporary files
+*.css.map
+*.scss.map
+
+# Large video files (if any)
+*.mp4
+*.mov
+*.avi
+
+# Backup files
+*.bak
+*.backup
