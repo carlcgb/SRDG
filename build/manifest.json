@@ -4,7 +4,7 @@
   "description": "Découvrez les meilleurs spectacles d'humour à Granby avec La Soirée du Rire. Des humoristes québécois de talent au Social Bar et Cie.",
   "icons": [
     {
-      "src": "favicon.svg",
+      "src": "assets/images/icons/favicon.ico",
       "sizes": "any",
       "type": "image/svg+xml"
     }

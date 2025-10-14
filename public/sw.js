@@ -8,7 +8,7 @@ const urlsToCache = [
   '/assets/styles/css/main.css',
   '/assets/styles/css/tilted.css',
   '/assets/images/logos/cgb.jpg',
-  '/favicon.svg',
+  '/assets/images/icons/favicon.ico',
   '/manifest.json'
 ];
 

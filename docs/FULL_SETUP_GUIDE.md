@@ -81,8 +81,10 @@ src/
 └── App.js                  # Composant App principal
 
 public/
-├── style/                  # Fichiers CSS
-├── assets/                 # Images et ressources
+├── assets/                 # Assets organisés
+│   ├── images/            # Images
+│   ├── styles/            # Fichiers CSS
+│   └── fonts/             # Polices
 ├── index.html              # Template HTML
 ├── sitemap.xml            # Sitemap SEO
 └── robots.txt             # Configuration robots

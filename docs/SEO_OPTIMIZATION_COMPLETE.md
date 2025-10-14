@@ -55,7 +55,7 @@
   "alternateName": "LSDRG",
   "description": "Organisateur de spectacles d'humour mensuels...",
   "url": "https://lasoireedurire.ca",
-  "logo": "https://lasoireedurire.ca/style/cgb.jpg",
+  "logo": "https://lasoireedurire.ca/assets/images/logos/cgb.jpg",
   "contactPoint": [...],
   "serviceArea": {...},
   "hasOfferCatalog": {...}
