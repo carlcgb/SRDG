@@ -5,9 +5,9 @@ const DYNAMIC_CACHE = 'dynamic-v2';
 
 const urlsToCache = [
   '/',
-  '/style/main.css',
-  '/style/tilted.css',
-  '/style/cgb.jpg',
+  '/assets/styles/css/main.css',
+  '/assets/styles/css/tilted.css',
+  '/assets/images/logos/cgb.jpg',
   '/favicon.svg',
   '/manifest.json'
 ];
