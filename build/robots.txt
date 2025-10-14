@@ -16,7 +16,7 @@ Disallow: /node_modules/
 Disallow: /src/
 
 # Allow important directories and files
-Allow: /style/
+Allow: /assets/
 Allow: /favicon.svg
 Allow: /manifest.json
 Allow: /robots.txt
