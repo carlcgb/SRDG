@@ -59,6 +59,8 @@
     
     <!-- Preload critical resources -->
     <link rel="preload" href="%PUBLIC_URL%/assets/images/logos/cgb.jpg" as="image" type="image/jpeg">
+    <link rel="preload" href="%PUBLIC_URL%/assets/styles/css/main.css" as="style">
+    <link rel="preload" href="%PUBLIC_URL%/assets/styles/css/tilted.css" as="style">
     
     <!-- Image optimization hints -->
     <meta name="image-optimization" content="enabled">
@@ -180,6 +182,10 @@
         margin-bottom: 60px;
         line-height: 1.4;
         font-weight: 400;
+        /* LCP optimization */
+        contain: layout style paint;
+        will-change: auto;
+        transform: translateZ(0);
       }
       .hero-buttons {
         display: flex;
@@ -279,6 +285,10 @@
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Bebas+Neue&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Bebas+Neue&display=swap"></noscript>
     
+    <!-- Preload critical font files -->
+    <link rel="preload" href="https://fonts.gstatic.com/s/teko/v15/5oXOiQjAqN0o5lp5eK6OvZJY.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/bebasneue/v9/JTUSjIg69CK48gW7PXoo9Wlhyw.woff2" as="font" type="font/woff2" crossorigin>
+    
     <!-- Load CSS asynchronously with media queries for better loading and caching -->
     <link rel="preload" href="%PUBLIC_URL%/assets/styles/css/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="%PUBLIC_URL%/assets/styles/css/tilted.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -314,6 +324,29 @@
     
     <noscript>Vous devez activer JavaScript pour exécuter cette application.</noscript>
     <div id="root"></div>
+    
+    <!-- LCP Performance Monitoring -->
+    <script>
+      // Monitor LCP performance
+      if ('PerformanceObserver' in window) {
+        const observer = new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (entry.entryType === 'largest-contentful-paint') {
+              console.log('LCP:', entry.startTime + 'ms');
+              // Send to analytics if needed
+              if (window.gtag) {
+                gtag('event', 'web_vitals', {
+                  event_category: 'Web Vitals',
+                  event_label: 'LCP',
+                  value: Math.round(entry.startTime)
+                });
+              }
+            }
+          }
+        });
+        observer.observe({entryTypes: ['largest-contentful-paint']});
+      }
+    </script>
     
     <!-- Google Tag Manager - Loaded at bottom to prevent render blocking -->
     <script>

@@ -433,6 +433,12 @@ body {
     margin-bottom: 60px;
     line-height: 1.4;
     font-weight: 400;
+    /* LCP optimization */
+    contain: layout style paint;
+    will-change: auto;
+    transform: translateZ(0);
+    /* Prevent layout shifts */
+    min-height: 4.5rem;
 }
 
 .hero-buttons {

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { memo } from 'react';
 
-const Hero = () => {
+const Hero = memo(() => {
   const handleNavClick = (e, targetId) => {
     e.preventDefault();
     const targetElement = document.querySelector(targetId);
@@ -64,6 +64,8 @@ const Hero = () => {
       </div>
     </section>
   );
-};
+});
+
+Hero.displayName = 'Hero';
 
 export default Hero;
