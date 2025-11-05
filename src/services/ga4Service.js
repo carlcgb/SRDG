@@ -5,6 +5,7 @@ const GA4_API_BASE = 'https://analyticsdata.googleapis.com/v1beta';
 
 /**
  * Get access token from Google Sign-In authentication
+ * Uses OAuth access token if available, otherwise falls back to JWT (which won't work for GA4)
  */
 const getAccessToken = async () => {
   // Get the stored auth data from localStorage
@@ -14,12 +15,20 @@ const getAccessToken = async () => {
   }
 
   const auth = JSON.parse(authData);
-  const token = auth.token; // JWT token from Google Sign-In
+  
+  // Use OAuth access token if available (has analytics.readonly scope)
+  if (auth.accessToken) {
+    return auth.accessToken;
+  }
 
-  // Exchange JWT for access token for GA4 API
-  // Note: In production, you should do this on a backend server
-  // For now, we'll use the JWT directly if it has the right scopes
-  return token;
+  // Fallback to JWT token (won't work for GA4 API, but provides better error message)
+  if (auth.token) {
+    console.warn('⚠️ Using JWT token instead of OAuth access token. GA4 API calls may fail.');
+    console.warn('⚠️ Please ensure OAuth access token is obtained during login.');
+    return auth.token;
+  }
+
+  throw new Error('No access token available');
 };
 
 /**

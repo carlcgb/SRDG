@@ -40,6 +40,45 @@ const Login = ({ onLogin }) => {
     };
   }, []);
 
+  /**
+   * Get OAuth access token for GA4 API
+   * Uses Google OAuth2 Token Client to get access token with analytics.readonly scope
+   */
+  const getOAuthAccessToken = () => {
+    return new Promise((resolve, reject) => {
+      const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+      
+      if (!clientId || !window.google || !window.google.accounts || !window.google.accounts.oauth2) {
+        reject(new Error('Google OAuth2 not available'));
+        return;
+      }
+
+      try {
+        // Initialize OAuth2 Token Client with Analytics scope
+        const tokenClient = window.google.accounts.oauth2.initTokenClient({
+          client_id: clientId,
+          scope: 'https://www.googleapis.com/auth/analytics.readonly',
+          callback: (tokenResponse) => {
+            if (tokenResponse.error) {
+              console.error('OAuth token error:', tokenResponse.error);
+              reject(new Error(tokenResponse.error));
+            } else if (tokenResponse.access_token) {
+              resolve(tokenResponse.access_token);
+            } else {
+              reject(new Error('No access token received'));
+            }
+          },
+        });
+
+        // Request access token
+        tokenClient.requestAccessToken({ prompt: 'consent' });
+      } catch (error) {
+        console.error('Error initializing OAuth2 Token Client:', error);
+        reject(error);
+      }
+    });
+  };
+
   const initializeGoogleSignIn = () => {
     const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
     
@@ -121,7 +160,7 @@ const Login = ({ onLogin }) => {
 
       // Store authentication info
       const authData = {
-        token: response.credential,
+        token: response.credential, // JWT token
         user: {
           email: payload.email,
           name: payload.name || payload.given_name || payload.email.split('@')[0],
@@ -129,6 +168,18 @@ const Login = ({ onLogin }) => {
         },
         timestamp: Date.now(),
       };
+
+      // Get OAuth access token for GA4 API
+      try {
+        const accessToken = await getOAuthAccessToken();
+        if (accessToken) {
+          authData.accessToken = accessToken;
+          console.log('✅ OAuth access token obtained for GA4 API');
+        }
+      } catch (tokenError) {
+        console.warn('⚠️ Could not get OAuth access token:', tokenError);
+        // Continue without access token - will use mock data or show error
+      }
 
       // Store in localStorage
       localStorage.setItem('dashboard_auth', JSON.stringify(authData));

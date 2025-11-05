@@ -1,5 +1,13 @@
-/*    /index.html   200
+# API routes - Must be handled by Cloudflare Workers BEFORE any catch-all redirects
+/api/*   200
 
-# Dashboard routing
+# Dashboard routing (for main domain)
 /dashboard    /index.html   200
 /dashboard/*    /index.html   200
+/dashboard/approve    /index.html   200
+
+# Approve route for subdomain (stats.lasoireedurire.ca/approve)
+/approve    /index.html   200
+
+# Catch-all redirect - must be last to avoid catching API routes
+/*    /index.html   200
