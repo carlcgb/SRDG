@@ -102,8 +102,9 @@ export const sendAccessRequestEmail = async (userEmail, userName, userPicture) =
     // If on subdomain, use /approve, if on main domain, use /dashboard/approve
     const approvePath = isDashboardSubdomain ? '/approve' : '/dashboard/approve';
     const encodedEmail = encodeURIComponent(userEmail);
-    const approvalLink = `${baseUrl}${approvePath}?email=${encodedEmail}&token=${token}&action=approve`;
-    const denialLink = `${baseUrl}${approvePath}?email=${encodedEmail}&token=${token}&action=deny`;
+    const encodedToken = encodeURIComponent(token);
+    const approvalLink = `${baseUrl}${approvePath}?email=${encodedEmail}&token=${encodedToken}&action=approve`;
+    const denialLink = `${baseUrl}${approvePath}?email=${encodedEmail}&token=${encodedToken}&action=deny`;
 
     // Prepare email data with all required fields
     const emailData = {

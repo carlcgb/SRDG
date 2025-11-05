@@ -1,156 +1,246 @@
-# 🔧 Dépannage EmailJS - Liens Vides
+# 🔍 Dépannage EmailJS - Email d'Approbation Non Reçu
 
-## Problème : `{{approval_link}}` et `{{denial_link}}` sont vides
+## Problème : Email d'approbation non reçu
 
-### ✅ Solution 1 : Vérifier les noms des variables dans EmailJS
+Si vous n'avez pas reçu l'email d'approbation pour les demandes d'accès au dashboard, suivez ces étapes de débogage.
 
-Dans votre template EmailJS, les variables doivent être nommées **exactement** comme ceci :
+## 🔍 Étape 1 : Vérifier dans la Console du Navigateur
 
-- ✅ `{{approval_link}}` (avec underscore)
-- ✅ `{{denial_link}}` (avec underscore)
-- ✅ `{{user_email}}`
-- ✅ `{{user_name}}`
-- ✅ `{{request_date}}`
-- ✅ `{{dashboard_url}}`
+### 1. Ouvrir la Console
 
-**❌ Ne PAS utiliser :**
-- `{{approval-link}}` (tiret)
-- `{{approvalLink}}` (camelCase)
-- `{{approval link}}` (espace)
+1. Ouvrez votre navigateur sur le dashboard
+2. Appuyez sur **F12** pour ouvrir les outils de développement
+3. Allez dans l'onglet **"Console"**
 
-### ✅ Solution 2 : Vérifier le format du template
+### 2. Tester avec un Email Non Autorisé
 
-**Format correct :**
-```
-Pour approuver l'accès:
-{{approval_link}}
+1. Déconnectez-vous du dashboard
+2. Reconnectez-vous avec un email qui n'est pas autorisé (pas `carl.g.bisaillon@gmail.com` ou `info@lasoireedurire.ca`)
+3. Regardez les logs dans la console
 
-Pour refuser l'accès:
-{{denial_link}}
-```
+### 3. Logs Attendus
 
-**Format HTML (alternative) :**
-```
-Pour approuver l'accès:
-<a href="{{approval_link}}">Cliquez ici pour approuver</a>
-
-Pour refuser l'accès:
-<a href="{{denial_link}}">Cliquez ici pour refuser</a>
-```
-
-### ✅ Solution 3 : Tester avec la console du navigateur
-
-1. Ouvrez la console du navigateur (F12)
-2. Connectez-vous avec un email non autorisé
-3. Vous devriez voir dans les logs :
-   ```
-   📧 Sending dashboard access request email:
-   Approval Link: https://lasoireedurire.ca/dashboard/approve?email=...
-   Denial Link: https://lasoireedurire.ca/dashboard/approve?email=...
-   ```
-
-Si les liens apparaissent dans la console mais pas dans l'email, le problème est dans le template EmailJS.
-
-### ✅ Solution 4 : Vérifier le template EmailJS
-
-1. Allez dans [EmailJS Dashboard](https://dashboard.emailjs.com/)
-2. Ouvrez votre template
-3. Vérifiez que :
-   - Les variables sont écrites sans espaces : `{{approval_link}}`
-   - Les variables sont sur des lignes séparées
-   - Il n'y a pas de caractères invisibles
-
-### ✅ Solution 5 : Utiliser les liens HTML formatés
-
-Si les liens simples ne fonctionnent pas, utilisez les versions HTML dans le template :
+**Si EmailJS est configuré correctement, vous devriez voir :**
 
 ```
-{{approval_link_html}}
-
-{{denial_link_html}}
+📧 Sending dashboard access request email:
+EmailJS Service ID: service_xxxxx
+EmailJS Template ID: template_xxxxx
+To: info@lasoireedurire.ca
+User: test@example.com Test User
+Approval Link: https://stats.lasoireedurire.ca/approve?email=...
+Denial Link: https://stats.lasoireedurire.ca/approve?email=...
+Email Data: {...}
+✅ Email sent successfully: {...}
+Response status: 200
+Response text: OK
 ```
 
-Ces versions incluent le formatage HTML complet avec styles.
-
-## 📋 Template EmailJS Complet Recommandé
+**Si EmailJS n'est pas configuré, vous verrez :**
 
 ```
-Bonjour,
-
-Une nouvelle demande d'accès au tableau de bord Analytics a été reçue.
-
-Informations de l'utilisateur:
-- Nom: {{user_name}}
-- Email: {{user_email}}
-- Date de la demande: {{request_date}}
-
-ACTIONS REQUISES:
-
-Pour approuver l'accès (View Only):
-{{approval_link}}
-
-Pour refuser l'accès:
-{{denial_link}}
-
-LIENS ALTERNATIFS (si les liens ci-dessus ne fonctionnent pas):
-
-Approuver: {{approval_link}}
-Refuser: {{denial_link}}
-
-URL du Dashboard: {{dashboard_url}}
-
----
-Dashboard La Soirée du Rire de Granby
+❌ EmailJS not configured for dashboard access requests
+EmailJS_SERVICE_ID: ❌ Missing
+EMAILJS_TEMPLATE_ID: ❌ Missing
+EMAILJS_PUBLIC_KEY: ❌ Missing
 ```
 
-## 🧪 Test Rapide
+**Si EmailJS échoue, vous verrez :**
 
-1. **Testez le template EmailJS directement** :
-   - Dans EmailJS Dashboard, utilisez "Test"
-   - Ajoutez des valeurs de test pour les variables
-   - Vérifiez que les liens apparaissent
+```
+❌ EmailJS send error: {...}
+Error details: {
+  code: ...,
+  text: ...,
+  status: ...,
+  message: ...
+}
+```
 
-2. **Vérifiez les logs du navigateur** :
-   - Ouvrez la console (F12)
-   - Connectez-vous avec un email non autorisé
-   - Vérifiez les logs pour voir les liens générés
+## 🔧 Étape 2 : Vérifier les Secrets GitHub
 
-3. **Vérifiez l'email reçu** :
-   - Regardez le code source de l'email (si possible)
-   - Vérifiez que les variables sont remplacées
+### 1. Vérifier dans GitHub Secrets
+
+1. Allez dans votre dépôt GitHub
+2. **Settings** → **Secrets and variables** → **Actions**
+3. Vérifiez que ces secrets existent :
+   - `EMAILJS_SERVICE_ID`
+   - `EMAILJS_TEMPLATE_ID`
+   - `EMAILJS_PUBLIC_KEY`
+   - `REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID` (optionnel)
+
+### 2. Vérifier dans GitHub Actions
+
+1. Allez dans **Actions** → Dernier workflow
+2. Ouvrez le job **"Verify environment variables"**
+3. Vérifiez que tous les secrets sont marqués comme **"set"**
+
+Si vous voyez **"WARNING: EMAILJS_XXX is not set"**, cela signifie que le secret n'est pas configuré.
+
+## 🔧 Étape 3 : Vérifier le Template EmailJS
+
+### 1. Vérifier que le Template Existe
+
+1. Allez sur [EmailJS Dashboard](https://dashboard.emailjs.com/)
+2. Allez dans **Email Templates**
+3. Vérifiez que le template existe (ID : celui configuré dans GitHub Secrets)
+
+### 2. Vérifier les Variables du Template
+
+Le template doit avoir ces variables :
+
+- `{{to_email}}` - Email de destination
+- `{{user_email}}` - Email de l'utilisateur
+- `{{user_name}}` - Nom de l'utilisateur
+- `{{approval_link}}` - Lien pour approuver
+- `{{denial_link}}` - Lien pour refuser
+- `{{approval_link_html}}` - Lien HTML pour approuver
+- `{{denial_link_html}}` - Lien HTML pour refuser
+- `{{request_date}}` - Date de la demande
+- `{{dashboard_url}}` - URL du dashboard
+
+### 3. Vérifier l'Email de Destination
+
+Dans le template EmailJS, vérifiez que l'email de destination est :
+- Soit `{{to_email}}` (variable dynamique)
+- Soit directement `info@lasoireedurire.ca`
+
+## 🔧 Étape 4 : Vérifier les Logs EmailJS
+
+### 1. Vérifier dans EmailJS Dashboard
+
+1. Allez sur [EmailJS Dashboard](https://dashboard.emailjs.com/)
+2. Allez dans **Email Logs** ou **Activity**
+3. Vérifiez si des emails ont été envoyés
+4. Si vous voyez des erreurs, notez-les
+
+### 2. Vérifier les Limites EmailJS
+
+- Vérifiez que vous n'avez pas dépassé la limite mensuelle d'emails
+- Vérifiez que votre compte EmailJS est actif
+
+## 🔧 Étape 5 : Test Manuel
+
+### Test 1 : Vérifier les Variables d'Environnement
+
+Dans la console du navigateur (F12), exécutez :
+
+```javascript
+console.log('EmailJS Service ID:', process.env.REACT_APP_EMAILJS_SERVICE_ID);
+console.log('EmailJS Template ID:', process.env.REACT_APP_EMAILJS_TEMPLATE_ID);
+console.log('EmailJS Public Key:', process.env.REACT_APP_EMAILJS_PUBLIC_KEY ? 'Set' : 'Not set');
+console.log('Dashboard Template ID:', process.env.REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID);
+```
+
+**Si vous voyez `undefined`**, cela signifie que les variables ne sont pas passées au build.
+
+### Test 2 : Vérifier le Fallback Mailto
+
+Si EmailJS échoue, le système devrait ouvrir un client email (mailto). Vérifiez si une fenêtre email s'ouvre.
+
+## 🐛 Erreurs Courantes et Solutions
+
+### Erreur : "EmailJS not configured"
+
+**Cause** : Les secrets GitHub ne sont pas configurés ou ne sont pas passés au build
+
+**Solution** :
+1. Vérifiez que les secrets existent dans GitHub Secrets
+2. Vérifiez que les secrets sont passés dans `.github/workflows/deploy.yml`
+3. Redéployez l'application
+
+### Erreur : "Invalid template ID"
+
+**Cause** : Le template ID n'existe pas dans EmailJS
+
+**Solution** :
+1. Vérifiez que le template existe dans EmailJS Dashboard
+2. Vérifiez que l'ID du template correspond à celui dans GitHub Secrets
+
+### Erreur : "Invalid service ID"
+
+**Cause** : Le service ID n'existe pas dans EmailJS
+
+**Solution** :
+1. Vérifiez que le service existe dans EmailJS Dashboard
+2. Vérifiez que l'ID du service correspond à celui dans GitHub Secrets
+
+### Erreur : "Invalid public key"
+
+**Cause** : La clé publique est incorrecte
+
+**Solution** :
+1. Vérifiez la clé publique dans EmailJS Dashboard → Account
+2. Assurez-vous que c'est la clé publique, pas la clé secrète
+
+### Erreur : "Template variables not found"
+
+**Cause** : Le template utilise des variables qui ne sont pas envoyées
+
+**Solution** :
+1. Vérifiez que toutes les variables du template correspondent aux variables envoyées dans `emailData`
+2. Vérifiez les logs dans la console pour voir quelles variables sont envoyées
+
+## ✅ Checklist de Vérification
+
+### Configuration
+- [ ] Secrets GitHub configurés (`EMAILJS_SERVICE_ID`, `EMAILJS_TEMPLATE_ID`, `EMAILJS_PUBLIC_KEY`)
+- [ ] Secrets passés dans `.github/workflows/deploy.yml`
+- [ ] Build GitHub Actions réussi avec tous les secrets
+- [ ] Application déployée après la configuration des secrets
+
+### EmailJS Dashboard
+- [ ] Service EmailJS existe et est actif
+- [ ] Template EmailJS existe pour les demandes d'accès
+- [ ] Template configuré avec toutes les variables nécessaires
+- [ ] Email de destination configuré dans le template
+- [ ] Compte EmailJS actif (pas de limite dépassée)
+
+### Test
+- [ ] Logs dans la console montrent "✅ Email sent successfully"
+- [ ] EmailJS Dashboard → Email Logs montre l'email envoyé
+- [ ] Email reçu dans la boîte email (vérifier spam aussi)
+- [ ] Liens d'approbation/refus fonctionnent dans l'email
 
 ## 🔍 Debugging Avancé
 
-### Vérifier ce qui est envoyé à EmailJS
+### Forcer l'Envoi d'Email
 
-Le code log maintenant les données complètes. Dans la console, vous verrez :
+Si vous voulez tester manuellement, vous pouvez créer un script de test :
 
 ```javascript
-📧 Sending dashboard access request email:
-To: info@lasoireedurire.ca
-User: user@example.com John Doe
-Approval Link: https://lasoireedurire.ca/dashboard/approve?email=user%40example.com&token=...
-Denial Link: https://lasoireedurire.ca/dashboard/approve?email=user%40example.com&token=...
+// Dans la console du navigateur (F12)
+import emailjs from '@emailjs/browser';
+
+const testEmail = async () => {
+  emailjs.init('YOUR_PUBLIC_KEY');
+  
+  const response = await emailjs.send(
+    'YOUR_SERVICE_ID',
+    'YOUR_TEMPLATE_ID',
+    {
+      to_email: 'info@lasoireedurire.ca',
+      user_email: 'test@example.com',
+      user_name: 'Test User',
+      approval_link: 'https://stats.lasoireedurire.ca/approve?email=test@example.com&token=test&action=approve',
+      denial_link: 'https://stats.lasoireedurire.ca/approve?email=test@example.com&token=test&action=deny',
+      // ... autres variables
+    }
+  );
+  
+  console.log('Email sent:', response);
+};
+
+testEmail();
 ```
 
-### Si les liens sont présents dans les logs mais absents de l'email
+## 📝 Notes
 
-Le problème est dans EmailJS :
-1. Vérifiez que le template utilise bien `{{approval_link}}` et `{{denial_link}}`
-2. Vérifiez qu'il n'y a pas de filtres ou de sanitization qui suppriment les URLs
-3. Testez avec un template simple d'abord
+- Les emails peuvent prendre quelques minutes à arriver
+- Vérifiez aussi le dossier **spam** de votre boîte email
+- Les logs EmailJS dans le dashboard peuvent prendre quelques minutes à s'afficher
+- Si vous utilisez le fallback mailto, une fenêtre email s'ouvrira au lieu d'un email automatique
 
-### Si les liens sont absents des logs
+---
 
-Le problème est dans le code :
-1. Vérifiez que `window.location.origin` est défini
-2. Vérifiez que `generateToken` fonctionne
-3. Vérifiez les erreurs dans la console
-
-## 📞 Support
-
-Si le problème persiste :
-1. Vérifiez les logs de la console
-2. Testez le template EmailJS directement
-3. Vérifiez la documentation EmailJS : https://www.emailjs.com/docs/
-
+**Si vous avez toujours des problèmes, vérifiez les logs dans la console du navigateur (F12) lors d'une demande d'accès !** 🔍
