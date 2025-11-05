@@ -191,11 +191,13 @@ const Dashboard = ({ authData, onLogout }) => {
           <p>La Soirée du Rire de Granby</p>
           {authData && authData.user && (
             <div className="dashboard-user-info">
-              <img 
-                src={authData.user.picture} 
-                alt={authData.user.name}
-                className="user-avatar"
-              />
+              {authData.user.picture && (
+                <img 
+                  src={authData.user.picture} 
+                  alt={authData.user.name}
+                  className="user-avatar"
+                />
+              )}
               <span className="user-name">{authData.user.name}</span>
               <button onClick={onLogout} className="btn-logout">
                 Déconnexion
