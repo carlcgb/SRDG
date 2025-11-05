@@ -86,9 +86,26 @@ export async function onRequestPost(context) {
     return addCorsHeaders(response, request);
   } catch (error) {
     console.error('Error during login:', error);
+    
+    // Ensure error response is always JSON
+    let errorMessage = error.message || 'Une erreur inattendue s\'est produite';
+    
+    // Handle specific error types
+    if (error.message && error.message.includes('JSON')) {
+      errorMessage = 'Erreur de format de données';
+    } else if (error.message && error.message.includes('database')) {
+      errorMessage = 'Erreur de base de données';
+    }
+    
     const response = new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      JSON.stringify({ error: errorMessage }),
+      { 
+        status: 500, 
+        headers: { 
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        } 
+      }
     );
     return addCorsHeaders(response, request);
   }

@@ -222,13 +222,30 @@ const Login = ({ onLogin }) => {
         }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Erreur lors de la connexion');
+      // Check if response is OK and has JSON content
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        // Try to get text response for debugging
+        const textResponse = await response.text();
+        console.error('Non-JSON response:', textResponse);
+        throw new Error('Le serveur a retourné une réponse invalide. Vérifiez que l\'API est correctement configurée.');
       }
 
-      if (!data.success || !data.user) {
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        console.error('JSON parse error:', jsonError);
+        const textResponse = await response.text();
+        console.error('Response text:', textResponse);
+        throw new Error('Erreur lors de la lecture de la réponse du serveur.');
+      }
+
+      if (!response.ok) {
+        throw new Error(data?.error || `Erreur ${response.status}: Erreur lors de la connexion`);
+      }
+
+      if (!data || !data.success || !data.user) {
         throw new Error('Réponse invalide du serveur');
       }
 
