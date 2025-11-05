@@ -1,7 +1,8 @@
 // Cloudflare Workers API for Email/Password Authentication
 // Handles login and session management
+// This file handles all routes under /api/auth/*
 
-import { handleOptions, addCorsHeaders } from './cors.js';
+import { handleOptions, addCorsHeaders } from '../cors.js';
 
 // Handle OPTIONS preflight request
 export async function onRequestOptions(context) {
@@ -10,10 +11,11 @@ export async function onRequestOptions(context) {
 
 // Handle GET request (not used, but required for Cloudflare Workers)
 export async function onRequestGet() {
-  return new Response(
+  const response = new Response(
     JSON.stringify({ error: 'Method not allowed' }),
     { status: 405, headers: { 'Content-Type': 'application/json' } }
   );
+  return response;
 }
 
 /**
@@ -50,9 +52,7 @@ export async function onRequestPost(context) {
       return addCorsHeaders(response, request);
     }
 
-    // Verify password (using bcrypt - you'll need to implement this)
-    // For now, we'll use a simple hash comparison
-    // In production, use bcrypt or similar
+    // Verify password (using SHA-256 for now)
     const passwordMatch = await verifyPassword(password, user.password_hash);
 
     if (!passwordMatch) {
@@ -116,11 +116,7 @@ export async function onRequestPost(context) {
  * Note: In production, use proper bcrypt hashing
  */
 async function verifyPassword(password, hash) {
-  // For now, we'll use a simple comparison
-  // In production, implement proper bcrypt verification
-  // This is a placeholder - you should use a proper password hashing library
   try {
-    // Simple hash comparison (replace with bcrypt in production)
     const crypto = globalThis.crypto || globalThis.webcrypto;
     const encoder = new TextEncoder();
     const data = encoder.encode(password);
@@ -133,24 +129,6 @@ async function verifyPassword(password, hash) {
   } catch (error) {
     console.error('Error verifying password:', error);
     return false;
-  }
-}
-
-/**
- * Hash password for storage
- * Note: In production, use proper bcrypt hashing
- */
-export async function hashPassword(password) {
-  try {
-    const crypto = globalThis.crypto || globalThis.webcrypto;
-    const encoder = new TextEncoder();
-    const data = encoder.encode(password);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  } catch (error) {
-    console.error('Error hashing password:', error);
-    throw error;
   }
 }
 

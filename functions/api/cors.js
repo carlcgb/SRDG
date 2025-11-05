@@ -64,4 +64,3 @@ export const addCorsHeaders = (response, request) => {
     headers: newHeaders,
   });
 };
-
