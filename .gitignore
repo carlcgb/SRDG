@@ -100,3 +100,6 @@ Thumbs.db
 # Project specific
 /Design.json
 /index.html
+
+# Power BI templates
+*.pbit

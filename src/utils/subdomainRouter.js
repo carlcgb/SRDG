@@ -31,6 +31,8 @@ export const getSubdomain = () => {
 };
 
 export const isDashboardSubdomain = () => {
-  return getSubdomain() === 'dashboard';
+  const subdomain = getSubdomain();
+  // Support multiple subdomains for dashboard: 'dashboard' and 'stats'
+  return subdomain === 'dashboard' || subdomain === 'stats';
 };
 

@@ -80,10 +80,16 @@ export const sendAccessRequestEmail = async (userEmail, userName, userPicture) =
     // Get the base URL (handle both development and production)
     const baseUrl = window.location.origin || 'https://lasoireedurire.ca';
     
+    // Check if we're on a dashboard subdomain (stats or dashboard)
+    const hostname = window.location.hostname;
+    const isDashboardSubdomain = hostname.startsWith('stats.') || hostname.startsWith('dashboard.');
+    
     // Create approval/denial links
+    // If on subdomain, use /approve, if on main domain, use /dashboard/approve
+    const approvePath = isDashboardSubdomain ? '/approve' : '/dashboard/approve';
     const encodedEmail = encodeURIComponent(userEmail);
-    const approvalLink = `${baseUrl}/dashboard/approve?email=${encodedEmail}&token=${token}&action=approve`;
-    const denialLink = `${baseUrl}/dashboard/approve?email=${encodedEmail}&token=${token}&action=deny`;
+    const approvalLink = `${baseUrl}${approvePath}?email=${encodedEmail}&token=${token}&action=approve`;
+    const denialLink = `${baseUrl}${approvePath}?email=${encodedEmail}&token=${token}&action=deny`;
 
     // Prepare email data with all required fields
     const emailData = {
@@ -103,7 +109,8 @@ export const sendAccessRequestEmail = async (userEmail, userName, userPicture) =
         hour: '2-digit',
         minute: '2-digit'
       }),
-      dashboard_url: `${baseUrl}/dashboard`,
+      // Dashboard URL: if on subdomain, use base URL, if on main domain, use /dashboard
+      dashboard_url: isDashboardSubdomain ? baseUrl : `${baseUrl}/dashboard`,
     };
 
     // Debug: Log the full data being sent
@@ -157,7 +164,7 @@ Informations de l'utilisateur:
 Pour approuver l'accès, veuillez répondre à cet email avec "APPROUVER".
 Pour refuser l'accès, veuillez répondre avec "REFUSER".
 
-URL du Dashboard: ${window.location.origin}/dashboard
+URL du Dashboard: ${window.location.origin}${window.location.hostname.startsWith('stats.') || window.location.hostname.startsWith('dashboard.') ? '' : '/dashboard'}
 
 ---
 Dashboard La Soirée du Rire de Granby

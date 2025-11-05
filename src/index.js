@@ -1,14 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import DashboardApp from './DashboardApp';
+import DashboardApp from './components/DashboardApp';
 import ApproveAccess from './components/ApproveAccess';
 import { isDashboardSubdomain } from './utils/subdomainRouter';
 
 // Check if we're on the dashboard subdomain or path
 const pathname = window.location.pathname;
-const isDashboard = isDashboardSubdomain() || pathname.startsWith('/dashboard');
-const isApprovePage = pathname.includes('/dashboard/approve') || pathname.includes('/approve');
+const isDashboardSubdomainCheck = isDashboardSubdomain();
+const isDashboardPath = pathname.startsWith('/dashboard');
+const isDashboard = isDashboardSubdomainCheck || isDashboardPath;
+// For approve page: if on subdomain, use /approve, if on main domain, use /dashboard/approve
+const isApprovePage = isDashboardSubdomainCheck 
+  ? pathname.includes('/approve') 
+  : pathname.includes('/dashboard/approve');
 
 // Debug logging
 console.log('Current pathname:', pathname);

@@ -12,7 +12,10 @@ Site web moderne et réactif pour La Soirée du Rire de Granby, construit avec R
 - **📝 Formulaires Intégrés**: Soumission de blagues avec Google Sheets
 - **🔍 SEO Optimisé**: Référencement complet et données structurées
 - **⚡ Performance**: Chargement rapide et optimisé
-- **🔐 Sécurisé**: Configuration avec variables d'environnement
+- **🔐 Sécurisé**: Configuration avec GitHub Secrets uniquement (pas de .env)
+- **📊 Dashboard Analytics**: Tableau de bord avec authentification Google et données GA4
+- **🗄️ Cloudflare D1**: Base de données pour gestion des permissions d'accès
+- **🌐 Sous-domaines**: Support pour `stats.lasoireedurire.ca` et `dashboard.lasoireedurire.ca`
 - **📁 Organisation Avancée**: Structure de dossiers professionnelle et scalable
 - **🎨 Assets Organisés**: Images, styles et polices catégorisés
 - **📚 Documentation Complète**: Guides détaillés pour maintenance et développement
@@ -35,10 +38,14 @@ cp .env.example .env
 npm start
 ```
 
-### Configuration EmailJS
-1. Créer un compte sur [emailjs.com](https://www.emailjs.com/)
-2. Configurer les variables dans `.env`
-3. Voir le [Guide Complet](FULL_SETUP_GUIDE.md) pour les détails
+### Configuration
+
+**⚠️ Important**: Ce projet utilise uniquement GitHub Secrets pour les informations sensibles. Aucun fichier `.env` n'est nécessaire.
+
+1. **Configurer GitHub Secrets** (voir [docs/GITHUB_SECRETS_ONLY.md](docs/GITHUB_SECRETS_ONLY.md))
+2. **Configurer EmailJS** (voir [docs/FULL_SETUP_GUIDE.md](docs/FULL_SETUP_GUIDE.md))
+3. **Configurer le Dashboard** (voir [docs/DASHBOARD_SETUP.md](docs/DASHBOARD_SETUP.md))
+4. **Configurer Cloudflare D1** (voir [docs/CLOUDFLARE_D1_SETUP.md](docs/CLOUDFLARE_D1_SETUP.md))
 
 ### Déploiement
 ```bash
@@ -113,17 +120,32 @@ SRDG/
 │   └── sw.js                        # Service worker
 ├── 📁 src/                          # Code source
 │   ├── 📁 components/               # Composants React
+│   │   ├── Dashboard.js            # Tableau de bord Analytics
+│   │   ├── DashboardApp.js         # App dashboard avec auth
+│   │   ├── Login.js                # Authentification Google
+│   │   └── ...                     # Autres composants
 │   ├── 📁 hooks/                    # Hooks personnalisés
 │   ├── 📁 services/                 # Services externes
+│   │   ├── ga4Service.js           # Service Google Analytics 4
+│   │   ├── dashboardAuthService.js # Gestion permissions
+│   │   ├── cloudflareApiService.js # API Cloudflare D1
+│   │   └── ...                     # Autres services
+│   ├── 📁 utils/                    # Utilitaires
+│   │   └── subdomainRouter.js      # Routage sous-domaines
 │   ├── App.js                       # Composant principal
 │   └── index.js                     # Point d'entrée
 ├── 📁 scripts/                      # Scripts Google Apps
 │   ├── google-apps-script-clean.js
 │   ├── google-apps-script-form.js
 │   └── google-apps-script-simple.js
+├── 📁 functions/                    # Cloudflare Workers
+│   └── 📁 api/                     # API Workers
+│       ├── access-requests.js      # CRUD demandes d'accès
+│       └── verify-token.js         # Vérification tokens
 ├── 📄 Configuration
 │   ├── package.json                 # Dépendances et scripts
-│   ├── wrangler.toml               # Configuration Cloudflare
+│   ├── wrangler.toml               # Configuration Cloudflare + D1
+│   ├── schema.sql                  # Schéma base de données D1
 │   ├── .gitignore                  # Règles Git
 │   └── PROJECT_STRUCTURE.md        # Vue d'ensemble du projet
 └── 📁 node_modules/                # Dépendances (auto-généré)
@@ -184,8 +206,12 @@ npm run build
 - **React 18** - Interface utilisateur moderne
 - **EmailJS** - Envoi d'emails automatique
 - **Google Sheets API** - Intégration de formulaires
-- **GitHub Actions** - Déploiement automatique
+- **Google Analytics 4** - Analytics et données de performance
+- **Google Sign-In** - Authentification OAuth 2.0
+- **Cloudflare D1** - Base de données SQLite serverless
+- **Cloudflare Workers** - API serverless pour gestion des permissions
 - **Cloudflare Pages** - Hébergement et CDN
+- **GitHub Actions** - Déploiement automatique
 - **CSS3** - Animations et effets visuels
 - **Service Worker** - Mise en cache et performance
 - **SEO Avancé** - Optimisation complète et données structurées
@@ -194,11 +220,24 @@ npm run build
 
 ## 📚 Documentation
 
+### Guides Principaux
 - **[Guide Complet](docs/FULL_SETUP_GUIDE.md)** - Configuration détaillée et complète
 - **[Structure du Projet](PROJECT_STRUCTURE.md)** - Vue d'ensemble de l'organisation
 - **[Guide des Assets](public/assets/README.md)** - Organisation des images et styles
+
+### Dashboard & Analytics
+- **[Configuration Dashboard](docs/DASHBOARD_SETUP.md)** - Configuration du tableau de bord
+- **[Configuration D1](docs/CLOUDFLARE_D1_SETUP.md)** - Base de données Cloudflare D1
+- **[GitHub Secrets](docs/GITHUB_SECRETS_ONLY.md)** - Configuration des secrets
+- **[Sous-domaines](docs/SUBDOMAIN_SETUP.md)** - Configuration stats.lasoireedurire.ca
+
+### SEO & Optimisation
 - **[Optimisation SEO](docs/SEO_OPTIMIZATION_COMPLETE.md)** - Guide SEO complet
 - **[Liens Internes](docs/INTERNAL_LINKS_OPTIMIZATION.md)** - Optimisation navigation
+
+### Configuration Email
+- **[EmailJS Template](docs/EMAILJS_TEMPLATE_SETUP.md)** - Configuration des templates
+- **[Dépannage EmailJS](docs/EMAILJS_TROUBLESHOOTING.md)** - Résolution de problèmes
 
 ## 📞 Support
 
