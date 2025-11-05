@@ -1,6 +1,10 @@
 # API routes - Must be handled by Cloudflare Workers BEFORE any catch-all redirects
 /api/*   200
 
+# Privacy policy page
+/privacy    /index.html   200
+/privacy-policy    /index.html   200
+
 # Dashboard routing (for main domain)
 /dashboard    /index.html   200
 /dashboard/*    /index.html   200

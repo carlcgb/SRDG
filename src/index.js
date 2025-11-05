@@ -5,6 +5,8 @@ import DashboardApp from './components/DashboardApp';
 import ApproveAccess from './components/ApproveAccess';
 import { isDashboardSubdomain } from './utils/subdomainRouter';
 
+import PrivacyPolicy from './components/PrivacyPolicy';
+
 // Check if we're on the dashboard subdomain or path
 const pathname = window.location.pathname;
 const isDashboardSubdomainCheck = isDashboardSubdomain();
@@ -14,15 +16,18 @@ const isDashboard = isDashboardSubdomainCheck || isDashboardPath;
 const isApprovePage = isDashboardSubdomainCheck 
   ? pathname.includes('/approve') 
   : pathname.includes('/dashboard/approve');
+// Check if privacy policy page
+const isPrivacyPage = pathname === '/privacy' || pathname === '/privacy-policy';
 
 // Debug logging
 console.log('Current pathname:', pathname);
 console.log('Is dashboard?', isDashboard);
 console.log('Is approve page?', isApprovePage);
+console.log('Is privacy page?', isPrivacyPage);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    {isApprovePage ? <ApproveAccess /> : (isDashboard ? <DashboardApp /> : <App />)}
+    {isPrivacyPage ? <PrivacyPolicy /> : (isApprovePage ? <ApproveAccess /> : (isDashboard ? <DashboardApp /> : <App />))}
   </React.StrictMode>
 );

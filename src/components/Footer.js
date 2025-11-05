@@ -50,6 +50,9 @@ const Footer = () => {
         </div>
         <div className="footer-bottom">
           <p>&copy; 2024 La Soirée du Rire de Granby. Tous droits réservés.</p>
+          <div className="footer-legal">
+            <a href="/privacy">Politique de confidentialité</a>
+          </div>
         </div>
       </div>
     </footer>
