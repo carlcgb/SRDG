@@ -224,21 +224,29 @@ const Login = ({ onLogin }) => {
 
       // Check if response is OK and has JSON content
       const contentType = response.headers.get('content-type');
+      let data;
+      
       if (!contentType || !contentType.includes('application/json')) {
-        // Try to get text response for debugging
+        // Non-JSON response - get text for debugging
         const textResponse = await response.text();
         console.error('Non-JSON response:', textResponse);
+        console.error('Response status:', response.status);
+        console.error('Response headers:', response.headers);
         throw new Error('Le serveur a retourné une réponse invalide. Vérifiez que l\'API est correctement configurée.');
       }
 
-      let data;
+      // Try to parse JSON response
       try {
-        data = await response.json();
+        const responseText = await response.text();
+        if (!responseText || responseText.trim() === '') {
+          throw new Error('Réponse vide du serveur');
+        }
+        data = JSON.parse(responseText);
       } catch (jsonError) {
         console.error('JSON parse error:', jsonError);
-        const textResponse = await response.text();
-        console.error('Response text:', textResponse);
-        throw new Error('Erreur lors de la lecture de la réponse du serveur.');
+        console.error('Response status:', response.status);
+        console.error('Response headers:', response.headers);
+        throw new Error('Erreur lors de la lecture de la réponse du serveur. Vérifiez que l\'API est correctement configurée.');
       }
 
       if (!response.ok) {
