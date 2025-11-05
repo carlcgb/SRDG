@@ -69,17 +69,20 @@ const Dashboard = ({ authData, onLogout }) => {
       // Get date ranges for current and previous periods
       const { startDate, endDate, previousStartDate, previousEndDate } = getDateRange(dateRange);
 
-      // Fetch all metrics in parallel
-      const [
-        usersData,
-        sessionsData,
-        pageViewsData,
-        bounceRateData,
-        avgSessionDurationData,
-        topPagesData,
-        trafficSourcesData,
-        deviceBreakdownData,
-      ] = await Promise.all([
+      // Default fallback data for when requests fail
+      const defaultData = {
+        users: { current: 0, previous: 0, change: 0 },
+        sessions: { current: 0, previous: 0, change: 0 },
+        pageViews: { current: 0, previous: 0, change: 0 },
+        bounceRate: { current: 0, previous: 0, change: 0 },
+        avgSessionDuration: { current: '0:00', previous: '0:00', change: 0 },
+        topPages: [],
+        trafficSources: [],
+        deviceBreakdown: [],
+      };
+
+      // Fetch all metrics in parallel - use allSettled to handle partial failures
+      const results = await Promise.allSettled([
         getUsers(propertyId, startDate, endDate, previousStartDate, previousEndDate),
         getSessions(propertyId, startDate, endDate, previousStartDate, previousEndDate),
         getPageViews(propertyId, startDate, endDate, previousStartDate, previousEndDate),
@@ -90,17 +93,43 @@ const Dashboard = ({ authData, onLogout }) => {
         getDeviceBreakdown(propertyId, startDate, endDate),
       ]);
 
-      // Combine all data
+      // Extract results with fallback to defaults
+      const [
+        usersResult,
+        sessionsResult,
+        pageViewsResult,
+        bounceRateResult,
+        avgSessionDurationResult,
+        topPagesResult,
+        trafficSourcesResult,
+        deviceBreakdownResult,
+      ] = results;
+
+      // Combine all data with fallbacks
       const dashboardData = {
-        users: usersData,
-        sessions: sessionsData,
-        pageViews: pageViewsData,
-        bounceRate: bounceRateData,
-        avgSessionDuration: avgSessionDurationData,
-        topPages: topPagesData,
-        trafficSources: trafficSourcesData,
-        deviceBreakdown: deviceBreakdownData,
+        users: usersResult.status === 'fulfilled' ? usersResult.value : defaultData.users,
+        sessions: sessionsResult.status === 'fulfilled' ? sessionsResult.value : defaultData.sessions,
+        pageViews: pageViewsResult.status === 'fulfilled' ? pageViewsResult.value : defaultData.pageViews,
+        bounceRate: bounceRateResult.status === 'fulfilled' ? bounceRateResult.value : defaultData.bounceRate,
+        avgSessionDuration: avgSessionDurationResult.status === 'fulfilled' 
+          ? avgSessionDurationResult.value 
+          : defaultData.avgSessionDuration,
+        topPages: topPagesResult.status === 'fulfilled' ? topPagesResult.value : defaultData.topPages,
+        trafficSources: trafficSourcesResult.status === 'fulfilled' 
+          ? trafficSourcesResult.value 
+          : defaultData.trafficSources,
+        deviceBreakdown: deviceBreakdownResult.status === 'fulfilled' 
+          ? deviceBreakdownResult.value 
+          : defaultData.deviceBreakdown,
       };
+
+      // Log any failures for debugging
+      results.forEach((result, index) => {
+        if (result.status === 'rejected') {
+          const metricNames = ['users', 'sessions', 'pageViews', 'bounceRate', 'avgSessionDuration', 'topPages', 'trafficSources', 'deviceBreakdown'];
+          console.warn(`⚠️ Failed to fetch ${metricNames[index]}:`, result.reason);
+        }
+      });
 
       setData(dashboardData);
     } catch (err) {
