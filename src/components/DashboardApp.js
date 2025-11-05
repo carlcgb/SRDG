@@ -89,20 +89,34 @@ function DashboardApp() {
       } else {
         // User not authorized - send access request email and store in Cloudflare D1
         try {
+          console.log('📝 Marking user as pending:', userEmail);
           await markAsPending(userEmail, auth.user?.name);
+          console.log('✅ User marked as pending in database');
+          
+          console.log('📧 Attempting to send access request email...');
           const emailResult = await sendAccessRequestEmail(
             userEmail,
             auth.user?.name,
             auth.user?.picture
           );
 
+          console.log('📧 Email result:', emailResult);
+          
           if (emailResult.success) {
+            console.log('✅ Email sent successfully, setting status to request_sent');
             setAccessStatus('request_sent');
           } else {
+            console.error('❌ Email sending failed, setting status to email_error');
+            console.error('Email result details:', emailResult);
             setAccessStatus('email_error');
           }
         } catch (error) {
-          console.error('Error sending access request:', error);
+          console.error('❌ Error sending access request:', error);
+          console.error('Error details:', {
+            message: error.message,
+            stack: error.stack,
+            name: error.name
+          });
           setAccessStatus('email_error');
         }
       }

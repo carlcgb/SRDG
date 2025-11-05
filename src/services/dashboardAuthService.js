@@ -27,7 +27,14 @@ const PRIMARY_ADMIN_EMAIL = process.env.REACT_APP_DASHBOARD_ADMIN_EMAIL || 'info
 
 // Initialize EmailJS if configured
 if (EMAILJS_PUBLIC_KEY) {
-  emailjs.init(EMAILJS_PUBLIC_KEY);
+  try {
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+    console.log('✅ EmailJS initialized with public key');
+  } catch (initError) {
+    console.error('❌ Error initializing EmailJS:', initError);
+  }
+} else {
+  console.warn('⚠️ EmailJS Public Key not configured');
 }
 
 /**
@@ -132,13 +139,21 @@ export const sendAccessRequestEmail = async (userEmail, userName, userPicture) =
     console.log('📧 Sending dashboard access request email:');
     console.log('EmailJS Service ID:', EMAILJS_SERVICE_ID);
     console.log('EmailJS Template ID:', EMAILJS_TEMPLATE_ID);
+    console.log('EmailJS Public Key:', EMAILJS_PUBLIC_KEY ? 'Set (length: ' + EMAILJS_PUBLIC_KEY.length + ')' : 'Missing');
     console.log('To:', PRIMARY_ADMIN_EMAIL);
     console.log('User:', userEmail, userName);
     console.log('Approval Link:', approvalLink);
     console.log('Denial Link:', denialLink);
     console.log('Email Data:', emailData);
 
+    // Verify EmailJS is initialized
+    if (!EMAILJS_PUBLIC_KEY) {
+      console.error('❌ EmailJS Public Key not configured - cannot send email');
+      throw new Error('EmailJS Public Key not configured');
+    }
+
     try {
+      console.log('📤 Attempting to send email via EmailJS...');
       const response = await emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
@@ -148,6 +163,7 @@ export const sendAccessRequestEmail = async (userEmail, userName, userPicture) =
       console.log('✅ Email sent successfully:', response);
       console.log('Response status:', response.status);
       console.log('Response text:', response.text);
+      console.log('Response statusText:', response.statusText);
 
       return {
         success: true,
