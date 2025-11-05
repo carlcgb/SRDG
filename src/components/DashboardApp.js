@@ -141,7 +141,8 @@ function DashboardApp() {
             <div className="access-icon">✉️</div>
             <h2>Demande d'accès envoyée</h2>
             <p>Votre demande d'accès au tableau de bord a été envoyée à l'administrateur.</p>
-            <p>Vous recevrez un email une fois votre demande approuvée.</p>
+            <p><strong>L'administrateur examinera votre demande et vous accordera ou refusera l'accès sous peu.</strong></p>
+            <p>Vous serez notifié une fois que votre demande aura été traitée.</p>
             <button onClick={handleLogout} className="btn-logout">
               Déconnexion
             </button>

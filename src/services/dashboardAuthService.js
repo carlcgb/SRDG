@@ -30,8 +30,12 @@ if (EMAILJS_PUBLIC_KEY) {
 export const isEmailAuthorized = async (email) => {
   if (!email) return false;
 
-  // Check admin email (always authorized)
-  if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+  // Check if email is an admin (always authorized)
+  const isAdmin = ADMIN_EMAILS.some(adminEmail => 
+    email.toLowerCase() === adminEmail.toLowerCase()
+  );
+  
+  if (isAdmin) {
     return true;
   }
 
@@ -93,7 +97,7 @@ export const sendAccessRequestEmail = async (userEmail, userName, userPicture) =
 
     // Prepare email data with all required fields
     const emailData = {
-      to_email: ADMIN_EMAIL,
+      to_email: PRIMARY_ADMIN_EMAIL,
       user_email: userEmail,
       user_name: userName || userEmail,
       user_picture: userPicture || '',
@@ -115,7 +119,7 @@ export const sendAccessRequestEmail = async (userEmail, userName, userPicture) =
 
     // Debug: Log the full data being sent
     console.log('📧 Sending dashboard access request email:');
-    console.log('To:', ADMIN_EMAIL);
+    console.log('To:', PRIMARY_ADMIN_EMAIL);
     console.log('User:', userEmail, userName);
     console.log('Approval Link:', approvalLink);
     console.log('Denial Link:', denialLink);
@@ -170,7 +174,7 @@ URL du Dashboard: ${window.location.origin}${window.location.hostname.startsWith
 Dashboard La Soirée du Rire de Granby
     `.trim();
 
-    const mailtoUrl = `mailto:${ADMIN_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const mailtoUrl = `mailto:${PRIMARY_ADMIN_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     window.open(mailtoUrl, '_blank');
 
     return {
@@ -230,7 +234,7 @@ export const verifyToken = async (email, token) => {
  */
 export const addAuthorizedUser = async (email, reviewedBy = null) => {
   try {
-    await updateAccessRequestStatus(email, 'approved', reviewedBy || ADMIN_EMAIL);
+    await updateAccessRequestStatus(email, 'approved', reviewedBy || PRIMARY_ADMIN_EMAIL);
     return true;
   } catch (error) {
     console.error('Error approving user access:', error);
@@ -244,7 +248,7 @@ export const addAuthorizedUser = async (email, reviewedBy = null) => {
  */
 export const removeAuthorizedUser = async (email, reviewedBy = null) => {
   try {
-    await updateAccessRequestStatus(email, 'denied', reviewedBy || ADMIN_EMAIL);
+    await updateAccessRequestStatus(email, 'denied', reviewedBy || PRIMARY_ADMIN_EMAIL);
     return true;
   } catch (error) {
     console.error('Error denying user access:', error);
