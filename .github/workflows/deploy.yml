@@ -28,7 +28,7 @@ jobs:
         
     - name: Install dependencies
       run: |
-        npm ci
+        npm install
         npm --version
         node --version
         
