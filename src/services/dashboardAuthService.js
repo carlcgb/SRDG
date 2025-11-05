@@ -15,8 +15,15 @@ const EMAILJS_SERVICE_ID = process.env.REACT_APP_EMAILJS_SERVICE_ID;
 const EMAILJS_TEMPLATE_ID = process.env.REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID || process.env.REACT_APP_EMAILJS_TEMPLATE_ID;
 const EMAILJS_PUBLIC_KEY = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
 
-// Admin email - injected at build time from GitHub Secrets
-const ADMIN_EMAIL = process.env.REACT_APP_DASHBOARD_ADMIN_EMAIL || 'info@lasoireedurire.ca';
+// Admin emails - multiple admins allowed
+const ADMIN_EMAILS = [
+  'carl.g.bisaillon@gmail.com',
+  'info@lasoireedurire.ca',
+  process.env.REACT_APP_DASHBOARD_ADMIN_EMAIL, // From GitHub Secrets (if set)
+].filter(Boolean); // Remove undefined values
+
+// Primary admin email for notifications (used in emails)
+const PRIMARY_ADMIN_EMAIL = process.env.REACT_APP_DASHBOARD_ADMIN_EMAIL || 'info@lasoireedurire.ca';
 
 // Initialize EmailJS if configured
 if (EMAILJS_PUBLIC_KEY) {
