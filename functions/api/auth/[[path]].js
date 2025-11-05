@@ -3,6 +3,7 @@
 // This file handles all routes under /api/auth/*
 
 import { handleOptions, addCorsHeaders } from '../cors.js';
+import { verifyPassword } from '../password.js';
 
 // Handle OPTIONS preflight request
 export async function onRequestOptions(context) {
@@ -111,24 +112,4 @@ export async function onRequestPost(context) {
   }
 }
 
-/**
- * Simple password verification
- * Note: In production, use proper bcrypt hashing
- */
-async function verifyPassword(password, hash) {
-  try {
-    const crypto = globalThis.crypto || globalThis.webcrypto;
-    const encoder = new TextEncoder();
-    const data = encoder.encode(password);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    
-    // Compare with stored hash
-    return hashHex === hash;
-  } catch (error) {
-    console.error('Error verifying password:', error);
-    return false;
-  }
-}
 

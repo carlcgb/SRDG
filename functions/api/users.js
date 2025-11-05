@@ -2,7 +2,7 @@
 // Handles creating and managing email/password users
 
 import { handleOptions, addCorsHeaders } from './cors.js';
-import { hashPassword } from './auth.js';
+import { hashPassword } from './password.js';
 
 // Handle OPTIONS preflight request
 export async function onRequestOptions(context) {
