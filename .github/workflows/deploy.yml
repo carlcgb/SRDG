@@ -65,6 +65,11 @@ jobs:
         else
           echo "REACT_APP_DASHBOARD_ADMIN_EMAIL is set"
         fi
+        if [ -z "$REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID" ]; then
+          echo "WARNING: REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID is not set (will use EMAILJS_TEMPLATE_ID as fallback)"
+        else
+          echo "REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID is set"
+        fi
       env:
         EMAILJS_SERVICE_ID: ${{ secrets.EMAILJS_SERVICE_ID }}
         EMAILJS_TEMPLATE_ID: ${{ secrets.EMAILJS_TEMPLATE_ID }}
@@ -72,6 +77,10 @@ jobs:
         REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.REACT_APP_GOOGLE_CLIENT_ID }}
         REACT_APP_GA4_PROPERTY_ID: ${{ secrets.REACT_APP_GA4_PROPERTY_ID }}
         REACT_APP_DASHBOARD_ADMIN_EMAIL: ${{ secrets.REACT_APP_DASHBOARD_ADMIN_EMAIL }}
+        REACT_APP_EMAILJS_SERVICE_ID: ${{ secrets.EMAILJS_SERVICE_ID }}
+        REACT_APP_EMAILJS_TEMPLATE_ID: ${{ secrets.EMAILJS_TEMPLATE_ID }}
+        REACT_APP_EMAILJS_PUBLIC_KEY: ${{ secrets.EMAILJS_PUBLIC_KEY }}
+        REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID: ${{ secrets.REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID }}
         
     - name: Build with environment variables
       run: |

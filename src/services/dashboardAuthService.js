@@ -83,7 +83,10 @@ export const sendAccessRequestEmail = async (userEmail, userName, userPicture) =
 
     // Send email notification
     if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
-      console.error('EmailJS not configured for dashboard access requests');
+      console.error('❌ EmailJS not configured for dashboard access requests');
+      console.error('EmailJS_SERVICE_ID:', EMAILJS_SERVICE_ID ? '✅ Set' : '❌ Missing');
+      console.error('EMAILJS_TEMPLATE_ID:', EMAILJS_TEMPLATE_ID ? '✅ Set' : '❌ Missing');
+      console.error('EMAILJS_PUBLIC_KEY:', EMAILJS_PUBLIC_KEY ? '✅ Set' : '❌ Missing');
       // Fallback to mailto if EmailJS not configured
       return await sendAccessRequestEmailFallback(userEmail, userName);
     }
@@ -126,26 +129,43 @@ export const sendAccessRequestEmail = async (userEmail, userName, userPicture) =
 
     // Debug: Log the full data being sent
     console.log('📧 Sending dashboard access request email:');
+    console.log('EmailJS Service ID:', EMAILJS_SERVICE_ID);
+    console.log('EmailJS Template ID:', EMAILJS_TEMPLATE_ID);
     console.log('To:', PRIMARY_ADMIN_EMAIL);
     console.log('User:', userEmail, userName);
     console.log('Approval Link:', approvalLink);
     console.log('Denial Link:', denialLink);
+    console.log('Email Data:', emailData);
 
-    const response = await emailjs.send(
-      EMAILJS_SERVICE_ID,
-      EMAILJS_TEMPLATE_ID,
-      emailData
-    );
+    try {
+      const response = await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        emailData
+      );
 
-    console.log('✅ Email sent successfully:', response);
+      console.log('✅ Email sent successfully:', response);
+      console.log('Response status:', response.status);
+      console.log('Response text:', response.text);
 
-    return {
-      success: true,
-      message: 'Access request email sent to admin',
-      response
-    };
+      return {
+        success: true,
+        message: 'Access request email sent to admin',
+        response
+      };
+    } catch (emailError) {
+      console.error('❌ EmailJS send error:', emailError);
+      console.error('Error details:', {
+        code: emailError.code,
+        text: emailError.text,
+        status: emailError.status,
+        message: emailError.message
+      });
+      throw emailError; // Re-throw to be caught by outer catch
+    }
   } catch (error) {
-    console.error('Error sending access request email:', error);
+    console.error('❌ Error sending access request email:', error);
+    console.error('Error stack:', error.stack);
     // Fallback to mailto if EmailJS fails
     return await sendAccessRequestEmailFallback(userEmail, userName);
   }
