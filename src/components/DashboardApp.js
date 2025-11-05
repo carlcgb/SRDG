@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Dashboard from './components/Dashboard';
-import Login from './components/Login';
-import AccessPending from './components/AccessPending';
-import './components/Dashboard.css';
-import './components/Login.css';
+import Dashboard from './Dashboard';
+import Login from './Login';
+import AccessPending from './AccessPending';
+import './Dashboard.css';
+import './Login.css';
 import { isEmailAuthorized, sendAccessRequestEmail, markAsPending, isPendingApproval } from '../services/dashboardAuthService';
 
 // Separate app for dashboard subdomain
