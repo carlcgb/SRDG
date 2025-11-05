@@ -273,20 +273,13 @@
   transform: translateX(5px);
 }
 
-.chart-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(246, 74, 62, 0.2);
-}
-
 .chart-card h2 {
   font-size: 1.8rem;
   font-weight: 700;
   color: var(--primary-color, #F64A3E);
-  margin: 0 0 25px 0;
+  margin: 0;
   text-transform: uppercase;
-  text-align: center;
-  border-bottom: 3px solid var(--primary-color, #F64A3E);
-  padding-bottom: 15px;
+  font-family: 'Teko', sans-serif;
 }
 
 /* Top Pages List */
