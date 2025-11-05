@@ -4,6 +4,9 @@ import './Login.css';
 const Login = ({ onLogin }) => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
+  const [loginMethod, setLoginMethod] = React.useState('google'); // 'google' or 'email'
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
 
   useEffect(() => {
     // Check if client ID is configured
@@ -193,6 +196,67 @@ const Login = ({ onLogin }) => {
     }
   };
 
+  /**
+   * Handle email/password login
+   */
+  const handleEmailLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      if (!email || !password) {
+        throw new Error('Veuillez remplir tous les champs');
+      }
+
+      // Authenticate with backend
+      const apiUrl = `${window.location.origin}/api/auth/login`;
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erreur lors de la connexion');
+      }
+
+      if (!data.success || !data.user) {
+        throw new Error('Réponse invalide du serveur');
+      }
+
+      // Store authentication info (similar format to Google Sign-In)
+      const authData = {
+        token: `email_${Date.now()}`, // Simple token for email login
+        user: {
+          email: data.user.email,
+          name: data.user.name || data.user.email,
+          picture: '', // No picture for email login
+          isAdmin: data.user.isAdmin,
+        },
+        timestamp: Date.now(),
+        loginMethod: 'email',
+      };
+
+      // Store in localStorage
+      localStorage.setItem('dashboard_auth', JSON.stringify(authData));
+      
+      // Call the onLogin callback (will check authorization)
+      await onLogin(authData);
+    } catch (err) {
+      console.error('Email login error:', err);
+      setError(err.message || 'Erreur lors de la connexion. Veuillez réessayer.');
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="login-container">
       <div className="login-card">
@@ -205,7 +269,7 @@ const Login = ({ onLogin }) => {
           <div className="login-icon">📊</div>
           <h2>Connexion requise</h2>
           <p className="login-description">
-            Veuillez vous connecter avec votre compte Google pour accéder au tableau de bord Analytics.
+            Veuillez vous connecter pour accéder au tableau de bord Analytics.
           </p>
 
           {error && (
@@ -214,15 +278,84 @@ const Login = ({ onLogin }) => {
             </div>
           )}
 
-          <div className="google-signin-container">
-            <div id="google-signin-button"></div>
-            {loading && (
-              <div className="login-loading">
-                <div className="spinner-login"></div>
-                <p>Connexion en cours...</p>
-              </div>
-            )}
+          {/* Login Method Toggle */}
+          <div className="login-method-toggle">
+            <button
+              type="button"
+              className={`method-btn ${loginMethod === 'google' ? 'active' : ''}`}
+              onClick={() => setLoginMethod('google')}
+              disabled={loading}
+            >
+              Google
+            </button>
+            <button
+              type="button"
+              className={`method-btn ${loginMethod === 'email' ? 'active' : ''}`}
+              onClick={() => setLoginMethod('email')}
+              disabled={loading}
+            >
+              Email
+            </button>
           </div>
+
+          {/* Google Sign-In */}
+          {loginMethod === 'google' && (
+            <div className="google-signin-container">
+              <div id="google-signin-button"></div>
+              {loading && (
+                <div className="login-loading">
+                  <div className="spinner-login"></div>
+                  <p>Connexion en cours...</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Email/Password Login */}
+          {loginMethod === 'email' && (
+            <form onSubmit={handleEmailLogin} className="email-login-form">
+              <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="votre@email.com"
+                  required
+                  disabled={loading}
+                  autoComplete="email"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="password">Mot de passe</label>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  disabled={loading}
+                  autoComplete="current-password"
+                />
+              </div>
+              <button
+                type="submit"
+                className="btn-login-email"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <div className="spinner-login-small"></div>
+                    Connexion...
+                  </>
+                ) : (
+                  'Se connecter'
+                )}
+              </button>
+            </form>
+          )}
         </div>
 
         <div className="login-footer">

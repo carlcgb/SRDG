@@ -21,41 +21,59 @@ function DashboardApp() {
   const checkAuthentication = async () => {
     try {
       const storedAuth = localStorage.getItem('dashboard_auth');
-      if (storedAuth) {
-        const auth = JSON.parse(storedAuth);
-        // Check if token is still valid (not expired)
-        const tokenAge = Date.now() - auth.timestamp;
-        const tokenMaxAge = 24 * 60 * 60 * 1000; // 24 hours
-        
-        if (tokenAge < tokenMaxAge) {
-          // Check if user is authorized (uses Cloudflare D1)
-          const userEmail = auth.user?.email;
-          if (userEmail) {
-            const authorized = await isEmailAuthorized(userEmail);
-            if (authorized) {
-              setAuthData(auth);
-              setIsAuthenticated(true);
-              setAccessStatus('authorized');
-            } else {
-              const pending = await isPendingApproval(userEmail);
-              if (pending) {
-                setAccessStatus('pending');
-              } else {
-                // User not authorized, need to request access
-                setAccessStatus('not_authorized');
-              }
-            }
+      if (!storedAuth) {
+        setLoading(false);
+        return;
+      }
+
+      const auth = JSON.parse(storedAuth);
+      const userEmail = auth.user?.email;
+      
+      if (!userEmail) {
+        localStorage.removeItem('dashboard_auth');
+        setLoading(false);
+        return;
+      }
+
+      // For email login, check if user is admin (faster check)
+      if (auth.loginMethod === 'email' && auth.user?.isAdmin) {
+        // Admin users with email login are immediately authorized
+        setAuthData(auth);
+        setIsAuthenticated(true);
+        setAccessStatus('authorized');
+        setLoading(false);
+        return;
+      }
+
+      // Check if token is still valid (not expired)
+      const tokenAge = Date.now() - auth.timestamp;
+      const tokenMaxAge = 24 * 60 * 60 * 1000; // 24 hours
+      
+      if (tokenAge >= tokenMaxAge) {
+        // Token expired, remove it
+        localStorage.removeItem('dashboard_auth');
+        setLoading(false);
+        return;
+      }
+
+      // Check if user is authorized (uses Cloudflare D1)
+      // For email login with admin flag, skip this check (already done above)
+      if (auth.loginMethod !== 'email' || !auth.user?.isAdmin) {
+        const authorized = await isEmailAuthorized(userEmail);
+        if (authorized) {
+          setAuthData(auth);
+          setIsAuthenticated(true);
+          setAccessStatus('authorized');
+        } else {
+          const pending = await isPendingApproval(userEmail);
+          if (pending) {
+            setAuthData(auth);
+            setAccessStatus('pending');
           } else {
-            // No email in auth data
+            // User not authorized, need to request access
             setAccessStatus('not_authorized');
           }
-        } else {
-          // Token expired, remove it
-          localStorage.removeItem('dashboard_auth');
-          setAccessStatus(null);
         }
-      } else {
-        setAccessStatus(null);
       }
     } catch (error) {
       console.error('Error checking authentication:', error);

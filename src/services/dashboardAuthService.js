@@ -53,6 +53,25 @@ export const isEmailAuthorized = async (email) => {
     return true;
   }
 
+  // Check if user exists in dashboard_users table (email/password login)
+  try {
+    const apiUrl = `${window.location.origin}/api/users`;
+    const response = await fetch(apiUrl);
+    
+    if (response.ok) {
+      const data = await response.json();
+      if (data.success && data.users) {
+        const user = data.users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.is_active);
+        if (user && user.is_admin) {
+          return true; // Admin user with email login
+        }
+      }
+    }
+  } catch (error) {
+    // Ignore errors checking dashboard_users
+    console.warn('Could not check dashboard_users:', error);
+  }
+
   try {
     // Check access request status from Cloudflare D1
     const accessRequest = await getAccessRequest(email);
