@@ -236,6 +236,43 @@
   transition: all 0.3s ease;
 }
 
+.chart-card-clickable {
+  cursor: pointer;
+  position: relative;
+}
+
+.chart-card-clickable:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(246, 74, 62, 0.2);
+  border-color: var(--accent-dark, #B5332D);
+}
+
+.chart-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.chart-card-header h2 {
+  margin: 0;
+}
+
+.chart-card-expand {
+  font-size: 0.9rem;
+  color: var(--primary-color, #F64A3E);
+  font-weight: 600;
+  text-transform: uppercase;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+  font-family: 'Teko', sans-serif;
+}
+
+.chart-card-clickable:hover .chart-card-expand {
+  opacity: 1;
+  transform: translateX(5px);
+}
+
 .chart-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 20px 40px rgba(246, 74, 62, 0.2);
