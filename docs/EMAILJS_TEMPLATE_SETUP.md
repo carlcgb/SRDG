@@ -1,21 +1,24 @@
-# 📧 Configuration EmailJS Template pour Demandes d'Accès
+# 📧 Configuration du Template EmailJS pour les Demandes d'Accès
 
-## ⚠️ Problème : Liens vides dans EmailJS
+## Configuration GitHub Secrets
 
-Si les variables `{{approval_link}}` et `{{denial_link}}` apparaissent vides dans vos emails, voici comment corriger :
+Vous avez deux options pour les templates EmailJS :
 
-## 🔧 Solution 1 : Vérifier les noms des variables dans EmailJS
+### Option 1 : Utiliser le template existant (formulaire de contact) ✅ Simple
 
-### Dans votre template EmailJS, utilisez EXACTEMENT ces noms :
+Si vous ne voulez pas créer un nouveau template, le système utilisera automatiquement votre template de contact existant (`EMAILJS_TEMPLATE_ID`).
 
-- `{{approval_link}}` (avec underscore, pas de tiret)
-- `{{denial_link}}` (avec underscore, pas de tiret)
-- `{{user_email}}`
-- `{{user_name}}`
-- `{{request_date}}`
-- `{{dashboard_url}}`
+**Aucune action requise** - Le système fonctionnera avec votre template actuel.
 
-### Format correct du template :
+### Option 2 : Créer un template spécifique (recommandé) 🎯 Recommandé
+
+Si vous voulez un template personnalisé pour les demandes d'accès au dashboard :
+
+#### 1. Créer le Template EmailJS
+
+1. Allez sur [EmailJS Dashboard](https://dashboard.emailjs.com/)
+2. Créez un nouveau **Email Template**
+3. Configurez-le avec ces variables :
 
 **Sujet :**
 ```
@@ -24,125 +27,74 @@ Nouvelle demande d'accès au Dashboard - {{user_name}}
 
 **Corps de l'email :**
 ```
-Bonjour,
-
-Une nouvelle demande d'accès au tableau de bord Analytics a été reçue.
+Nouvelle demande d'accès au tableau de bord Analytics
 
 Informations de l'utilisateur:
 - Nom: {{user_name}}
 - Email: {{user_email}}
 - Date de la demande: {{request_date}}
 
-Pour approuver l'accès (View Only):
-{{approval_link}}
-
-Pour refuser l'accès:
-{{denial_link}}
-
-URL du Dashboard: {{dashboard_url}}
-
----
-Dashboard La Soirée du Rire de Granby
-```
-
-## 🔍 Vérification dans EmailJS
-
-1. Allez dans votre template EmailJS
-2. Vérifiez que les variables sont écrites **exactement** comme ci-dessus
-3. Assurez-vous qu'il n'y a pas d'espaces supplémentaires
-4. Les liens doivent être sur des lignes séparées pour s'afficher correctement
-
-## 🐛 Dépannage
-
-### Les liens sont vides
-
-**Cause possible 1 : Noms de variables incorrects**
-- Vérifiez que vous utilisez `{{approval_link}}` et `{{denial_link}}` (avec underscore)
-- PAS `{{approval-link}}` ou `{{approvalLink}}`
-
-**Cause possible 2 : Variables non passées**
-- Vérifiez la console du navigateur lors de l'envoi
-- Vous devriez voir un log avec les données envoyées
-- Les liens devraient être visibles dans le log
-
-**Cause possible 3 : Template EmailJS incorrect**
-- Vérifiez que le template utilise bien ces variables
-- Testez le template avec des valeurs de test dans EmailJS
-
-### Tester les liens
-
-1. Ouvrez la console du navigateur (F12)
-2. Connectez-vous avec un email non autorisé
-3. Regardez les logs - vous devriez voir :
-   ```
-   Sending email with data: {
-     approval_link: "https://lasoireedurire.ca/dashboard/approve?...",
-     denial_link: "https://lasoireedurire.ca/dashboard/approve?..."
-   }
-   ```
-
-### Format des liens dans l'email
-
-Les liens doivent être formatés comme des liens HTML dans EmailJS :
-
-**Option A : Lien simple (recommandé)**
-```
-Pour approuver: {{approval_link}}
-
-Pour refuser: {{denial_link}}
-```
-
-**Option B : Lien HTML formaté**
-```
-Pour approuver: <a href="{{approval_link}}">Cliquez ici pour approuver</a>
-
-Pour refuser: <a href="{{denial_link}}">Cliquez ici pour refuser</a>
-```
-
-## 📝 Exemple de Template Complet
-
-```
-Bonjour,
-
-Une nouvelle demande d'accès au tableau de bord Analytics a été reçue.
-
-Informations de l'utilisateur:
-- Nom: {{user_name}}
-- Email: {{user_email}}
-- Date de la demande: {{request_date}}
-
-Pour approuver l'accès (View Only):
-{{approval_link}}
-
-Pour refuser l'accès:
-{{denial_link}}
-
-URL du Dashboard: {{dashboard_url}}
-
-Si les liens ci-dessus ne fonctionnent pas, copiez et collez ces URLs dans votre navigateur:
-
+Actions:
 Approuver: {{approval_link}}
 Refuser: {{denial_link}}
 
----
-Dashboard La Soirée du Rire de Granby
+Dashboard: {{dashboard_url}}
 ```
+
+4. Configurez l'email de destination : `info@lasoireedurire.ca`
+5. Sauvegardez et notez l'**ID du template** (ex: `template_1pwn12i`)
+
+#### 2. Ajouter le Secret GitHub
+
+1. Allez dans votre dépôt GitHub
+2. **Settings** → **Secrets and variables** → **Actions**
+3. Cliquez sur **"New repository secret"**
+4. **Name** : `REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID`
+5. **Value** : `template_1pwn12i` (votre ID de template)
+6. Cliquez sur **"Add secret"**
+
+#### 3. Vérifier
+
+Après le prochain déploiement, le système utilisera automatiquement ce template pour les demandes d'accès.
 
 ## ✅ Checklist
 
-- [ ] Variables nommées correctement avec underscore (`{{approval_link}}`)
-- [ ] Template EmailJS sauvegardé
-- [ ] Testé avec un email de test
-- [ ] Liens visibles dans l'email reçu
-- [ ] Liens cliquables et fonctionnels
+- [ ] Template EmailJS créé dans EmailJS Dashboard
+- [ ] Template configuré avec toutes les variables nécessaires
+- [ ] ID du template noté (ex: `template_1pwn12i`)
+- [ ] Secret GitHub `REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID` ajouté
+- [ ] Email de destination configuré dans le template
+- [ ] Prochain déploiement attendu
 
-## 🔗 Format des URLs générées
+## 📝 Variables Disponibles dans le Template
 
-Les liens générés ressemblent à :
+| Variable | Description | Exemple |
+|----------|-------------|---------|
+| `{{to_email}}` | Email de destination | `info@lasoireedurire.ca` |
+| `{{user_email}}` | Email de l'utilisateur qui demande l'accès | `user@example.com` |
+| `{{user_name}}` | Nom de l'utilisateur | `John Doe` |
+| `{{approval_link}}` | Lien pour approuver l'accès | `https://stats.lasoireedurire.ca/approve?email=...&token=...&action=approve` |
+| `{{denial_link}}` | Lien pour refuser l'accès | `https://stats.lasoireedurire.ca/approve?email=...&token=...&action=deny` |
+| `{{approval_link_html}}` | Lien HTML formaté pour approuver | `<a href="...">✅ Approuver l'accès</a>` |
+| `{{denial_link_html}}` | Lien HTML formaté pour refuser | `<a href="...">❌ Refuser l'accès</a>` |
+| `{{request_date}}` | Date de la demande | `5 novembre 2024, 11:00` |
+| `{{dashboard_url}}` | URL du dashboard | `https://stats.lasoireedurire.ca` |
+
+## 🔍 Vérification
+
+Après avoir ajouté le secret, vérifiez dans la console du navigateur (F12) lors d'une demande d'accès :
+
 ```
-https://lasoireedurire.ca/dashboard/approve?email=user@example.com&token=ABC123&action=approve
-https://lasoireedurire.ca/dashboard/approve?email=user@example.com&token=ABC123&action=deny
+📧 Sending dashboard access request email:
+EmailJS Service ID: service_xxxxx
+EmailJS Template ID: template_1pwn12i  ← Votre nouveau template
+To: info@lasoireedurire.ca
+...
+✅ Email sent successfully
 ```
 
-Si vous voyez ces URLs dans les logs mais pas dans l'email, le problème est dans le template EmailJS.
+Si vous voyez encore l'ancien template ID, attendez le prochain déploiement GitHub Actions.
 
+---
+
+**Note** : Si vous n'ajoutez pas `REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID`, le système utilisera automatiquement `EMAILJS_TEMPLATE_ID` (votre template de contact).
