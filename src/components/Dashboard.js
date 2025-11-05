@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Dashboard.css';
+import DashboardModal from './DashboardModal';
 import {
   getUsers,
   getSessions,
@@ -17,6 +18,10 @@ const Dashboard = ({ authData, onLogout }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dateRange, setDateRange] = useState('last30days');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalData, setModalData] = useState(null);
+  const [modalType, setModalType] = useState(null);
+  const [modalTitle, setModalTitle] = useState('');
 
   useEffect(() => {
     loadDashboardData();
@@ -88,7 +93,7 @@ const Dashboard = ({ authData, onLogout }) => {
         getPageViews(propertyId, startDate, endDate, previousStartDate, previousEndDate),
         getBounceRate(propertyId, startDate, endDate, previousStartDate, previousEndDate),
         getAvgSessionDuration(propertyId, startDate, endDate, previousStartDate, previousEndDate),
-        getTopPages(propertyId, startDate, endDate, 10),
+        getTopPages(propertyId, startDate, endDate, 50), // Fetch more for modal
         getTrafficSources(propertyId, startDate, endDate),
         getDeviceBreakdown(propertyId, startDate, endDate),
       ]);
@@ -277,19 +282,32 @@ const Dashboard = ({ authData, onLogout }) => {
       </div>
 
       <div className="dashboard-charts-grid">
-        <div className="chart-card">
-          <h2>Pages les plus visitées</h2>
+        <div 
+          className="chart-card chart-card-clickable" 
+          onClick={() => {
+            setModalData(data.topPages);
+            setModalType('topPages');
+            setModalTitle('Pages les plus visitées');
+            setModalOpen(true);
+          }}
+        >
+          <div className="chart-card-header">
+            <h2>Pages les plus visitées</h2>
+            <span className="chart-card-expand">Voir tout →</span>
+          </div>
           <div className="top-pages-list">
-            {data.topPages.map((page, index) => (
+            {data.topPages.slice(0, 5).map((page, index) => (
               <div key={index} className="top-page-item">
                 <div className="page-rank">#{index + 1}</div>
                 <div className="page-info">
                   <div className="page-path">{page.path}</div>
                   <div className="page-stats">
                     <span className="page-views">{formatNumber(page.views)} vues</span>
-                    <span className={`page-change ${page.change > 0 ? 'positive' : 'negative'}`}>
-                      {formatPercentage(page.change)}
-                    </span>
+                    {page.change !== undefined && (
+                      <span className={`page-change ${page.change > 0 ? 'positive' : 'negative'}`}>
+                        {formatPercentage(page.change)}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -297,14 +315,25 @@ const Dashboard = ({ authData, onLogout }) => {
           </div>
         </div>
 
-        <div className="chart-card">
-          <h2>Sources de trafic</h2>
+        <div 
+          className="chart-card chart-card-clickable" 
+          onClick={() => {
+            setModalData(data.trafficSources);
+            setModalType('trafficSources');
+            setModalTitle('Sources de trafic');
+            setModalOpen(true);
+          }}
+        >
+          <div className="chart-card-header">
+            <h2>Sources de trafic</h2>
+            <span className="chart-card-expand">Voir tout →</span>
+          </div>
           <div className="traffic-sources-list">
-            {data.trafficSources.map((source, index) => (
+            {data.trafficSources.slice(0, 5).map((source, index) => (
               <div key={index} className="traffic-source-item">
                 <div className="source-header">
                   <span className="source-name">{source.source}</span>
-                  <span className="source-percentage">{source.percentage}%</span>
+                  <span className="source-percentage">{source.percentage.toFixed(1)}%</span>
                 </div>
                 <div className="source-bar-container">
                   <div 
@@ -318,14 +347,25 @@ const Dashboard = ({ authData, onLogout }) => {
           </div>
         </div>
 
-        <div className="chart-card">
-          <h2>Appareils</h2>
+        <div 
+          className="chart-card chart-card-clickable" 
+          onClick={() => {
+            setModalData(data.deviceBreakdown);
+            setModalType('deviceBreakdown');
+            setModalTitle('Appareils');
+            setModalOpen(true);
+          }}
+        >
+          <div className="chart-card-header">
+            <h2>Appareils</h2>
+            <span className="chart-card-expand">Voir tout →</span>
+          </div>
           <div className="device-breakdown">
-            {data.deviceBreakdown.map((device, index) => (
+            {data.deviceBreakdown.slice(0, 5).map((device, index) => (
               <div key={index} className="device-item">
                 <div className="device-header">
                   <span className="device-name">{device.device}</span>
-                  <span className="device-percentage">{device.percentage}%</span>
+                  <span className="device-percentage">{device.percentage.toFixed(1)}%</span>
                 </div>
                 <div className="device-bar-container">
                   <div 
@@ -339,6 +379,15 @@ const Dashboard = ({ authData, onLogout }) => {
           </div>
         </div>
       </div>
+
+      {/* Modal for detailed view */}
+      <DashboardModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={modalTitle}
+        data={modalData}
+        type={modalType}
+      />
     </div>
   );
 };
