@@ -53,16 +53,22 @@ const Login = ({ onLogin }) => {
         window.google.accounts.id.initialize({
           client_id: clientId,
           callback: handleCredentialResponse,
+          auto_select: false,
+          cancel_on_tap_outside: true,
         });
 
         const buttonContainer = document.getElementById('google-signin-button');
         if (buttonContainer) {
+          // Clear any existing button
+          buttonContainer.innerHTML = '';
+          
           window.google.accounts.id.renderButton(buttonContainer, {
             theme: 'outline',
             size: 'large',
             width: 280,
             text: 'signin_with',
             locale: 'fr',
+            type: 'standard',
           });
         }
 
@@ -82,17 +88,44 @@ const Login = ({ onLogin }) => {
     setError(null);
 
     try {
+      // Validate response
+      if (!response || !response.credential) {
+        throw new Error('Réponse invalide de Google Sign-In');
+      }
+
       // Decode the JWT token (basic validation)
       // In production, you should verify this token on your backend
-      const payload = JSON.parse(atob(response.credential.split('.')[1]));
-      
+      const parts = response.credential.split('.');
+      if (parts.length !== 3) {
+        throw new Error('Format de token invalide');
+      }
+
+      let payload;
+      try {
+        // Decode base64 URL-safe payload
+        const base64Url = parts[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        payload = JSON.parse(jsonPayload);
+      } catch (decodeError) {
+        console.error('Error decoding JWT:', decodeError);
+        throw new Error('Impossible de décoder le token de connexion');
+      }
+
+      // Validate required fields
+      if (!payload.email) {
+        throw new Error('Email manquant dans la réponse de connexion');
+      }
+
       // Store authentication info
       const authData = {
         token: response.credential,
         user: {
           email: payload.email,
-          name: payload.name,
-          picture: payload.picture,
+          name: payload.name || payload.given_name || payload.email.split('@')[0],
+          picture: payload.picture || '',
         },
         timestamp: Date.now(),
       };
@@ -104,7 +137,7 @@ const Login = ({ onLogin }) => {
       await onLogin(authData);
     } catch (err) {
       console.error('Login error:', err);
-      setError('Erreur lors de la connexion. Veuillez réessayer.');
+      setError(err.message || 'Erreur lors de la connexion. Veuillez réessayer.');
       setLoading(false);
     }
   };
