@@ -142,14 +142,6 @@ const Login = ({ onLogin }) => {
     }
   };
 
-  const handleManualSignIn = () => {
-    if (window.google && window.google.accounts) {
-      window.google.accounts.id.prompt();
-    } else {
-      setError('Google Sign-In n\'est pas encore chargé. Veuillez attendre quelques secondes.');
-    }
-  };
-
   return (
     <div className="login-container">
       <div className="login-card">
@@ -180,14 +172,6 @@ const Login = ({ onLogin }) => {
               </div>
             )}
           </div>
-
-          <button 
-            onClick={handleManualSignIn}
-            className="btn-manual-signin"
-            disabled={loading}
-          >
-            Afficher la fenêtre de connexion
-          </button>
         </div>
 
         <div className="login-footer">
