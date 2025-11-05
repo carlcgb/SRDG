@@ -1,6 +1,13 @@
 // Cloudflare Workers API for Dashboard Access Requests
 // Handles storing and retrieving access requests from D1 database
 
+import { handleOptions, addCorsHeaders } from './cors.js';
+
+// Handle OPTIONS preflight request
+export async function onRequestOptions(context) {
+  return handleOptions(context.request);
+}
+
 export async function onRequestPost(context) {
   const { request, env } = context;
   const { DB } = env;
@@ -10,10 +17,11 @@ export async function onRequestPost(context) {
     const { email, name, picture, token, expiresAt } = body;
 
     if (!email || !token || !expiresAt) {
-      return new Response(
+      const response = new Response(
         JSON.stringify({ error: 'Missing required fields: email, token, expiresAt' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
+      return addCorsHeaders(response, request);
     }
 
     // Insert or update access request
@@ -31,16 +39,18 @@ export async function onRequestPost(context) {
       .bind(email, name || null, picture || null, token, expiresAt)
       .run();
 
-    return new Response(
+    const response = new Response(
       JSON.stringify({ success: true, id: result.meta.last_row_id }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
+    return addCorsHeaders(response, request);
   } catch (error) {
     console.error('Error creating access request:', error);
-    return new Response(
+    const response = new Response(
       JSON.stringify({ error: error.message }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
+    return addCorsHeaders(response, request);
   }
 }
 
@@ -69,25 +79,25 @@ export async function onRequestGet(context) {
 
     const stmt = DB.prepare(query);
     
+    let result;
     if (params.length > 0) {
-      const result = await stmt.bind(...params).all();
-      return new Response(
-        JSON.stringify({ success: true, data: result.results }),
-        { status: 200, headers: { 'Content-Type': 'application/json' } }
-      );
+      result = await stmt.bind(...params).all();
     } else {
-      const result = await stmt.all();
-      return new Response(
-        JSON.stringify({ success: true, data: result.results }),
-        { status: 200, headers: { 'Content-Type': 'application/json' } }
-      );
+      result = await stmt.all();
     }
+    
+    const response = new Response(
+      JSON.stringify({ success: true, data: result.results }),
+      { status: 200, headers: { 'Content-Type': 'application/json' } }
+    );
+    return addCorsHeaders(response, request);
   } catch (error) {
     console.error('Error fetching access requests:', error);
-    return new Response(
+    const response = new Response(
       JSON.stringify({ error: error.message }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
+    return addCorsHeaders(response, request);
   }
 }
 
@@ -100,17 +110,19 @@ export async function onRequestPut(context) {
     const { email, status, reviewedBy } = body;
 
     if (!email || !status) {
-      return new Response(
+      const response = new Response(
         JSON.stringify({ error: 'Missing required fields: email, status' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
+      return addCorsHeaders(response, request);
     }
 
     if (!['pending', 'approved', 'denied'].includes(status)) {
-      return new Response(
+      const response = new Response(
         JSON.stringify({ error: 'Invalid status. Must be: pending, approved, or denied' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
+      return addCorsHeaders(response, request);
     }
 
     // Update access request status
@@ -123,22 +135,25 @@ export async function onRequestPut(context) {
       .run();
 
     if (result.meta.changes === 0) {
-      return new Response(
+      const response = new Response(
         JSON.stringify({ error: 'Access request not found' }),
         { status: 404, headers: { 'Content-Type': 'application/json' } }
       );
+      return addCorsHeaders(response, request);
     }
 
-    return new Response(
+    const response = new Response(
       JSON.stringify({ success: true }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
+    return addCorsHeaders(response, request);
   } catch (error) {
     console.error('Error updating access request:', error);
-    return new Response(
+    const response = new Response(
       JSON.stringify({ error: error.message }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
+    return addCorsHeaders(response, request);
   }
 }
 
@@ -149,10 +164,11 @@ export async function onRequestDelete(context) {
   const email = url.searchParams.get('email');
 
   if (!email) {
-    return new Response(
+    const response = new Response(
       JSON.stringify({ error: 'Missing email parameter' }),
       { status: 400, headers: { 'Content-Type': 'application/json' } }
     );
+    return addCorsHeaders(response, request);
   }
 
   try {
@@ -160,16 +176,18 @@ export async function onRequestDelete(context) {
       .bind(email)
       .run();
 
-    return new Response(
+    const response = new Response(
       JSON.stringify({ success: true, deleted: result.meta.changes > 0 }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
+    return addCorsHeaders(response, request);
   } catch (error) {
     console.error('Error deleting access request:', error);
-    return new Response(
+    const response = new Response(
       JSON.stringify({ error: error.message }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
+    return addCorsHeaders(response, request);
   }
 }
 
