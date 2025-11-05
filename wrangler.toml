@@ -1,3 +1,10 @@
 name = "srdg"
 compatibility_date = "2024-01-01"
 pages_build_output_dir = "build"
+
+# Cloudflare D1 Database Configuration
+[[d1_databases]]
+binding = "DB"
+database_name = "dashboard-access"
+database_id = "87db862e-29da-46fb-a28b-6fbd80897dfd"
+preview_database_id = "87db862e-29da-46fb-a28b-6fbd80897dfd" # Use same ID for preview

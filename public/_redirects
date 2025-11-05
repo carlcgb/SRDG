@@ -1,1 +1,10 @@
+# API routes - Must be handled by Cloudflare Workers BEFORE any catch-all redirects
+/api/*   200
+
+# Dashboard routing
+/dashboard    /index.html   200
+/dashboard/*    /index.html   200
+/dashboard/approve    /index.html   200
+
+# Catch-all redirect - must be last to avoid catching API routes
 /*    /index.html   200

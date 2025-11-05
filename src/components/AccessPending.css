@@ -1,0 +1,202 @@
+/* Access Pending Styles - Matching Main Website Color Palette */
+
+.access-pending-container {
+  min-height: 100vh;
+  background: var(--background-color, #FFE1AF);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'Teko', sans-serif;
+}
+
+.access-pending-card {
+  background: var(--accent-light, #FFFFFF);
+  border-radius: 20px;
+  padding: 50px 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  border: 3px solid var(--primary-color, #F64A3E);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.access-pending-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, 
+    var(--primary-color, #F64A3E), 
+    #ff6b9d, 
+    #c44569, 
+    #f8b500, 
+    var(--primary-color, #F64A3E));
+  background-size: 300% 100%;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.access-pending-header {
+  margin-bottom: 30px;
+}
+
+.access-pending-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.access-pending-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-color, #F64A3E);
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+}
+
+.access-pending-header p {
+  font-size: 1.1rem;
+  color: var(--text-secondary, #333333);
+  margin: 0;
+}
+
+.access-pending-content {
+  margin-bottom: 30px;
+}
+
+.access-pending-info {
+  text-align: left;
+  margin-bottom: 30px;
+}
+
+.access-pending-info p {
+  font-size: 1rem;
+  color: var(--text-secondary, #333333);
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.access-pending-info strong {
+  color: var(--primary-color, #F64A3E);
+  font-weight: 700;
+}
+
+.access-pending-note {
+  font-size: 0.9rem;
+  color: #666;
+  font-style: italic;
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(246, 74, 62, 0.05);
+  border-radius: 10px;
+  border-left: 4px solid var(--primary-color, #F64A3E);
+}
+
+.btn-logout-pending {
+  background: transparent;
+  color: var(--primary-color, #F64A3E);
+  border: 2px solid var(--primary-color, #F64A3E);
+  padding: 12px 32px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Teko', sans-serif;
+  width: 100%;
+}
+
+.btn-logout-pending:hover {
+  background: var(--primary-color, #F64A3E);
+  color: var(--accent-light, #FFFFFF);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(246, 74, 62, 0.3);
+}
+
+/* Access Request Sent Styles */
+.access-request-sent {
+  text-align: center;
+  padding: 40px;
+}
+
+.access-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.access-request-sent h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-color, #F64A3E);
+  margin: 0 0 20px 0;
+  text-transform: uppercase;
+}
+
+.access-request-sent p {
+  font-size: 1.1rem;
+  color: var(--text-secondary, #333333);
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .access-pending-card {
+    padding: 40px 30px;
+    max-width: 100%;
+  }
+
+  .access-pending-header h1 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .access-pending-container {
+    padding: 15px;
+  }
+
+  .access-pending-card {
+    padding: 30px 20px;
+  }
+
+  .access-pending-header h1 {
+    font-size: 1.8rem;
+  }
+}
+
