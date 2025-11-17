@@ -70,7 +70,7 @@ const Events = ({ onEventsLoad }) => {
       facebookUrl: "https://www.facebook.com/share/1JY5U2a4va/",
       guests: [
         { name: "Jay Laliberté", url: "https://www.facebook.com/jaylalib" },
-        { name: "RADI", url: "https://www.facebook.com/monsieurradi.radi" },
+        { name: "RADI", url: "https://www.instagram.com/radi_standup/" },
         { name: "FRANKY", url: "https://www.facebook.com/frankyhumoriste" }
       ],
       isPast: false,  // Set to true to grey out this event
