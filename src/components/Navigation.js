@@ -52,13 +52,7 @@ const Navigation = () => {
           Corporatif
           </a>
           <a 
-            href="/dashboard" 
-            className="nav-link"
-          >
-            Dashboard
-          </a>
-          <a 
-            href="https://app.tixigo.com/TOffice?token=sNozI5aN0tE7QVy3zaUxCFBQFtB%2Bg7sW0cWMhItujXo%3D&fbclid=IwY2xjawJNWLxleHRuA2FlbQIxMAABHTuOYmPpzVBIIiAXos2mv-ElAtqrkM9IknwJp84I-jt4sU0Ouc6RFQdqOA_aem_F6YCpxptwl6T8vrqwoyuxg" 
+            href="https://app.tixigo.com/TOffice/BookAndBuy?perfToken=E4d2BYKqEwk3BDSi4IrKtMT8x3tWLVEUeZ%2BzHo05PTo%3D" 
             target="_blank" 
             rel="noopener noreferrer"
             className="nav-tickets-btn"

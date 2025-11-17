@@ -54,8 +54,8 @@ const Events = ({ onEventsLoad }) => {
         { name: "Mathieu Bougie", url: "https://www.instagram.com/mathbougie/" },
         { name: "Pier-Luc Pomerleau", url: "https://www.facebook.com/PLPomerleau" }
       ],
-      isPast: false,  // Set to true to grey out this event
-      isNext: true,   // Set to true to highlight this as the next event
+      isPast: true,  // Set to true to grey out this event
+      isNext: false,   // Set to true to highlight this as the next event
       calendarDate: "2024-11-08", // Date for calendar (YYYY-MM-DD format)
       calendarTime: "20:00", // Time for calendar (24h format)
       calendarDuration: "2h" // Duration for calendar
@@ -67,15 +67,15 @@ const Events = ({ onEventsLoad }) => {
       description: "On est en 2025 ! 😅 Nouvelle année, nouveaux fous rires avec des humoristes québécois qui vont vous faire péter de rire au Social Bar et Cie. C'est le temps des résolutions... ou pas ! (On sait ben que vous allez les briser anyway) Une soirée de malade pour bien commencer l'année pis oublier que vous avez encore pas tenu vos promesses !",
       time: "20h00",
       location: "Le Social Bar et Cie",
-      facebookUrl: "https://www.facebook.com/lsdrg",
+      facebookUrl: "https://www.facebook.com/share/1JY5U2a4va/",
       guests: [
-        { name: "À déterminer", url: "" },
-        { name: "À déterminer", url: "" },
-        { name: "À déterminer", url: "" }
+        { name: "Jay Laliberté", url: "https://www.facebook.com/jaylalib" },
+        { name: "RADI", url: "https://www.facebook.com/monsieurradi.radi" },
+        { name: "FRANKY", url: "https://www.facebook.com/frankyhumoriste" }
       ],
       isPast: false,  // Set to true to grey out this event
-      isNext: false,   // Set to true to highlight this as the next event
-      calendarDate: "2025-01-10", // Date for calendar (YYYY-MM-DD format)
+      isNext: true,   // Set to true to highlight this as the next event
+      calendarDate: "2026-01-10", // Date for calendar (YYYY-MM-DD format)
       calendarTime: "20:00", // Time for calendar (24h format)
       calendarDuration: "2h" // Duration for calendar
     },
