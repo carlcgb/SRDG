@@ -167,6 +167,8 @@ export const deleteAccessRequest = async (email) => {
   try {
     const apiUrl = `${getApiBaseUrl()}/api/access-requests?email=${encodeURIComponent(email)}`;
     
+    console.log('🗑️ Deleting access request:', { email, apiUrl });
+    
     const response = await fetch(apiUrl, {
       method: 'DELETE',
       headers: {
@@ -174,14 +176,35 @@ export const deleteAccessRequest = async (email) => {
       },
     });
 
+    console.log('🗑️ Response status:', response.status, response.statusText);
+    console.log('🗑️ Response headers:', Object.fromEntries(response.headers.entries()));
+
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ error: 'Unknown error' }));
-      throw new Error(error.error || `HTTP ${response.status}`);
+      let errorData;
+      try {
+        const text = await response.text();
+        console.error('❌ Error response text:', text);
+        errorData = JSON.parse(text);
+      } catch (parseError) {
+        console.error('❌ Could not parse error response:', parseError);
+        errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
+      }
+      
+      const errorMessage = errorData.error || errorData.message || `HTTP ${response.status}`;
+      console.error('❌ API Error:', errorMessage);
+      throw new Error(errorMessage);
     }
 
-    return await response.json();
+    const result = await response.json();
+    console.log('✅ Deletion successful:', result);
+    return result;
   } catch (error) {
-    console.error('Error deleting access request:', error);
+    console.error('❌ Error deleting access request:', error);
+    console.error('❌ Error details:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
     throw error;
   }
 };

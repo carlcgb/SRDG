@@ -105,15 +105,35 @@ const AdminPanel = ({ authData, onBack }) => {
   };
 
   const handleDeleteAccess = async (email) => {
+    if (processingEmail) return; // Prevent multiple clicks
+    
     if (!window.confirm(`Êtes-vous sûr de vouloir supprimer la demande d'accès pour ${email} ?`)) {
       return;
     }
+    
+    setProcessingEmail(email);
+    setError(null);
+    setSuccessMessage(null);
+    
     try {
-      await deleteAccessRequest(email);
-      await loadData();
+      console.log('🗑️ Deleting access request for:', email);
+      const result = await deleteAccessRequest(email);
+      console.log('🗑️ Deletion result:', result);
+      
+      setSuccessMessage(`La demande d'accès pour ${email} a été supprimée avec succès.`);
+      
+      // Reload data after a short delay to show success message
+      setTimeout(async () => {
+        await loadData();
+        setSuccessMessage(null);
+      }, 500);
     } catch (err) {
-      console.error('Error deleting access:', err);
-      alert('Erreur lors de la suppression de la demande.');
+      console.error('❌ Error deleting access:', err);
+      const errorMsg = err.message || 'Erreur lors de la suppression de la demande.';
+      setError(`Erreur: ${errorMsg}`);
+      alert(`Erreur lors de la suppression de la demande: ${errorMsg}`);
+    } finally {
+      setProcessingEmail(null);
     }
   };
 
@@ -430,20 +450,23 @@ const AdminPanel = ({ authData, onBack }) => {
             </button>
           </div>
 
-          <div className="admin-stats">
-            <div className="stat-card">
-              <div className="stat-number">{approvedUsers.length}</div>
-              <div className="stat-label">Approuvés</div>
+          {/* Statistiques - affichées seulement s'il y a des demandes */}
+          {accessRequests.length > 0 && (
+            <div className="admin-stats">
+              <div className="stat-card">
+                <div className="stat-number">{approvedUsers.length}</div>
+                <div className="stat-label">Approuvés</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-number">{pendingUsers.length}</div>
+                <div className="stat-label">En attente</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-number">{deniedUsers.length}</div>
+                <div className="stat-label">Refusés</div>
+              </div>
             </div>
-            <div className="stat-card">
-              <div className="stat-number">{pendingUsers.length}</div>
-              <div className="stat-label">En attente</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-number">{deniedUsers.length}</div>
-              <div className="stat-label">Refusés</div>
-            </div>
-          </div>
+          )}
 
           <div className="admin-table-container">
             <table className="admin-table">
@@ -516,13 +539,13 @@ const AdminPanel = ({ authData, onBack }) => {
                             handleDeleteAccess(request.email);
                           }} 
                           className="btn-delete"
-                          disabled={processingEmail !== null}
+                          disabled={processingEmail === request.email || processingEmail !== null}
                           style={{
-                            opacity: processingEmail !== null ? 0.6 : 1,
-                            cursor: processingEmail !== null ? 'not-allowed' : 'pointer'
+                            opacity: (processingEmail === request.email || processingEmail !== null) ? 0.6 : 1,
+                            cursor: (processingEmail === request.email || processingEmail !== null) ? 'not-allowed' : 'pointer'
                           }}
                         >
-                          🗑️ Supprimer
+                          {processingEmail === request.email ? '⏳ Traitement...' : '🗑️ Supprimer'}
                         </button>
                       </div>
                     </td>
