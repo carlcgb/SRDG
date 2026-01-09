@@ -661,6 +661,7 @@ const Login = ({ onLogin }) => {
               </button>
             </form>
           )}
+            </>
           )}
 
           {mode === 'request' && (
