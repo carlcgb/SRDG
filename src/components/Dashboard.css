@@ -165,7 +165,7 @@
 }
 
 .stat-card {
-  background: linear-gradient(135deg, var(--primary-color, #F64A3E), #ff6b9d);
+  background: var(--accent-light, #FFFFFF);
   border-radius: 20px;
   padding: 30px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -193,7 +193,7 @@
 .stat-content h3 {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--accent-light, #FFFFFF);
+  color: var(--text-secondary, #333333);
   margin: 0 0 10px 0;
   text-transform: uppercase;
 }
@@ -201,7 +201,7 @@
 .stat-value {
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--accent-light, #FFFFFF);
+  color: var(--primary-color, #F64A3E);
   margin-bottom: 5px;
   line-height: 1;
 }
@@ -212,11 +212,11 @@
 }
 
 .stat-change.positive {
-  color: #90EE90;
+  color: #28a745;
 }
 
 .stat-change.negative {
-  color: var(--text-secondary, #333333);
+  color: #dc3545;
 }
 
 .dashboard-charts-grid {
