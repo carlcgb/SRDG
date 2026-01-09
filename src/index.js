@@ -19,8 +19,8 @@ const isApprovePage = isDashboardSubdomainCheck
   : pathname.includes('/dashboard/approve');
 // Check if admin page: if on subdomain, use /admin, if on main domain, use /dashboard/admin
 const isAdminPage = isDashboardSubdomainCheck 
-  ? pathname.includes('/admin') 
-  : pathname.includes('/dashboard/admin');
+  ? (pathname === '/admin' || pathname.startsWith('/admin/'))
+  : (pathname === '/dashboard/admin' || pathname.startsWith('/dashboard/admin/'));
 // Check if privacy policy page
 const isPrivacyPage = pathname === '/privacy' || pathname === '/privacy-policy';
 
