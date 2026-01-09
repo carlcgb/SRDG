@@ -13,6 +13,9 @@ import {
   getTrafficSources,
   getDeviceBreakdown,
   getDateRange,
+  getRealtimeActivePages,
+  getRealtimeUserLocations,
+  getRealtimeTrafficSources,
 } from '../services/ga4Service';
 
 const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
@@ -35,42 +38,88 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
     
     try {
       const propertyId = process.env.REACT_APP_GA4_PROPERTY_ID;
+      const isProduction = process.env.NODE_ENV === 'production';
       
-      // If Property ID is not configured, use mock data for development
+      // In production, Property ID is REQUIRED - never use mock data
       if (!propertyId) {
-        console.warn('⚠️ GA4 Property ID not configured. Using mock data.');
-        
-        // Use mock data for development
-        const mockData = {
-          users: { current: 12450, previous: 11230, change: 10.8 },
-          sessions: { current: 18750, previous: 16980, change: 10.4 },
-          pageViews: { current: 45230, previous: 38920, change: 16.2 },
-          bounceRate: { current: 42.3, previous: 45.1, change: -6.2 },
-          avgSessionDuration: { current: '3:45', previous: '3:20', change: 12.5 },
-          topPages: [
-            { path: '/', views: 12500, change: 8.2 },
-            { path: '/evenements', views: 8900, change: 15.3 },
-            { path: '/corporatif', views: 6700, change: 12.1 },
-            { path: '/contact', views: 3200, change: 5.4 },
-          ],
-          trafficSources: [
-            { source: 'Organic Search', sessions: 8500, percentage: 45.3 },
-            { source: 'Direct', sessions: 6200, percentage: 33.1 },
-            { source: 'Social Media', sessions: 2800, percentage: 14.9 },
-            { source: 'Referral', sessions: 1250, percentage: 6.7 },
-          ],
-          deviceBreakdown: [
-            { device: 'Desktop', sessions: 10200, percentage: 54.4 },
-            { device: 'Mobile', sessions: 6800, percentage: 36.3 },
-            { device: 'Tablet', sessions: 1750, percentage: 9.3 },
-          ],
-        };
-        
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setData(mockData);
-        setLoading(false);
-        return;
+        if (isProduction) {
+          // In production, throw error if Property ID is missing
+          throw new Error('GA4 Property ID not configured. Please configure REACT_APP_GA4_PROPERTY_ID in your environment variables.');
+        } else {
+          // In development only, use mock data if Property ID is not configured
+          console.warn('⚠️ GA4 Property ID not configured. Using mock data for development only.');
+          console.warn('⚠️ NOTE: Mock data will NEVER be used in production.');
+          
+          // Use mock data for development
+          let mockData;
+          if (useRealtime) {
+            // Real-time mock data
+            mockData = {
+              users: { current: 45, previous: 38, change: 18.4 },
+              sessions: { current: 52, previous: 44, change: 18.2 },
+              pageViews: { current: 128, previous: 105, change: 21.9 },
+              bounceRate: { current: 38.5, previous: 42.1, change: -8.6 },
+              avgSessionDuration: { current: '4:12', previous: '3:45', change: 12.0 },
+              realtimeActivePages: [
+                { path: '/', title: 'Accueil', activeUsers: 12 },
+                { path: '/evenements', title: 'Événements', activeUsers: 8 },
+                { path: '/corporatif', title: 'Corporatif', activeUsers: 5 },
+                { path: '/contact', title: 'Contact', activeUsers: 3 },
+              ],
+              realtimeLocations: [
+                { country: 'Canada', city: 'Montréal', activeUsers: 15, location: 'Montréal, Canada' },
+                { country: 'Canada', city: 'Québec', activeUsers: 8, location: 'Québec, Canada' },
+                { country: 'Canada', city: 'Granby', activeUsers: 6, location: 'Granby, Canada' },
+                { country: 'France', city: 'Paris', activeUsers: 4, location: 'Paris, France' },
+              ],
+              realtimeTrafficSources: [
+                { source: 'Google (organic)', activeUsers: 18, percentage: 40.0 },
+                { source: 'Direct', activeUsers: 12, percentage: 26.7 },
+                { source: 'Facebook (social)', activeUsers: 8, percentage: 17.8 },
+                { source: 'Twitter (social)', activeUsers: 4, percentage: 8.9 },
+              ],
+              isRealtime: true,
+            };
+          } else {
+            // Standard mock data
+            mockData = {
+              users: { current: 12450, previous: 11230, change: 10.8 },
+              sessions: { current: 18750, previous: 16980, change: 10.4 },
+              pageViews: { current: 45230, previous: 38920, change: 16.2 },
+              bounceRate: { current: 42.3, previous: 45.1, change: -6.2 },
+              avgSessionDuration: { current: '3:45', previous: '3:20', change: 12.5 },
+              topPages: [
+                { path: '/', views: 12500, change: 8.2 },
+                { path: '/evenements', views: 8900, change: 15.3 },
+                { path: '/corporatif', views: 6700, change: 12.1 },
+                { path: '/contact', views: 3200, change: 5.4 },
+              ],
+              trafficSources: [
+                { source: 'Organic Search', sessions: 8500, percentage: 45.3 },
+                { source: 'Direct', sessions: 6200, percentage: 33.1 },
+                { source: 'Social Media', sessions: 2800, percentage: 14.9 },
+                { source: 'Referral', sessions: 1250, percentage: 6.7 },
+              ],
+              deviceBreakdown: [
+                { device: 'Desktop', sessions: 10200, percentage: 54.4 },
+                { device: 'Mobile', sessions: 6800, percentage: 36.3 },
+                { device: 'Tablet', sessions: 1750, percentage: 9.3 },
+              ],
+              isRealtime: false,
+            };
+          }
+          
+          // Simulate API delay
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          setData(mockData);
+          setLoading(false);
+          return;
+        }
+      }
+      
+      // Production check: Ensure we're using real data
+      if (isProduction) {
+        console.log('✅ Production mode: Using real GA4 data only');
       }
 
       // Get date ranges for current and previous periods
@@ -80,6 +129,8 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
       const useRealtime = dateRange === 'today';
 
       // Default fallback data for when requests fail
+      // These are empty/zero values - NOT mock data
+      // In production, if all requests fail, we'll show an error instead
       const defaultData = {
         users: { current: 0, previous: 0, change: 0 },
         sessions: { current: 0, previous: 0, change: 0 },
@@ -89,19 +140,38 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
         topPages: [],
         trafficSources: [],
         deviceBreakdown: [],
+        realtimeActivePages: [],
+        realtimeLocations: [],
+        realtimeTrafficSources: [],
       };
 
-      // Fetch all metrics in parallel - use allSettled to handle partial failures
-      const results = await Promise.allSettled([
-        getUsers(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
-        getSessions(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
-        getPageViews(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
-        getBounceRate(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
-        getAvgSessionDuration(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
-        getTopPages(propertyId, startDate, endDate, 50, useRealtime), // Fetch more for modal
-        getTrafficSources(propertyId, startDate, endDate, useRealtime),
-        getDeviceBreakdown(propertyId, startDate, endDate, useRealtime),
-      ]);
+      // For real-time view (today), fetch different data
+      let results;
+      if (useRealtime) {
+        // Real-time data: active pages, locations, traffic sources
+        results = await Promise.allSettled([
+          getUsers(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
+          getSessions(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
+          getPageViews(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
+          getBounceRate(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
+          getAvgSessionDuration(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
+          getRealtimeActivePages(10), // Real-time active pages
+          getRealtimeUserLocations(10), // Real-time user locations
+          getRealtimeTrafficSources(10), // Real-time traffic sources
+        ]);
+      } else {
+        // Standard data for historical periods
+        results = await Promise.allSettled([
+          getUsers(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
+          getSessions(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
+          getPageViews(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
+          getBounceRate(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
+          getAvgSessionDuration(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
+          getTopPages(propertyId, startDate, endDate, 50, useRealtime), // Fetch more for modal
+          getTrafficSources(propertyId, startDate, endDate, useRealtime),
+          getDeviceBreakdown(propertyId, startDate, endDate, useRealtime),
+        ]);
+      }
 
       // Extract results with fallback to defaults
       const [
@@ -110,36 +180,70 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
         pageViewsResult,
         bounceRateResult,
         avgSessionDurationResult,
-        topPagesResult,
-        trafficSourcesResult,
-        deviceBreakdownResult,
+        realtimeData1Result,
+        realtimeData2Result,
+        realtimeData3Result,
       ] = results;
 
       // Combine all data with fallbacks
-      const dashboardData = {
-        users: usersResult.status === 'fulfilled' ? usersResult.value : defaultData.users,
-        sessions: sessionsResult.status === 'fulfilled' ? sessionsResult.value : defaultData.sessions,
-        pageViews: pageViewsResult.status === 'fulfilled' ? pageViewsResult.value : defaultData.pageViews,
-        bounceRate: bounceRateResult.status === 'fulfilled' ? bounceRateResult.value : defaultData.bounceRate,
-        avgSessionDuration: avgSessionDurationResult.status === 'fulfilled' 
-          ? avgSessionDurationResult.value 
-          : defaultData.avgSessionDuration,
-        topPages: topPagesResult.status === 'fulfilled' ? topPagesResult.value : defaultData.topPages,
-        trafficSources: trafficSourcesResult.status === 'fulfilled' 
-          ? trafficSourcesResult.value 
-          : defaultData.trafficSources,
-        deviceBreakdown: deviceBreakdownResult.status === 'fulfilled' 
-          ? deviceBreakdownResult.value 
-          : defaultData.deviceBreakdown,
-      };
+      let dashboardData;
+      if (useRealtime) {
+        // Real-time view: use real-time specific data
+        dashboardData = {
+          users: usersResult.status === 'fulfilled' ? usersResult.value : defaultData.users,
+          sessions: sessionsResult.status === 'fulfilled' ? sessionsResult.value : defaultData.sessions,
+          pageViews: pageViewsResult.status === 'fulfilled' ? pageViewsResult.value : defaultData.pageViews,
+          bounceRate: bounceRateResult.status === 'fulfilled' ? bounceRateResult.value : defaultData.bounceRate,
+          avgSessionDuration: avgSessionDurationResult.status === 'fulfilled' 
+            ? avgSessionDurationResult.value 
+            : defaultData.avgSessionDuration,
+          realtimeActivePages: realtimeData1Result.status === 'fulfilled' ? realtimeData1Result.value : [],
+          realtimeLocations: realtimeData2Result.status === 'fulfilled' ? realtimeData2Result.value : [],
+          realtimeTrafficSources: realtimeData3Result.status === 'fulfilled' ? realtimeData3Result.value : [],
+          isRealtime: true,
+        };
+      } else {
+        // Standard view: use historical data
+        dashboardData = {
+          users: usersResult.status === 'fulfilled' ? usersResult.value : defaultData.users,
+          sessions: sessionsResult.status === 'fulfilled' ? sessionsResult.value : defaultData.sessions,
+          pageViews: pageViewsResult.status === 'fulfilled' ? pageViewsResult.value : defaultData.pageViews,
+          bounceRate: bounceRateResult.status === 'fulfilled' ? bounceRateResult.value : defaultData.bounceRate,
+          avgSessionDuration: avgSessionDurationResult.status === 'fulfilled' 
+            ? avgSessionDurationResult.value 
+            : defaultData.avgSessionDuration,
+          topPages: realtimeData1Result.status === 'fulfilled' ? realtimeData1Result.value : defaultData.topPages,
+          trafficSources: realtimeData2Result.status === 'fulfilled' 
+            ? realtimeData2Result.value 
+            : defaultData.trafficSources,
+          deviceBreakdown: realtimeData3Result.status === 'fulfilled' 
+            ? realtimeData3Result.value 
+            : defaultData.deviceBreakdown,
+          isRealtime: false,
+        };
+      }
 
       // Log any failures for debugging
+      const failedRequests = [];
+      // Note: isProduction is already declared at the top of the function (line 41)
+      
       results.forEach((result, index) => {
         if (result.status === 'rejected') {
-          const metricNames = ['users', 'sessions', 'pageViews', 'bounceRate', 'avgSessionDuration', 'topPages', 'trafficSources', 'deviceBreakdown'];
+          const metricNames = useRealtime 
+            ? ['users', 'sessions', 'pageViews', 'bounceRate', 'avgSessionDuration', 'realtimeActivePages', 'realtimeLocations', 'realtimeTrafficSources']
+            : ['users', 'sessions', 'pageViews', 'bounceRate', 'avgSessionDuration', 'topPages', 'trafficSources', 'deviceBreakdown'];
           console.warn(`⚠️ Failed to fetch ${metricNames[index]}:`, result.reason);
+          failedRequests.push(metricNames[index]);
         }
       });
+
+      // In production, if all critical requests failed, show error instead of empty data
+      const criticalMetrics = ['users', 'sessions', 'pageViews'];
+      const allCriticalFailed = criticalMetrics.every(metric => failedRequests.includes(metric));
+      
+      if (isProduction && allCriticalFailed && failedRequests.length >= 3) {
+        throw new Error('Impossible de charger les données GA4. Veuillez vérifier la configuration et les permissions.');
+      }
 
       setData(dashboardData);
     } catch (err) {
@@ -147,11 +251,19 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
       
       // Provide more helpful error message
       let errorMessage = err.message || 'Failed to load dashboard data.';
+      const isProductionEnv = process.env.NODE_ENV === 'production';
       
       if (err.message && err.message.includes('Property ID not configured')) {
-        errorMessage = 'GA4 Property ID not configured. Please add REACT_APP_GA4_PROPERTY_ID to your .env file and restart the server.';
+        if (isProductionEnv) {
+          errorMessage = 'GA4 Property ID not configured. Please configure REACT_APP_GA4_PROPERTY_ID in your production environment.';
+        } else {
+          errorMessage = 'GA4 Property ID not configured. Please add REACT_APP_GA4_PROPERTY_ID to your .env file and restart the server.';
+        }
       } else if (err.message && err.message.includes('Authentication failed')) {
         errorMessage = 'Authentication failed. Please ensure your Google account has access to GA4 and the analytics.readonly scope is granted.';
+      } else if (isProductionEnv) {
+        // In production, be more explicit about errors
+        errorMessage = `Erreur lors du chargement des données: ${err.message}. Veuillez vérifier la configuration GA4.`;
       }
       
       setError(errorMessage);
@@ -327,102 +439,244 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
       </div>
 
       <div className="dashboard-charts-grid">
-        <div 
-          className="chart-card chart-card-clickable" 
-          onClick={() => {
-            setModalData(data.topPages);
-            setModalType('topPages');
-            setModalTitle('Pages les plus visitées');
-            setModalOpen(true);
-          }}
-        >
-          <div className="chart-card-header">
-            <h2>Pages les plus visitées</h2>
-            <span className="chart-card-expand">Voir tout →</span>
-          </div>
-          <div className="top-pages-list">
-            {data.topPages.slice(0, 5).map((page, index) => (
-              <div key={index} className="top-page-item">
-                <div className="page-rank">#{index + 1}</div>
-                <div className="page-info">
-                  <div className="page-path">{page.path}</div>
-                  <div className="page-stats">
-                    <span className="page-views">{formatNumber(page.views)} vues</span>
-                    {page.change !== undefined && (
-                      <span className={`page-change ${page.change > 0 ? 'positive' : 'negative'}`}>
-                        {formatPercentage(page.change)}
-                      </span>
-                    )}
+        {data.isRealtime ? (
+          <>
+            {/* Real-time view: Active pages, Locations, Traffic sources */}
+            <div 
+              className="chart-card chart-card-clickable" 
+              onClick={() => {
+                setModalData(data.realtimeActivePages);
+                setModalType('realtimeActivePages');
+                setModalTitle('Pages actuellement visitées');
+                setModalOpen(true);
+              }}
+            >
+              <div className="chart-card-header">
+                <h2>📱 Pages actuellement visitées</h2>
+                <span className="chart-card-expand">Voir tout →</span>
+              </div>
+              <div className="top-pages-list">
+                {data.realtimeActivePages && data.realtimeActivePages.length > 0 ? (
+                  data.realtimeActivePages.slice(0, 5).map((page, index) => (
+                    <div key={index} className="top-page-item">
+                      <div className="page-rank">#{index + 1}</div>
+                      <div className="page-info">
+                        <div className="page-path" title={page.title}>{page.path}</div>
+                        <div className="page-stats">
+                          <span className="page-views" style={{ color: '#28a745', fontWeight: '600' }}>
+                            👥 {formatNumber(page.activeUsers)} actifs
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
+                    Aucune page actuellement visitée
                   </div>
-                </div>
+                )}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        <div 
-          className="chart-card chart-card-clickable" 
-          onClick={() => {
-            setModalData(data.trafficSources);
-            setModalType('trafficSources');
-            setModalTitle('Sources de trafic');
-            setModalOpen(true);
-          }}
-        >
-          <div className="chart-card-header">
-            <h2>Sources de trafic</h2>
-            <span className="chart-card-expand">Voir tout →</span>
-          </div>
-          <div className="traffic-sources-list">
-            {data.trafficSources.slice(0, 5).map((source, index) => (
-              <div key={index} className="traffic-source-item">
-                <div className="source-header">
-                  <span className="source-name">{source.source}</span>
-                  <span className="source-percentage">{source.percentage.toFixed(1)}%</span>
-                </div>
-                <div className="source-bar-container">
-                  <div 
-                    className="source-bar" 
-                    style={{ width: `${source.percentage}%` }}
-                  ></div>
-                </div>
-                <div className="source-sessions">{formatNumber(source.sessions)} sessions</div>
+            <div 
+              className="chart-card chart-card-clickable" 
+              onClick={() => {
+                setModalData(data.realtimeLocations);
+                setModalType('realtimeLocations');
+                setModalTitle('Localisation des utilisateurs actifs');
+                setModalOpen(true);
+              }}
+            >
+              <div className="chart-card-header">
+                <h2>🌍 Localisation des utilisateurs</h2>
+                <span className="chart-card-expand">Voir tout →</span>
               </div>
-            ))}
-          </div>
-        </div>
+              <div className="traffic-sources-list">
+                {data.realtimeLocations && data.realtimeLocations.length > 0 ? (
+                  data.realtimeLocations.slice(0, 5).map((location, index) => {
+                    const totalUsers = data.realtimeLocations.reduce((sum, loc) => sum + loc.activeUsers, 0);
+                    const percentage = totalUsers > 0 ? (location.activeUsers / totalUsers) * 100 : 0;
+                    return (
+                      <div key={index} className="traffic-source-item">
+                        <div className="source-header">
+                          <span className="source-name">{location.location}</span>
+                          <span className="source-percentage">{percentage.toFixed(1)}%</span>
+                        </div>
+                        <div className="source-bar-container">
+                          <div 
+                            className="source-bar" 
+                            style={{ width: `${percentage}%` }}
+                          ></div>
+                        </div>
+                        <div className="source-sessions">{formatNumber(location.activeUsers)} utilisateurs actifs</div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
+                    Aucune localisation disponible
+                  </div>
+                )}
+              </div>
+            </div>
 
-        <div 
-          className="chart-card chart-card-clickable" 
-          onClick={() => {
-            setModalData(data.deviceBreakdown);
-            setModalType('deviceBreakdown');
-            setModalTitle('Appareils');
-            setModalOpen(true);
-          }}
-        >
-          <div className="chart-card-header">
-            <h2>Appareils</h2>
-            <span className="chart-card-expand">Voir tout →</span>
-          </div>
-          <div className="device-breakdown">
-            {data.deviceBreakdown.slice(0, 5).map((device, index) => (
-              <div key={index} className="device-item">
-                <div className="device-header">
-                  <span className="device-name">{device.device}</span>
-                  <span className="device-percentage">{device.percentage.toFixed(1)}%</span>
-                </div>
-                <div className="device-bar-container">
-                  <div 
-                    className="device-bar" 
-                    style={{ width: `${device.percentage}%` }}
-                  ></div>
-                </div>
-                <div className="device-sessions">{formatNumber(device.sessions)} sessions</div>
+            <div 
+              className="chart-card chart-card-clickable" 
+              onClick={() => {
+                setModalData(data.realtimeTrafficSources);
+                setModalType('realtimeTrafficSources');
+                setModalTitle('Sources de trafic en temps réel');
+                setModalOpen(true);
+              }}
+            >
+              <div className="chart-card-header">
+                <h2>🔗 Sources de trafic en temps réel</h2>
+                <span className="chart-card-expand">Voir tout →</span>
               </div>
-            ))}
-          </div>
-        </div>
+              <div className="traffic-sources-list">
+                {data.realtimeTrafficSources && data.realtimeTrafficSources.length > 0 ? (
+                  data.realtimeTrafficSources.slice(0, 5).map((source, index) => (
+                    <div key={index} className="traffic-source-item">
+                      <div className="source-header">
+                        <span className="source-name">{source.source}</span>
+                        <span className="source-percentage">{source.percentage.toFixed(1)}%</span>
+                      </div>
+                      <div className="source-bar-container">
+                        <div 
+                          className="source-bar" 
+                          style={{ width: `${source.percentage}%` }}
+                        ></div>
+                      </div>
+                      <div className="source-sessions">{formatNumber(source.activeUsers)} utilisateurs actifs</div>
+                    </div>
+                  ))
+                ) : (
+                  <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
+                    Aucune source de trafic disponible
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Standard view: Top pages, Traffic sources, Devices */}
+            <div 
+              className="chart-card chart-card-clickable" 
+              onClick={() => {
+                setModalData(data.topPages);
+                setModalType('topPages');
+                setModalTitle('Pages les plus visitées');
+                setModalOpen(true);
+              }}
+            >
+              <div className="chart-card-header">
+                <h2>Pages les plus visitées</h2>
+                <span className="chart-card-expand">Voir tout →</span>
+              </div>
+              <div className="top-pages-list">
+                {data.topPages && data.topPages.length > 0 ? (
+                  data.topPages.slice(0, 5).map((page, index) => (
+                    <div key={index} className="top-page-item">
+                      <div className="page-rank">#{index + 1}</div>
+                      <div className="page-info">
+                        <div className="page-path">{page.path}</div>
+                        <div className="page-stats">
+                          <span className="page-views">{formatNumber(page.views)} vues</span>
+                          {page.change !== undefined && (
+                            <span className={`page-change ${page.change > 0 ? 'positive' : 'negative'}`}>
+                              {formatPercentage(page.change)}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
+                    Aucune donnée disponible
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div 
+              className="chart-card chart-card-clickable" 
+              onClick={() => {
+                setModalData(data.trafficSources);
+                setModalType('trafficSources');
+                setModalTitle('Sources de trafic');
+                setModalOpen(true);
+              }}
+            >
+              <div className="chart-card-header">
+                <h2>Sources de trafic</h2>
+                <span className="chart-card-expand">Voir tout →</span>
+              </div>
+              <div className="traffic-sources-list">
+                {data.trafficSources && data.trafficSources.length > 0 ? (
+                  data.trafficSources.slice(0, 5).map((source, index) => (
+                    <div key={index} className="traffic-source-item">
+                      <div className="source-header">
+                        <span className="source-name">{source.source}</span>
+                        <span className="source-percentage">{source.percentage.toFixed(1)}%</span>
+                      </div>
+                      <div className="source-bar-container">
+                        <div 
+                          className="source-bar" 
+                          style={{ width: `${source.percentage}%` }}
+                        ></div>
+                      </div>
+                      <div className="source-sessions">{formatNumber(source.sessions)} sessions</div>
+                    </div>
+                  ))
+                ) : (
+                  <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
+                    Aucune donnée disponible
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div 
+              className="chart-card chart-card-clickable" 
+              onClick={() => {
+                setModalData(data.deviceBreakdown);
+                setModalType('deviceBreakdown');
+                setModalTitle('Appareils');
+                setModalOpen(true);
+              }}
+            >
+              <div className="chart-card-header">
+                <h2>Appareils</h2>
+                <span className="chart-card-expand">Voir tout →</span>
+              </div>
+              <div className="device-breakdown">
+                {data.deviceBreakdown && data.deviceBreakdown.length > 0 ? (
+                  data.deviceBreakdown.slice(0, 5).map((device, index) => (
+                    <div key={index} className="device-item">
+                      <div className="device-header">
+                        <span className="device-name">{device.device}</span>
+                        <span className="device-percentage">{device.percentage.toFixed(1)}%</span>
+                      </div>
+                      <div className="device-bar-container">
+                        <div 
+                          className="device-bar" 
+                          style={{ width: `${device.percentage}%` }}
+                        ></div>
+                      </div>
+                      <div className="device-sessions">{formatNumber(device.sessions)} sessions</div>
+                    </div>
+                  ))
+                ) : (
+                  <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
+                    Aucune donnée disponible
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Modal for detailed view */}

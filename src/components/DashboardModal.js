@@ -95,6 +95,80 @@ const DashboardModal = ({ isOpen, onClose, title, data, type }) => {
           </div>
         );
 
+      case 'realtimeActivePages':
+        return (
+          <div className="modal-list">
+            {data.map((page, index) => (
+              <div key={index} className="modal-item modal-page-item">
+                <div className="modal-rank">#{index + 1}</div>
+                <div className="modal-item-content">
+                  <div className="modal-item-header">
+                    <span className="modal-item-title" title={page.title}>{page.path || '/'}</span>
+                    <span className="modal-item-secondary" style={{ color: '#28a745', fontWeight: '600' }}>
+                      👥 {formatNumber(page.activeUsers)} actifs
+                    </span>
+                  </div>
+                  {page.title && (
+                    <div className="modal-item-change">
+                      <span className="modal-change-label">{page.title}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+
+      case 'realtimeLocations':
+        return (
+          <div className="modal-list">
+            {data.map((location, index) => {
+              const totalUsers = data.reduce((sum, loc) => sum + loc.activeUsers, 0);
+              const percentage = totalUsers > 0 ? (location.activeUsers / totalUsers) * 100 : 0;
+              return (
+                <div key={index} className="modal-item modal-source-item">
+                  <div className="modal-item-header">
+                    <span className="modal-item-title">🌍 {location.location}</span>
+                    <span className="modal-item-percentage">{formatPercentage(percentage)}%</span>
+                  </div>
+                  <div className="modal-bar-container">
+                    <div 
+                      className="modal-bar" 
+                      style={{ width: `${percentage}%` }}
+                    ></div>
+                  </div>
+                  <div className="modal-item-stats">
+                    <span>{formatNumber(location.activeUsers)} utilisateurs actifs</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        );
+
+      case 'realtimeTrafficSources':
+        return (
+          <div className="modal-list">
+            {data.map((source, index) => (
+              <div key={index} className="modal-item modal-source-item">
+                <div className="modal-item-header">
+                  <span className="modal-item-title">{source.source}</span>
+                  <span className="modal-item-percentage">{formatPercentage(source.percentage)}%</span>
+                </div>
+                <div className="modal-bar-container">
+                  <div 
+                    className="modal-bar" 
+                    style={{ width: `${source.percentage}%` }}
+                  ></div>
+                </div>
+                <div className="modal-item-stats">
+                  <span>{formatNumber(source.activeUsers)} utilisateurs actifs</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+
       default:
         return null;
     }

@@ -506,6 +506,126 @@ export const getDeviceBreakdown = async (propertyId, startDate, endDate, useReal
 };
 
 /**
+ * Get real-time active pages (pages currently being viewed)
+ * Note: propertyId is not needed as it's retrieved from process.env in makeGA4Request
+ */
+export const getRealtimeActivePages = async (limit = 10) => {
+  const result = await fetchRealtimeAnalyticsData({
+    metrics: ['activeUsers'],
+    dimensions: ['pagePath', 'pageTitle'],
+    orderBys: [
+      {
+        metric: {
+          metricName: 'activeUsers',
+        },
+        desc: true,
+      },
+    ],
+    limit,
+  });
+
+  if (!result.success) {
+    throw new Error('Failed to fetch real-time active pages');
+  }
+
+  const rows = result.data?.rows || [];
+  return rows.map((row) => {
+    const path = row.dimensionValues?.[0]?.value || '/';
+    const title = row.dimensionValues?.[1]?.value || 'Sans titre';
+    const activeUsers = parseInt(row.metricValues?.[0]?.value || '0', 10);
+
+    return {
+      path,
+      title,
+      activeUsers,
+    };
+  });
+};
+
+/**
+ * Get real-time user locations (countries/cities of active users)
+ * Note: propertyId is not needed as it's retrieved from process.env in makeGA4Request
+ */
+export const getRealtimeUserLocations = async (limit = 10) => {
+  const result = await fetchRealtimeAnalyticsData({
+    metrics: ['activeUsers'],
+    dimensions: ['country', 'city'],
+    orderBys: [
+      {
+        metric: {
+          metricName: 'activeUsers',
+        },
+        desc: true,
+      },
+    ],
+    limit,
+  });
+
+  if (!result.success) {
+    throw new Error('Failed to fetch real-time user locations');
+  }
+
+  const rows = result.data?.rows || [];
+  return rows.map((row) => {
+    const country = row.dimensionValues?.[0]?.value || 'Inconnu';
+    const city = row.dimensionValues?.[1]?.value || 'Inconnu';
+    const activeUsers = parseInt(row.metricValues?.[0]?.value || '0', 10);
+
+    return {
+      country,
+      city,
+      activeUsers,
+      location: city !== 'Inconnu' ? `${city}, ${country}` : country,
+    };
+  });
+};
+
+/**
+ * Get real-time traffic sources (where current active users came from)
+ * Note: propertyId is not needed as it's retrieved from process.env in makeGA4Request
+ */
+export const getRealtimeTrafficSources = async (limit = 10) => {
+  const result = await fetchRealtimeAnalyticsData({
+    metrics: ['activeUsers'],
+    dimensions: ['sessionSource', 'sessionMedium'],
+    orderBys: [
+      {
+        metric: {
+          metricName: 'activeUsers',
+        },
+        desc: true,
+      },
+    ],
+    limit,
+  });
+
+  if (!result.success) {
+    throw new Error('Failed to fetch real-time traffic sources');
+  }
+
+  const rows = result.data?.rows || [];
+  const totalUsers = rows.reduce((sum, row) => {
+    return sum + parseInt(row.metricValues?.[0]?.value || '0', 10);
+  }, 0);
+
+  return rows.map((row) => {
+    const source = row.dimensionValues?.[0]?.value || '(direct)';
+    const medium = row.dimensionValues?.[1]?.value || 'none';
+    const activeUsers = parseInt(row.metricValues?.[0]?.value || '0', 10);
+    const percentage = totalUsers > 0 ? (activeUsers / totalUsers) * 100 : 0;
+
+    const sourceLabel = source === '(direct)' ? 'Direct' : source;
+    const mediumLabel = medium !== 'none' ? ` (${medium})` : '';
+
+    return {
+      source: sourceLabel + mediumLabel,
+      activeUsers,
+      percentage: parseFloat(percentage.toFixed(1)),
+    };
+  });
+};
+
+/**
  * Helper function to format date range
  */
 export const getDateRange = (range) => {
