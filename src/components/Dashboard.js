@@ -269,8 +269,7 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
                 >
                   ⚙️ Admin
                 </button>
-                );
-              })()}
+              )}
               <button onClick={onLogout} className="btn-logout">
                 Déconnexion
               </button>
