@@ -209,9 +209,13 @@ const Dashboard = ({ authData, onLogout }) => {
               <span className="user-name">{authData.user.name}</span>
               {authData.user.email && authData.user.email.toLowerCase() === 'carl.g.bisaillon@gmail.com' && (
                 <button 
-                  onClick={() => {
-                    const isSubdomain = window.location.hostname.startsWith('stats.') || window.location.hostname.startsWith('dashboard.');
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const hostname = window.location.hostname;
+                    const isSubdomain = hostname.startsWith('stats.') || hostname.startsWith('dashboard.');
                     const adminPath = isSubdomain ? '/admin' : '/dashboard/admin';
+                    console.log('Navigating to admin panel:', adminPath);
+                    // Use window.location for full page reload to ensure proper routing
                     window.location.href = adminPath;
                   }} 
                   className="btn-admin"
@@ -230,12 +234,16 @@ const Dashboard = ({ authData, onLogout }) => {
                     marginRight: '10px'
                   }}
                   onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = '#17a2b8';
-                    e.target.style.color = '#fff';
+                    if (!e.target.disabled) {
+                      e.target.style.backgroundColor = '#17a2b8';
+                      e.target.style.color = '#fff';
+                    }
                   }}
                   onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = 'transparent';
-                    e.target.style.color = '#17a2b8';
+                    if (!e.target.disabled) {
+                      e.target.style.backgroundColor = 'transparent';
+                      e.target.style.color = '#17a2b8';
+                    }
                   }}
                 >
                   ⚙️ Admin
