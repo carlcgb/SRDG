@@ -455,31 +455,43 @@ const Login = ({ onLogin }) => {
               : 'Demandez l\'accès au tableau de bord Analytics. Vous recevrez une notification une fois votre demande approuvée.'}
           </p>
 
-          {/* Mode Toggle */}
-          <div className="login-method-toggle" style={{ marginBottom: '20px' }}>
+          {/* Mode Toggle - Single button that switches between modes */}
+          <div style={{ marginBottom: '20px', textAlign: 'center' }}>
             <button
               type="button"
-              className={`method-btn ${mode === 'login' ? 'active' : ''}`}
+              className="method-btn"
               onClick={() => {
-                setMode('login');
+                setMode(mode === 'login' ? 'request' : 'login');
                 setError(null);
                 setRequestSent(false);
               }}
               disabled={loading}
-            >
-              Connexion
-            </button>
-            <button
-              type="button"
-              className={`method-btn ${mode === 'request' ? 'active' : ''}`}
-              onClick={() => {
-                setMode('request');
-                setError(null);
-                setRequestSent(false);
+              style={{
+                padding: '10px 20px',
+                fontSize: '14px',
+                fontWeight: '500',
+                border: '2px solid #F64A3E',
+                borderRadius: '8px',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                transition: 'all 0.3s ease',
+                backgroundColor: mode === 'login' ? '#fff' : '#F64A3E',
+                color: mode === 'login' ? '#F64A3E' : '#fff',
+                opacity: loading ? 0.6 : 1,
               }}
-              disabled={loading}
+              onMouseEnter={(e) => {
+                if (!loading) {
+                  e.target.style.backgroundColor = mode === 'login' ? '#F64A3E' : '#d93a2e';
+                  e.target.style.color = '#fff';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!loading) {
+                  e.target.style.backgroundColor = mode === 'login' ? '#fff' : '#F64A3E';
+                  e.target.style.color = mode === 'login' ? '#F64A3E' : '#fff';
+                }
+              }}
             >
-              Demande d'accès
+              {mode === 'login' ? 'Demande d\'accès' : 'Connexion'}
             </button>
           </div>
 
