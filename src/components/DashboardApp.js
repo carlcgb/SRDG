@@ -35,16 +35,6 @@ function DashboardApp() {
         return;
       }
 
-      // For email login, check if user is admin (faster check)
-      if (auth.loginMethod === 'email' && auth.user?.isAdmin) {
-        // Admin users with email login are immediately authorized
-        setAuthData(auth);
-        setIsAuthenticated(true);
-        setAccessStatus('authorized');
-        setLoading(false);
-        return;
-      }
-
       // Check if token is still valid (not expired)
       const tokenAge = Date.now() - auth.timestamp;
       const tokenMaxAge = 24 * 60 * 60 * 1000; // 24 hours
@@ -56,23 +46,21 @@ function DashboardApp() {
         return;
       }
 
-      // Check if user is authorized (uses Cloudflare D1)
-      // For email login with admin flag, skip this check (already done above)
-      if (auth.loginMethod !== 'email' || !auth.user?.isAdmin) {
-        const authorized = await isEmailAuthorized(userEmail);
-        if (authorized) {
+      // ALWAYS check if user is authorized, regardless of login method
+      // Even admin users with email login must be explicitly authorized
+      const authorized = await isEmailAuthorized(userEmail);
+      if (authorized) {
+        setAuthData(auth);
+        setIsAuthenticated(true);
+        setAccessStatus('authorized');
+      } else {
+        const pending = await isPendingApproval(userEmail);
+        if (pending) {
           setAuthData(auth);
-          setIsAuthenticated(true);
-          setAccessStatus('authorized');
+          setAccessStatus('pending');
         } else {
-          const pending = await isPendingApproval(userEmail);
-          if (pending) {
-            setAuthData(auth);
-            setAccessStatus('pending');
-          } else {
-            // User not authorized, need to request access
-            setAccessStatus('not_authorized');
-          }
+          // User not authorized, need to request access
+          setAccessStatus('not_authorized');
         }
       }
     } catch (error) {
@@ -92,21 +80,25 @@ function DashboardApp() {
       return;
     }
 
-    // Check if user is authorized (uses Cloudflare D1)
+    // ALWAYS check if user is authorized before allowing access
+    // This applies to BOTH Google login and email/password login
     const authorized = await isEmailAuthorized(userEmail);
     if (authorized) {
+      // User is authorized - allow access
       setAuthData(auth);
       setIsAuthenticated(true);
       setAccessStatus('authorized');
     } else {
+      // User is NOT authorized - check if already pending
       const pending = await isPendingApproval(userEmail);
       if (pending) {
-        // User is pending approval
+        // User is pending approval - show pending screen
         setAuthData(auth);
         setAccessStatus('pending');
       } else {
-        // User not authorized - send access request email and store in Cloudflare D1
+        // User not authorized and not pending - send access request email
         try {
+          console.log('📝 New login attempt from unauthorized user:', userEmail);
           console.log('📝 Marking user as pending:', userEmail);
           await markAsPending(userEmail, auth.user?.name);
           console.log('✅ User marked as pending in database');

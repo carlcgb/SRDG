@@ -54,6 +54,9 @@ export const isEmailAuthorized = async (email) => {
   }
 
   // Check if user exists in dashboard_users table (email/password login)
+  // IMPORTANT: Even admin users in dashboard_users must be explicitly approved
+  // Only users in ADMIN_EMAILS list or with approved access_requests can access
+  // This ensures that even if someone has an account, they need explicit approval
   try {
     const apiUrl = `${window.location.origin}/api/users`;
     const response = await fetch(apiUrl);
@@ -62,8 +65,18 @@ export const isEmailAuthorized = async (email) => {
       const data = await response.json();
       if (data.success && data.users) {
         const user = data.users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.is_active);
+        // Even if user is admin in dashboard_users, they still need to be in ADMIN_EMAILS
+        // or have an approved access_request to access the dashboard
+        // This prevents unauthorized access even with valid credentials
         if (user && user.is_admin) {
-          return true; // Admin user with email login
+          // Check if this admin email is also in the ADMIN_EMAILS list
+          const isAdminInList = ADMIN_EMAILS.some(adminEmail => 
+            email.toLowerCase() === adminEmail.toLowerCase()
+          );
+          if (isAdminInList) {
+            return true; // Admin user in both dashboard_users AND ADMIN_EMAILS
+          }
+          // If admin in dashboard_users but not in ADMIN_EMAILS, still need approval
         }
       }
     }
