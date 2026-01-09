@@ -187,6 +187,7 @@ export const verifyToken = async (email, token) => {
 export const getAllUsers = async () => {
   try {
     const apiUrl = `${getApiBaseUrl()}/api/users`;
+    console.log('📡 Fetching users from:', apiUrl);
     
     const response = await fetch(apiUrl, {
       method: 'GET',
@@ -195,15 +196,27 @@ export const getAllUsers = async () => {
       },
     });
 
+    console.log('📡 Response status:', response.status, response.statusText);
+
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ error: 'Unknown error' }));
-      throw new Error(error.error || `HTTP ${response.status}`);
+      const errorText = await response.text();
+      console.error('❌ API Error response:', errorText);
+      let error;
+      try {
+        error = JSON.parse(errorText);
+      } catch {
+        error = { error: errorText || 'Unknown error' };
+      }
+      throw new Error(error.error || `HTTP ${response.status}: ${response.statusText}`);
     }
 
     const data = await response.json();
-    return data.users || [];
+    console.log('✅ API Response data:', data);
+    const users = data.users || [];
+    console.log('✅ Parsed users:', users);
+    return users;
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.error('❌ Error fetching users:', error);
     throw error;
   }
 };

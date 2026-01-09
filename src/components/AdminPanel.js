@@ -20,15 +20,21 @@ const AdminPanel = ({ authData, onBack }) => {
     setLoading(true);
     setError(null);
     try {
+      console.log('🔄 Loading admin panel data...');
       const [usersData, requestsData] = await Promise.all([
         getAllUsers(),
         getAllAccessRequests()
       ]);
-      setUsers(usersData);
-      setAccessRequests(requestsData);
+      console.log('✅ Users loaded:', usersData);
+      console.log('✅ Access requests loaded:', requestsData);
+      setUsers(usersData || []);
+      setAccessRequests(requestsData || []);
     } catch (err) {
-      console.error('Error loading data:', err);
-      setError('Erreur lors du chargement des données. Veuillez réessayer.');
+      console.error('❌ Error loading data:', err);
+      setError(`Erreur lors du chargement des données: ${err.message}. Veuillez réessayer.`);
+      // Set empty arrays on error to prevent UI issues
+      setUsers([]);
+      setAccessRequests([]);
     } finally {
       setLoading(false);
     }
@@ -182,13 +188,39 @@ const AdminPanel = ({ authData, onBack }) => {
       {activeTab === 'users' && (
         <div className="admin-panel-content">
           <div className="admin-panel-actions">
-            <button onClick={() => { setEditingUser(null); setNewUser({ email: '', password: '', name: '', isAdmin: false }); setShowAddUserModal(true); }} className="btn-add">
+            <button 
+              onClick={() => { 
+                setEditingUser(null); 
+                setNewUser({ email: '', password: '', name: '', isAdmin: false }); 
+                setShowAddUserModal(true); 
+              }} 
+              className="btn-add"
+            >
               + Ajouter un utilisateur
             </button>
             <button onClick={loadData} className="btn-refresh">
               🔄 Actualiser
             </button>
           </div>
+
+          {users.length === 0 && !loading && (
+            <div style={{
+              padding: '30px',
+              textAlign: 'center',
+              backgroundColor: '#fff3cd',
+              border: '2px solid #ffc107',
+              borderRadius: '10px',
+              marginBottom: '20px',
+              color: '#856404'
+            }}>
+              <p style={{ fontSize: '1.2rem', margin: '0 0 10px 0' }}>
+                ℹ️ Aucun utilisateur trouvé dans la base de données.
+              </p>
+              <p style={{ margin: '0', fontSize: '1rem' }}>
+                Cliquez sur "Ajouter un utilisateur" pour créer le premier utilisateur.
+              </p>
+            </div>
+          )}
 
           <div className="admin-table-container">
             <table className="admin-table">
@@ -204,39 +236,40 @@ const AdminPanel = ({ authData, onBack }) => {
                 </tr>
               </thead>
               <tbody>
-                {users.map(user => (
-                  <tr key={user.id}>
-                    <td>{user.email}</td>
-                    <td>{user.name || '-'}</td>
-                    <td>
-                      <button
-                        onClick={() => handleToggleAdmin(user)}
-                        className={`btn-toggle ${user.is_admin ? 'active' : ''}`}
-                      >
-                        {user.is_admin ? '✅ Oui' : '❌ Non'}
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        onClick={() => handleToggleActive(user)}
-                        className={`btn-toggle ${user.is_active ? 'active' : ''}`}
-                      >
-                        {user.is_active ? '✅ Oui' : '❌ Non'}
-                      </button>
-                    </td>
-                    <td>{user.created_at ? new Date(user.created_at).toLocaleDateString('fr-CA') : '-'}</td>
-                    <td>{user.last_login ? new Date(user.last_login).toLocaleDateString('fr-CA') : '-'}</td>
-                    <td>
-                      <button onClick={() => handleEditUser(user)} className="btn-edit">
-                        ✏️ Modifier
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-                {users.length === 0 && (
+                {users.length > 0 ? (
+                  users.map(user => (
+                    <tr key={user.id}>
+                      <td>{user.email}</td>
+                      <td>{user.name || '-'}</td>
+                      <td>
+                        <button
+                          onClick={() => handleToggleAdmin(user)}
+                          className={`btn-toggle ${user.is_admin ? 'active' : ''}`}
+                        >
+                          {user.is_admin ? '✅ Oui' : '❌ Non'}
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          onClick={() => handleToggleActive(user)}
+                          className={`btn-toggle ${user.is_active ? 'active' : ''}`}
+                        >
+                          {user.is_active ? '✅ Oui' : '❌ Non'}
+                        </button>
+                      </td>
+                      <td>{user.created_at ? new Date(user.created_at).toLocaleDateString('fr-CA') : '-'}</td>
+                      <td>{user.last_login ? new Date(user.last_login).toLocaleDateString('fr-CA') : '-'}</td>
+                      <td>
+                        <button onClick={() => handleEditUser(user)} className="btn-edit">
+                          ✏️ Modifier
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
                   <tr>
-                    <td colSpan="7" style={{ textAlign: 'center', padding: '20px' }}>
-                      Aucun utilisateur trouvé
+                    <td colSpan="7" style={{ textAlign: 'center', padding: '40px', fontSize: '1.1rem', color: '#666' }}>
+                      {loading ? 'Chargement...' : 'Aucun utilisateur trouvé. Cliquez sur "Ajouter un utilisateur" pour commencer.'}
                     </td>
                   </tr>
                 )}
