@@ -73,6 +73,9 @@ const Dashboard = ({ authData, onLogout }) => {
 
       // Get date ranges for current and previous periods
       const { startDate, endDate, previousStartDate, previousEndDate } = getDateRange(dateRange);
+      
+      // Use Real-time API for today's data
+      const useRealtime = dateRange === 'today';
 
       // Default fallback data for when requests fail
       const defaultData = {
@@ -88,14 +91,14 @@ const Dashboard = ({ authData, onLogout }) => {
 
       // Fetch all metrics in parallel - use allSettled to handle partial failures
       const results = await Promise.allSettled([
-        getUsers(propertyId, startDate, endDate, previousStartDate, previousEndDate),
-        getSessions(propertyId, startDate, endDate, previousStartDate, previousEndDate),
-        getPageViews(propertyId, startDate, endDate, previousStartDate, previousEndDate),
-        getBounceRate(propertyId, startDate, endDate, previousStartDate, previousEndDate),
-        getAvgSessionDuration(propertyId, startDate, endDate, previousStartDate, previousEndDate),
-        getTopPages(propertyId, startDate, endDate, 50), // Fetch more for modal
-        getTrafficSources(propertyId, startDate, endDate),
-        getDeviceBreakdown(propertyId, startDate, endDate),
+        getUsers(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
+        getSessions(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
+        getPageViews(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
+        getBounceRate(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
+        getAvgSessionDuration(propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime),
+        getTopPages(propertyId, startDate, endDate, 50, useRealtime), // Fetch more for modal
+        getTrafficSources(propertyId, startDate, endDate, useRealtime),
+        getDeviceBreakdown(propertyId, startDate, endDate, useRealtime),
       ]);
 
       // Extract results with fallback to defaults
@@ -222,6 +225,11 @@ const Dashboard = ({ authData, onLogout }) => {
             <option value="last90days">90 derniers jours</option>
             <option value="last365days">12 derniers mois</option>
           </select>
+          {dateRange === 'today' && (
+            <div className="realtime-indicator" style={{ marginTop: '10px', fontSize: '0.85rem', color: '#666', fontStyle: 'italic' }}>
+              📊 Données en temps réel (certaines métriques peuvent avoir un délai de traitement)
+            </div>
+          )}
         </div>
       </div>
 

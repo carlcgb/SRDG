@@ -136,17 +136,48 @@ export const fetchAnalyticsData = async (config) => {
 };
 
 /**
+ * Fetch real-time analytics data from GA4 (for today's data)
+ */
+export const fetchRealtimeAnalyticsData = async (config) => {
+  const { metrics = [], dimensions = [], orderBys = [] } = config;
+
+  const requestBody = {
+    metrics: metrics.map(metric => ({ name: metric })),
+    dimensions: dimensions.map(dimension => ({ name: dimension })),
+    ...(orderBys.length > 0 && { orderBys }),
+    limit: config.limit || 100,
+  };
+
+  try {
+    const data = await makeGA4Request(':runRealtimeReport', requestBody);
+    return {
+      success: true,
+      data: data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+};
+
+/**
  * Get users metric with comparison
  */
-export const getUsers = async (propertyId, startDate, endDate, previousStartDate, previousEndDate) => {
-  // Current period
-  const currentResult = await fetchAnalyticsData({
-    startDate,
-    endDate,
-    metrics: ['activeUsers'],
-  });
+export const getUsers = async (propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime = false) => {
+  // Current period - use Real-time API if requested
+  const currentResult = useRealtime 
+    ? await fetchRealtimeAnalyticsData({
+        metrics: ['activeUsers'],
+      })
+    : await fetchAnalyticsData({
+        startDate,
+        endDate,
+        metrics: ['activeUsers'],
+      });
 
-  // Previous period for comparison
+  // Previous period for comparison (always use standard API)
   const previousResult = await fetchAnalyticsData({
     startDate: previousStartDate,
     endDate: previousEndDate,
@@ -171,12 +202,16 @@ export const getUsers = async (propertyId, startDate, endDate, previousStartDate
 /**
  * Get sessions metric with comparison
  */
-export const getSessions = async (propertyId, startDate, endDate, previousStartDate, previousEndDate) => {
-  const currentResult = await fetchAnalyticsData({
-    startDate,
-    endDate,
-    metrics: ['sessions'],
-  });
+export const getSessions = async (propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime = false) => {
+  const currentResult = useRealtime
+    ? await fetchRealtimeAnalyticsData({
+        metrics: ['sessions'],
+      })
+    : await fetchAnalyticsData({
+        startDate,
+        endDate,
+        metrics: ['sessions'],
+      });
 
   const previousResult = await fetchAnalyticsData({
     startDate: previousStartDate,
@@ -202,12 +237,16 @@ export const getSessions = async (propertyId, startDate, endDate, previousStartD
 /**
  * Get page views metric with comparison
  */
-export const getPageViews = async (propertyId, startDate, endDate, previousStartDate, previousEndDate) => {
-  const currentResult = await fetchAnalyticsData({
-    startDate,
-    endDate,
-    metrics: ['screenPageViews'],
-  });
+export const getPageViews = async (propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime = false) => {
+  const currentResult = useRealtime
+    ? await fetchRealtimeAnalyticsData({
+        metrics: ['screenPageViews'],
+      })
+    : await fetchAnalyticsData({
+        startDate,
+        endDate,
+        metrics: ['screenPageViews'],
+      });
 
   const previousResult = await fetchAnalyticsData({
     startDate: previousStartDate,
@@ -232,8 +271,10 @@ export const getPageViews = async (propertyId, startDate, endDate, previousStart
 
 /**
  * Get bounce rate metric with comparison
+ * Note: bounceRate is not available in Real-time API, so we use standard API even for today
  */
-export const getBounceRate = async (propertyId, startDate, endDate, previousStartDate, previousEndDate) => {
+export const getBounceRate = async (propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime = false) => {
+  // bounceRate is not available in Real-time API, always use standard API
   const currentResult = await fetchAnalyticsData({
     startDate,
     endDate,
@@ -263,8 +304,10 @@ export const getBounceRate = async (propertyId, startDate, endDate, previousStar
 
 /**
  * Get average session duration with comparison
+ * Note: averageSessionDuration is not available in Real-time API, so we use standard API even for today
  */
-export const getAvgSessionDuration = async (propertyId, startDate, endDate, previousStartDate, previousEndDate) => {
+export const getAvgSessionDuration = async (propertyId, startDate, endDate, previousStartDate, previousEndDate, useRealtime = false) => {
+  // averageSessionDuration is not available in Real-time API, always use standard API
   const currentResult = await fetchAnalyticsData({
     startDate,
     endDate,
@@ -302,22 +345,36 @@ export const getAvgSessionDuration = async (propertyId, startDate, endDate, prev
 /**
  * Get top pages
  */
-export const getTopPages = async (propertyId, startDate, endDate, limit = 10) => {
-  const result = await fetchAnalyticsData({
-    startDate,
-    endDate,
-    metrics: ['screenPageViews'],
-    dimensions: ['pagePath'],
-    orderBys: [
-      {
-        metric: {
-          metricName: 'screenPageViews',
-        },
-        desc: true,
-      },
-    ],
-    limit,
-  });
+export const getTopPages = async (propertyId, startDate, endDate, limit = 10, useRealtime = false) => {
+  const result = useRealtime
+    ? await fetchRealtimeAnalyticsData({
+        metrics: ['screenPageViews'],
+        dimensions: ['pagePath'],
+        orderBys: [
+          {
+            metric: {
+              metricName: 'screenPageViews',
+            },
+            desc: true,
+          },
+        ],
+        limit,
+      })
+    : await fetchAnalyticsData({
+        startDate,
+        endDate,
+        metrics: ['screenPageViews'],
+        dimensions: ['pagePath'],
+        orderBys: [
+          {
+            metric: {
+              metricName: 'screenPageViews',
+            },
+            desc: true,
+          },
+        ],
+        limit,
+      });
 
   if (!result.success) {
     throw new Error('Failed to fetch top pages data');
@@ -341,22 +398,36 @@ export const getTopPages = async (propertyId, startDate, endDate, limit = 10) =>
 /**
  * Get traffic sources
  */
-export const getTrafficSources = async (propertyId, startDate, endDate) => {
-  const result = await fetchAnalyticsData({
-    startDate,
-    endDate,
-    metrics: ['sessions'],
-    dimensions: ['sessionSource'],
-    orderBys: [
-      {
-        metric: {
-          metricName: 'sessions',
-        },
-        desc: true,
-      },
-    ],
-    limit: 10,
-  });
+export const getTrafficSources = async (propertyId, startDate, endDate, useRealtime = false) => {
+  const result = useRealtime
+    ? await fetchRealtimeAnalyticsData({
+        metrics: ['activeUsers'], // Real-time uses activeUsers instead of sessions
+        dimensions: ['sessionSource'],
+        orderBys: [
+          {
+            metric: {
+              metricName: 'activeUsers',
+            },
+            desc: true,
+          },
+        ],
+        limit: 10,
+      })
+    : await fetchAnalyticsData({
+        startDate,
+        endDate,
+        metrics: ['sessions'],
+        dimensions: ['sessionSource'],
+        orderBys: [
+          {
+            metric: {
+              metricName: 'sessions',
+            },
+            desc: true,
+          },
+        ],
+        limit: 10,
+      });
 
   if (!result.success) {
     throw new Error('Failed to fetch traffic sources data');
@@ -383,21 +454,34 @@ export const getTrafficSources = async (propertyId, startDate, endDate) => {
 /**
  * Get device breakdown
  */
-export const getDeviceBreakdown = async (propertyId, startDate, endDate) => {
-  const result = await fetchAnalyticsData({
-    startDate,
-    endDate,
-    metrics: ['sessions'],
-    dimensions: ['deviceCategory'],
-    orderBys: [
-      {
-        metric: {
-          metricName: 'sessions',
-        },
-        desc: true,
-      },
-    ],
-  });
+export const getDeviceBreakdown = async (propertyId, startDate, endDate, useRealtime = false) => {
+  const result = useRealtime
+    ? await fetchRealtimeAnalyticsData({
+        metrics: ['activeUsers'], // Real-time uses activeUsers instead of sessions
+        dimensions: ['deviceCategory'],
+        orderBys: [
+          {
+            metric: {
+              metricName: 'activeUsers',
+            },
+            desc: true,
+          },
+        ],
+      })
+    : await fetchAnalyticsData({
+        startDate,
+        endDate,
+        metrics: ['sessions'],
+        dimensions: ['deviceCategory'],
+        orderBys: [
+          {
+            metric: {
+              metricName: 'sessions',
+            },
+            desc: true,
+          },
+        ],
+      });
 
   if (!result.success) {
     throw new Error('Failed to fetch device breakdown data');
