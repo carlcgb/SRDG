@@ -209,14 +209,14 @@ const Dashboard = ({ authData, onLogout }) => {
               <span className="user-name">{authData.user.name}</span>
               {authData.user.email && authData.user.email.toLowerCase() === 'carl.g.bisaillon@gmail.com' && (
                 <button 
-                  onClick={(e) => {
-                    e.preventDefault();
+                  type="button"
+                  onClick={() => {
                     const hostname = window.location.hostname;
                     const isSubdomain = hostname.startsWith('stats.') || hostname.startsWith('dashboard.');
                     const adminPath = isSubdomain ? '/admin' : '/dashboard/admin';
-                    console.log('Navigating to admin panel:', adminPath);
-                    // Use window.location for full page reload to ensure proper routing
-                    window.location.href = adminPath;
+                    console.log('Navigating to admin panel:', adminPath, 'from:', window.location.href);
+                    // Force navigation
+                    window.location.assign(adminPath);
                   }} 
                   className="btn-admin"
                   style={{
