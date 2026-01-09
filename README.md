@@ -237,7 +237,7 @@ npm run build
 - **[Configuration D1](docs/CLOUDFLARE_D1_SETUP.md)** - Base de données Cloudflare D1
 - **[GitHub Secrets](docs/GITHUB_SECRETS_ONLY.md)** - Configuration des secrets
 - **[Sous-domaines](docs/SUBDOMAIN_SETUP.md)** - Configuration stats.lasoireedurire.ca
-- **Panel d'Administration** - Accessible via `/dashboard/admin` (réservé à l'admin principal)
+- **[Panel d'Administration](docs/ADMIN_PANEL_SETUP.md)** - Guide complet du panel admin
   - Gestion des utilisateurs (ajouter, modifier, activer/désactiver, définir admin)
   - Gestion des demandes d'accès (approuver, refuser, supprimer)
   - Statistiques des accès (approuvés, en attente, refusés)
