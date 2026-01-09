@@ -15,6 +15,10 @@
 # Also available on main domain as /dashboard/approve
 /approve    /index.html   200
 
+# Admin route for subdomain (stats.lasoireedurire.ca/admin)
+# Also available on main domain as /dashboard/admin
+/admin    /index.html   200
+
 # Catch-all redirect - must be last to avoid catching API routes
 # This ensures all other routes serve the React app
 /*    /index.html   200

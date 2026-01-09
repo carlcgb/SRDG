@@ -207,6 +207,40 @@ const Dashboard = ({ authData, onLogout }) => {
                 />
               )}
               <span className="user-name">{authData.user.name}</span>
+              {authData.user.email && authData.user.email.toLowerCase() === 'carl.g.bisaillon@gmail.com' && (
+                <button 
+                  onClick={() => {
+                    const isSubdomain = window.location.hostname.startsWith('stats.') || window.location.hostname.startsWith('dashboard.');
+                    const adminPath = isSubdomain ? '/admin' : '/dashboard/admin';
+                    window.location.href = adminPath;
+                  }} 
+                  className="btn-admin"
+                  style={{
+                    padding: '8px 16px',
+                    fontSize: '0.9rem',
+                    fontWeight: '600',
+                    textTransform: 'uppercase',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    fontFamily: "'Teko', sans-serif",
+                    border: '2px solid #17a2b8',
+                    borderRadius: '50px',
+                    backgroundColor: 'transparent',
+                    color: '#17a2b8',
+                    marginRight: '10px'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = '#17a2b8';
+                    e.target.style.color = '#fff';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = 'transparent';
+                    e.target.style.color = '#17a2b8';
+                  }}
+                >
+                  ⚙️ Admin
+                </button>
+              )}
               <button onClick={onLogout} className="btn-logout">
                 Déconnexion
               </button>

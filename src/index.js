@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import DashboardApp from './components/DashboardApp';
 import ApproveAccess from './components/ApproveAccess';
+import AdminApp from './components/AdminApp';
 import { isDashboardSubdomain } from './utils/subdomainRouter';
 
 import PrivacyPolicy from './components/PrivacyPolicy';
@@ -16,6 +17,10 @@ const isDashboard = isDashboardSubdomainCheck || isDashboardPath;
 const isApprovePage = isDashboardSubdomainCheck 
   ? pathname.includes('/approve') 
   : pathname.includes('/dashboard/approve');
+// Check if admin page: if on subdomain, use /admin, if on main domain, use /dashboard/admin
+const isAdminPage = isDashboardSubdomainCheck 
+  ? pathname.includes('/admin') 
+  : pathname.includes('/dashboard/admin');
 // Check if privacy policy page
 const isPrivacyPage = pathname === '/privacy' || pathname === '/privacy-policy';
 
@@ -23,11 +28,15 @@ const isPrivacyPage = pathname === '/privacy' || pathname === '/privacy-policy';
 console.log('Current pathname:', pathname);
 console.log('Is dashboard?', isDashboard);
 console.log('Is approve page?', isApprovePage);
+console.log('Is admin page?', isAdminPage);
 console.log('Is privacy page?', isPrivacyPage);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    {isPrivacyPage ? <PrivacyPolicy /> : (isApprovePage ? <ApproveAccess /> : (isDashboard ? <DashboardApp /> : <App />))}
+    {isPrivacyPage ? <PrivacyPolicy /> : 
+     (isAdminPage ? <AdminApp /> : 
+      (isApprovePage ? <ApproveAccess /> : 
+       (isDashboard ? <DashboardApp /> : <App />)))}
   </React.StrictMode>
 );
