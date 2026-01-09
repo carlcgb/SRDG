@@ -46,6 +46,7 @@ const Login = ({ onLogin }) => {
   /**
    * Get OAuth access token for GA4 API
    * Uses Google OAuth2 Token Client to get access token with analytics.readonly scope
+   * Uses empty prompt to avoid popup if permissions already granted
    */
   const getOAuthAccessToken = () => {
     return new Promise((resolve, reject) => {
@@ -57,6 +58,23 @@ const Login = ({ onLogin }) => {
       }
 
       try {
+        // Check if we already have a valid token with the required scope
+        let existingToken = null;
+        try {
+          existingToken = window.google.accounts.oauth2.getTokenResponse();
+          if (existingToken && 
+              window.google.accounts.oauth2.hasGrantedAllScopes(
+                existingToken,
+                'https://www.googleapis.com/auth/analytics.readonly'
+              )) {
+            // We already have a valid token with the required scope
+            resolve(existingToken.access_token);
+            return;
+          }
+        } catch (e) {
+          // No existing token, continue to request one
+        }
+
         // Initialize OAuth2 Token Client with Analytics scope
         const tokenClient = window.google.accounts.oauth2.initTokenClient({
           client_id: clientId,
@@ -73,8 +91,9 @@ const Login = ({ onLogin }) => {
           },
         });
 
-        // Request access token
-        tokenClient.requestAccessToken({ prompt: 'consent' });
+        // Use empty prompt - will only show popup if permissions not already granted
+        // This prevents multiple popups if user already granted permissions
+        tokenClient.requestAccessToken({ prompt: '' });
       } catch (error) {
         console.error('Error initializing OAuth2 Token Client:', error);
         reject(error);
@@ -101,17 +120,21 @@ const Login = ({ onLogin }) => {
 
         const buttonContainer = document.getElementById('google-signin-button');
         if (buttonContainer) {
-          // Clear any existing button
+          // Clear any existing button to prevent duplicates
           buttonContainer.innerHTML = '';
           
-          window.google.accounts.id.renderButton(buttonContainer, {
-            theme: 'outline',
-            size: 'large',
-            width: 280,
-            text: 'signin_with',
-            locale: 'fr',
-            type: 'standard',
-          });
+          // Check if button was already rendered to avoid duplicates
+          if (!buttonContainer.hasAttribute('data-button-rendered')) {
+            window.google.accounts.id.renderButton(buttonContainer, {
+              theme: 'outline',
+              size: 'large',
+              width: 280,
+              text: 'signin_with',
+              locale: 'fr',
+              type: 'standard',
+            });
+            buttonContainer.setAttribute('data-button-rendered', 'true');
+          }
         }
 
         // Also show the One Tap prompt (optional)
@@ -126,6 +149,12 @@ const Login = ({ onLogin }) => {
   };
 
   const handleCredentialResponse = async (response) => {
+    // Prevent multiple simultaneous login attempts
+    if (loading) {
+      console.log('Login already in progress, ignoring duplicate request');
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -170,10 +199,16 @@ const Login = ({ onLogin }) => {
           picture: payload.picture || '',
         },
         timestamp: Date.now(),
+        loginMethod: 'google',
       };
 
       // Get OAuth access token for GA4 API
+      // Wait a bit to ensure the first popup is closed before opening the second one
+      // This prevents popup overlap and confusion
       try {
+        // Wait for the Google Sign-In popup to close before requesting OAuth token
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Delay to avoid popup overlap
+        
         const accessToken = await getOAuthAccessToken();
         if (accessToken) {
           authData.accessToken = accessToken;
@@ -182,6 +217,7 @@ const Login = ({ onLogin }) => {
       } catch (tokenError) {
         console.warn('⚠️ Could not get OAuth access token:', tokenError);
         // Continue without access token - will use mock data or show error
+        // Don't fail the login if OAuth token can't be obtained
       }
 
       // Store in localStorage
@@ -333,6 +369,9 @@ const Login = ({ onLogin }) => {
                   <p>Connexion en cours...</p>
                 </div>
               )}
+              <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '10px', textAlign: 'center' }}>
+                ⚠️ Si plusieurs fenêtres s'ouvrent, c'est normal : une pour l'authentification, une pour les permissions Analytics.
+              </p>
             </div>
           )}
 
