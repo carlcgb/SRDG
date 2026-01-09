@@ -143,6 +143,35 @@ const AdminPanel = ({ authData, onBack }) => {
   const approvedUsers = accessRequests.filter(r => r.status === 'approved');
   const pendingUsers = accessRequests.filter(r => r.status === 'pending');
   const deniedUsers = accessRequests.filter(r => r.status === 'denied');
+  
+  // Combine dashboard_users and approved access_requests to show all users with access
+  const allUsersWithAccess = [
+    // Users from dashboard_users table (email/password users)
+    ...users.map(u => ({
+      id: u.id,
+      email: u.email,
+      name: u.name || '-',
+      source: 'dashboard_users',
+      isAdmin: u.is_admin === 1,
+      isActive: u.is_active === 1,
+      created_at: u.created_at,
+      last_login: u.last_login,
+      status: 'active'
+    })),
+    // Approved users from access_requests (Google Sign-In users)
+    ...approvedUsers.map(r => ({
+      id: `access_${r.id}`,
+      email: r.email,
+      name: r.name || '-',
+      source: 'access_requests',
+      isAdmin: false,
+      isActive: true,
+      created_at: r.requested_at,
+      last_login: r.reviewed_at,
+      status: 'approved',
+      reviewed_by: r.reviewed_by
+    }))
+  ];
 
   if (loading) {
     return (
@@ -175,7 +204,7 @@ const AdminPanel = ({ authData, onBack }) => {
           className={activeTab === 'users' ? 'active' : ''}
           onClick={() => setActiveTab('users')}
         >
-          Utilisateurs ({users.length})
+          Utilisateurs avec accès ({allUsersWithAccess.length})
         </button>
         <button
           className={activeTab === 'access' ? 'active' : ''}
@@ -203,7 +232,19 @@ const AdminPanel = ({ authData, onBack }) => {
             </button>
           </div>
 
-          {users.length === 0 && !loading && (
+          <div style={{
+            padding: '15px',
+            backgroundColor: '#d1ecf1',
+            border: '2px solid #17a2b8',
+            borderRadius: '10px',
+            marginBottom: '20px',
+            color: '#0c5460'
+          }}>
+            <strong>📊 Vue d'ensemble :</strong> Cette liste montre tous les utilisateurs ayant accès au dashboard, 
+            incluant les utilisateurs email/password et les utilisateurs Google Sign-In approuvés.
+          </div>
+
+          {allUsersWithAccess.length === 0 && !loading && (
             <div style={{
               padding: '30px',
               textAlign: 'center',
@@ -214,10 +255,10 @@ const AdminPanel = ({ authData, onBack }) => {
               color: '#856404'
             }}>
               <p style={{ fontSize: '1.2rem', margin: '0 0 10px 0' }}>
-                ℹ️ Aucun utilisateur trouvé dans la base de données.
+                ℹ️ Aucun utilisateur avec accès trouvé.
               </p>
               <p style={{ margin: '0', fontSize: '1rem' }}>
-                Cliquez sur "Ajouter un utilisateur" pour créer le premier utilisateur.
+                Cliquez sur "Ajouter un utilisateur" pour créer un compte email/password, ou approuvez des demandes d'accès dans l'onglet "Demandes d'accès".
               </p>
             </div>
           )}
@@ -228,48 +269,78 @@ const AdminPanel = ({ authData, onBack }) => {
                 <tr>
                   <th>Email</th>
                   <th>Nom</th>
+                  <th>Source</th>
                   <th>Admin</th>
-                  <th>Actif</th>
+                  <th>Statut</th>
                   <th>Créé le</th>
-                  <th>Dernière connexion</th>
+                  <th>Dernière activité</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {users.length > 0 ? (
-                  users.map(user => (
+                {allUsersWithAccess.length > 0 ? (
+                  allUsersWithAccess.map(user => (
                     <tr key={user.id}>
                       <td>{user.email}</td>
-                      <td>{user.name || '-'}</td>
+                      <td>{user.name}</td>
                       <td>
-                        <button
-                          onClick={() => handleToggleAdmin(user)}
-                          className={`btn-toggle ${user.is_admin ? 'active' : ''}`}
-                        >
-                          {user.is_admin ? '✅ Oui' : '❌ Non'}
-                        </button>
+                        <span style={{
+                          padding: '4px 8px',
+                          borderRadius: '4px',
+                          fontSize: '0.85rem',
+                          backgroundColor: user.source === 'dashboard_users' ? '#d4edda' : '#cce5ff',
+                          color: user.source === 'dashboard_users' ? '#155724' : '#004085'
+                        }}>
+                          {user.source === 'dashboard_users' ? '📧 Email/Password' : '🔵 Google Sign-In'}
+                        </span>
                       </td>
                       <td>
-                        <button
-                          onClick={() => handleToggleActive(user)}
-                          className={`btn-toggle ${user.is_active ? 'active' : ''}`}
-                        >
-                          {user.is_active ? '✅ Oui' : '❌ Non'}
-                        </button>
+                        {user.source === 'dashboard_users' ? (
+                          <button
+                            onClick={() => handleToggleAdmin(users.find(u => u.id === user.id))}
+                            className={`btn-toggle ${user.isAdmin ? 'active' : ''}`}
+                          >
+                            {user.isAdmin ? '✅ Oui' : '❌ Non'}
+                          </button>
+                        ) : (
+                          <span style={{ color: '#666' }}>-</span>
+                        )}
+                      </td>
+                      <td>
+                        {user.source === 'dashboard_users' ? (
+                          <button
+                            onClick={() => handleToggleActive(users.find(u => u.id === user.id))}
+                            className={`btn-toggle ${user.isActive ? 'active' : ''}`}
+                          >
+                            {user.isActive ? '✅ Actif' : '❌ Inactif'}
+                          </button>
+                        ) : (
+                          <span style={{ color: '#28a745', fontWeight: '600' }}>✅ Approuvé</span>
+                        )}
                       </td>
                       <td>{user.created_at ? new Date(user.created_at).toLocaleDateString('fr-CA') : '-'}</td>
                       <td>{user.last_login ? new Date(user.last_login).toLocaleDateString('fr-CA') : '-'}</td>
                       <td>
-                        <button onClick={() => handleEditUser(user)} className="btn-edit">
-                          ✏️ Modifier
-                        </button>
+                        {user.source === 'dashboard_users' ? (
+                          <button onClick={() => handleEditUser(users.find(u => u.id === user.id))} className="btn-edit">
+                            ✏️ Modifier
+                          </button>
+                        ) : (
+                          <button 
+                            onClick={() => handleDeleteAccess(user.email)} 
+                            className="btn-delete"
+                            title="Supprimer l'accès"
+                          >
+                            🗑️ Supprimer
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7" style={{ textAlign: 'center', padding: '40px', fontSize: '1.1rem', color: '#666' }}>
-                      {loading ? 'Chargement...' : 'Aucun utilisateur trouvé. Cliquez sur "Ajouter un utilisateur" pour commencer.'}
+                    <td colSpan="8" style={{ textAlign: 'center', padding: '40px', fontSize: '1.1rem', color: '#666' }}>
+                      {loading ? 'Chargement...' : 'Aucun utilisateur avec accès trouvé.'}
                     </td>
                   </tr>
                 )}

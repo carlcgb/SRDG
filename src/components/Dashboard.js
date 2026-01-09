@@ -210,13 +210,17 @@ const Dashboard = ({ authData, onLogout }) => {
               {authData.user.email && authData.user.email.toLowerCase() === 'carl.g.bisaillon@gmail.com' && (
                 <button 
                   type="button"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     const hostname = window.location.hostname;
                     const isSubdomain = hostname.startsWith('stats.') || hostname.startsWith('dashboard.');
                     const adminPath = isSubdomain ? '/admin' : '/dashboard/admin';
-                    console.log('Navigating to admin panel:', adminPath, 'from:', window.location.href);
-                    // Force navigation
-                    window.location.assign(adminPath);
+                    console.log('🔧 Admin button clicked - Navigating to:', adminPath);
+                    console.log('🔧 Current URL:', window.location.href);
+                    console.log('🔧 Hostname:', hostname);
+                    // Use window.location.href for reliable navigation
+                    window.location.href = adminPath;
                   }} 
                   className="btn-admin"
                   style={{
