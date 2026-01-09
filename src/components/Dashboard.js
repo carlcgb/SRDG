@@ -208,45 +208,59 @@ const Dashboard = ({ authData, onLogout }) => {
                 />
               )}
               <span className="user-name">{authData.user.name}</span>
-              {authData.user.email && authData.user.email.toLowerCase() === 'carl.g.bisaillon@gmail.com' && (
-                <button 
-                  type="button"
-                  onClick={(e) => {
-                    try {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      
-                      const hostname = window.location.hostname;
-                      const currentPath = window.location.pathname;
-                      const isSubdomain = hostname.startsWith('stats.') || hostname.startsWith('dashboard.');
-                      const adminPath = isSubdomain ? '/admin' : '/dashboard/admin';
-                      
+              {(() => {
+                const isAdmin = authData.user.email && authData.user.email.toLowerCase() === 'carl.g.bisaillon@gmail.com';
+                console.log('🔍 Admin button check:', {
+                  hasEmail: !!authData.user.email,
+                  email: authData.user.email,
+                  isAdmin: isAdmin
+                });
+                
+                return isAdmin && (
+                  <button 
+                    type="button"
+                    id="admin-button"
+                    onClick={(e) => {
                       console.log('🔧 ===== ADMIN BUTTON CLICKED =====');
-                      console.log('🔧 Hostname:', hostname);
-                      console.log('🔧 Current pathname:', currentPath);
-                      console.log('🔧 Is subdomain:', isSubdomain);
-                      console.log('🔧 Admin path calculated:', adminPath);
-                      console.log('🔧 Current full URL:', window.location.href);
+                      console.log('🔧 Event:', e);
+                      console.log('🔧 Button element:', e.target);
                       
-                      // Try multiple navigation methods
-                      const fullAdminUrl = window.location.origin + adminPath;
-                      console.log('🔧 Full admin URL:', fullAdminUrl);
-                      
-                      // Method 1: Direct navigation
-                      window.location.href = adminPath;
-                      
-                      // Fallback after 100ms if navigation didn't work
-                      setTimeout(() => {
-                        if (window.location.pathname !== adminPath && !window.location.pathname.includes('/admin')) {
-                          console.warn('⚠️ Navigation failed, trying alternative method');
-                          window.location.assign(adminPath);
-                        }
-                      }, 100);
-                    } catch (error) {
-                      console.error('❌ Error in admin button click:', error);
-                      alert('Erreur lors de la navigation. Veuillez essayer d\'accéder directement à: /dashboard/admin');
-                    }
-                  }} 
+                      try {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        const hostname = window.location.hostname;
+                        const currentPath = window.location.pathname;
+                        const isSubdomain = hostname.startsWith('stats.') || hostname.startsWith('dashboard.');
+                        const adminPath = isSubdomain ? '/admin' : '/dashboard/admin';
+                        
+                        console.log('🔧 Hostname:', hostname);
+                        console.log('🔧 Current pathname:', currentPath);
+                        console.log('🔧 Is subdomain:', isSubdomain);
+                        console.log('🔧 Admin path calculated:', adminPath);
+                        console.log('🔧 Current full URL:', window.location.href);
+                        
+                        // Try multiple navigation methods
+                        const fullAdminUrl = window.location.origin + adminPath;
+                        console.log('🔧 Full admin URL:', fullAdminUrl);
+                        
+                        // Method 1: Direct navigation
+                        console.log('🔧 Attempting navigation to:', adminPath);
+                        window.location.href = adminPath;
+                        
+                        // Fallback after 500ms if navigation didn't work
+                        setTimeout(() => {
+                          if (window.location.pathname !== adminPath && !window.location.pathname.includes('/admin')) {
+                            console.warn('⚠️ Navigation failed, trying alternative method');
+                            window.location.assign(adminPath);
+                          }
+                        }, 500);
+                      } catch (error) {
+                        console.error('❌ Error in admin button click:', error);
+                        console.error('❌ Error stack:', error.stack);
+                        alert('Erreur lors de la navigation. Veuillez essayer d\'accéder directement à: /dashboard/admin');
+                      }
+                    }} 
                   className="btn-admin"
                   style={{
                     padding: '8px 16px',
@@ -279,7 +293,8 @@ const Dashboard = ({ authData, onLogout }) => {
                 >
                   ⚙️ Admin
                 </button>
-              )}
+                );
+              })()}
               <button onClick={onLogout} className="btn-logout">
                 Déconnexion
               </button>
