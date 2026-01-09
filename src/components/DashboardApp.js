@@ -5,7 +5,7 @@ import AccessPending from './AccessPending';
 import AdminPanel from './AdminPanel';
 import './Dashboard.css';
 import './Login.css';
-import { isEmailAuthorized, sendAccessRequestEmail, markAsPending, isPendingApproval } from '../services/dashboardAuthService';
+import { isEmailAuthorized, sendAccessRequestEmail, markAsPending, isPendingApproval, PRIMARY_ADMIN_PANEL_EMAIL } from '../services/dashboardAuthService';
 
 // Separate app for dashboard subdomain
 function DashboardApp() {
@@ -199,7 +199,7 @@ function DashboardApp() {
   }
 
   // Check if user wants to see admin panel
-  const isAdmin = authData?.user?.email?.toLowerCase() === 'carl.g.bisaillon@gmail.com';
+  const isAdmin = authData?.user?.email?.toLowerCase() === PRIMARY_ADMIN_PANEL_EMAIL.toLowerCase();
   
   // Show admin panel if requested and user is admin
   if (showAdminPanel && isAdmin && isAuthenticated && accessStatus === 'authorized') {

@@ -132,6 +132,30 @@
   box-shadow: 0 4px 12px rgba(246, 74, 62, 0.3);
 }
 
+.btn-admin {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Teko', sans-serif;
+  border: 2px solid #17a2b8;
+  border-radius: 50px;
+  background-color: transparent;
+  color: #17a2b8;
+  margin-right: 10px;
+  z-index: 1000;
+  position: relative;
+}
+
+.btn-admin:hover {
+  background-color: #17a2b8;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3);
+}
+
 .date-range-select {
   padding: 12px 20px;
   border: 3px solid var(--primary-color, #F64A3E);

@@ -11,6 +11,8 @@ const AdminPanel = ({ authData, onBack }) => {
   const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [newUser, setNewUser] = useState({ email: '', password: '', name: '', isAdmin: false });
+  const [processingEmail, setProcessingEmail] = useState(null); // Track which email is being processed
+  const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -41,22 +43,64 @@ const AdminPanel = ({ authData, onBack }) => {
   };
 
   const handleApproveAccess = async (email) => {
+    if (processingEmail) return; // Prevent multiple clicks
+    
+    setProcessingEmail(email);
+    setError(null);
+    setSuccessMessage(null);
+    
     try {
-      await updateAccessRequestStatus(email, 'approved', authData?.user?.email);
-      await loadData();
+      console.log('✅ Approving access for:', email);
+      const result = await updateAccessRequestStatus(email, 'approved', authData?.user?.email);
+      console.log('✅ Approval result:', result);
+      
+      setSuccessMessage(`L'accès pour ${email} a été approuvé avec succès.`);
+      
+      // Reload data after a short delay to show success message
+      setTimeout(async () => {
+        await loadData();
+        setSuccessMessage(null);
+      }, 500);
     } catch (err) {
-      console.error('Error approving access:', err);
-      alert('Erreur lors de l\'approbation de l\'accès.');
+      console.error('❌ Error approving access:', err);
+      const errorMsg = err.message || 'Erreur lors de l\'approbation de l\'accès.';
+      setError(`Erreur: ${errorMsg}`);
+      alert(`Erreur lors de l'approbation de l'accès: ${errorMsg}`);
+    } finally {
+      setProcessingEmail(null);
     }
   };
 
   const handleDenyAccess = async (email) => {
+    if (processingEmail) return; // Prevent multiple clicks
+    
+    if (!window.confirm(`Êtes-vous sûr de vouloir refuser l'accès pour ${email} ?`)) {
+      return;
+    }
+    
+    setProcessingEmail(email);
+    setError(null);
+    setSuccessMessage(null);
+    
     try {
-      await updateAccessRequestStatus(email, 'denied', authData?.user?.email);
-      await loadData();
+      console.log('❌ Denying access for:', email);
+      const result = await updateAccessRequestStatus(email, 'denied', authData?.user?.email);
+      console.log('❌ Denial result:', result);
+      
+      setSuccessMessage(`L'accès pour ${email} a été refusé.`);
+      
+      // Reload data after a short delay to show success message
+      setTimeout(async () => {
+        await loadData();
+        setSuccessMessage(null);
+      }, 500);
     } catch (err) {
-      console.error('Error denying access:', err);
-      alert('Erreur lors du refus de l\'accès.');
+      console.error('❌ Error denying access:', err);
+      const errorMsg = err.message || 'Erreur lors du refus de l\'accès.';
+      setError(`Erreur: ${errorMsg}`);
+      alert(`Erreur lors du refus de l'accès: ${errorMsg}`);
+    } finally {
+      setProcessingEmail(null);
     }
   };
 
@@ -196,6 +240,34 @@ const AdminPanel = ({ authData, onBack }) => {
       {error && (
         <div className="admin-panel-error">
           <span>⚠️</span> {error}
+          <button 
+            onClick={() => setError(null)} 
+            style={{ marginLeft: '10px', padding: '5px 10px', cursor: 'pointer' }}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      {successMessage && (
+        <div style={{
+          padding: '15px',
+          marginBottom: '20px',
+          backgroundColor: '#d4edda',
+          border: '2px solid #28a745',
+          borderRadius: '10px',
+          color: '#155724',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <span>✅ {successMessage}</span>
+          <button 
+            onClick={() => setSuccessMessage(null)} 
+            style={{ marginLeft: '10px', padding: '5px 10px', cursor: 'pointer', background: 'transparent', border: 'none', fontSize: '1.2rem' }}
+          >
+            ✕
+          </button>
         </div>
       )}
 
@@ -405,15 +477,51 @@ const AdminPanel = ({ authData, onBack }) => {
                       <div className="action-buttons">
                         {request.status === 'pending' && (
                           <>
-                            <button onClick={() => handleApproveAccess(request.email)} className="btn-approve">
-                              ✅ Approuver
+                            <button 
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handleApproveAccess(request.email);
+                              }} 
+                              className="btn-approve"
+                              disabled={processingEmail === request.email || processingEmail !== null}
+                              style={{
+                                opacity: (processingEmail === request.email || processingEmail !== null) ? 0.6 : 1,
+                                cursor: (processingEmail === request.email || processingEmail !== null) ? 'not-allowed' : 'pointer'
+                              }}
+                            >
+                              {processingEmail === request.email ? '⏳ Traitement...' : '✅ Approuver'}
                             </button>
-                            <button onClick={() => handleDenyAccess(request.email)} className="btn-deny">
-                              ❌ Refuser
+                            <button 
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handleDenyAccess(request.email);
+                              }} 
+                              className="btn-deny"
+                              disabled={processingEmail === request.email || processingEmail !== null}
+                              style={{
+                                opacity: (processingEmail === request.email || processingEmail !== null) ? 0.6 : 1,
+                                cursor: (processingEmail === request.email || processingEmail !== null) ? 'not-allowed' : 'pointer'
+                              }}
+                            >
+                              {processingEmail === request.email ? '⏳ Traitement...' : '❌ Refuser'}
                             </button>
                           </>
                         )}
-                        <button onClick={() => handleDeleteAccess(request.email)} className="btn-delete">
+                        <button 
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleDeleteAccess(request.email);
+                          }} 
+                          className="btn-delete"
+                          disabled={processingEmail !== null}
+                          style={{
+                            opacity: processingEmail !== null ? 0.6 : 1,
+                            cursor: processingEmail !== null ? 'not-allowed' : 'pointer'
+                          }}
+                        >
                           🗑️ Supprimer
                         </button>
                       </div>

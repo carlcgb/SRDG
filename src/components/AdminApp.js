@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminPanel from './AdminPanel';
 import Login from './Login';
-import { isEmailAuthorized } from '../services/dashboardAuthService';
-
-// Email autorisé pour accéder au panel admin
-const ADMIN_PANEL_EMAIL = 'carl.g.bisaillon@gmail.com';
+import { isEmailAuthorized, PRIMARY_ADMIN_PANEL_EMAIL } from '../services/dashboardAuthService';
 
 function AdminApp() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -44,7 +41,7 @@ function AdminApp() {
       }
 
       // Check if user is the authorized admin
-      const isAdmin = userEmail.toLowerCase() === ADMIN_PANEL_EMAIL.toLowerCase();
+      const isAdmin = userEmail.toLowerCase() === PRIMARY_ADMIN_PANEL_EMAIL.toLowerCase();
       
       if (isAdmin) {
         // Also check if user has general dashboard access
@@ -76,7 +73,7 @@ function AdminApp() {
     }
 
     // Check if user is the authorized admin
-    const isAdmin = userEmail.toLowerCase() === ADMIN_PANEL_EMAIL.toLowerCase();
+    const isAdmin = userEmail.toLowerCase() === PRIMARY_ADMIN_PANEL_EMAIL.toLowerCase();
     
     if (!isAdmin) {
       alert('Accès refusé. Ce panel est réservé à l\'administrateur principal.');

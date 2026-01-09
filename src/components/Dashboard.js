@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Dashboard.css';
 import DashboardModal from './DashboardModal';
 import { testAdminNavigation } from './AdminButtonTest';
+import { PRIMARY_ADMIN_PANEL_EMAIL } from '../services/dashboardAuthService';
 import {
   getUsers,
   getSessions,
@@ -208,7 +209,7 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
                 />
               )}
               <span className="user-name">{authData.user.name}</span>
-              {authData.user.email && authData.user.email.toLowerCase() === 'carl.g.bisaillon@gmail.com' && (
+              {authData.user.email && authData.user.email.toLowerCase() === PRIMARY_ADMIN_PANEL_EMAIL.toLowerCase() && (
                 <button 
                   type="button"
                   id="admin-button"
@@ -238,34 +239,6 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
                     window.location.replace(fullAdminUrl);
                   }} 
                   className="btn-admin"
-                  style={{
-                    padding: '8px 16px',
-                    fontSize: '0.9rem',
-                    fontWeight: '600',
-                    textTransform: 'uppercase',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    fontFamily: "'Teko', sans-serif",
-                    border: '2px solid #17a2b8',
-                    borderRadius: '50px',
-                    backgroundColor: 'transparent',
-                    color: '#17a2b8',
-                    marginRight: '10px',
-                    zIndex: 1000,
-                    position: 'relative'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!e.target.disabled) {
-                      e.target.style.backgroundColor = '#17a2b8';
-                      e.target.style.color = '#fff';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!e.target.disabled) {
-                      e.target.style.backgroundColor = 'transparent';
-                      e.target.style.color = '#17a2b8';
-                    }
-                  }}
                 >
                   ⚙️ Admin
                 </button>

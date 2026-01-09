@@ -15,9 +15,12 @@ const EMAILJS_SERVICE_ID = process.env.REACT_APP_EMAILJS_SERVICE_ID;
 const EMAILJS_TEMPLATE_ID = process.env.REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID || process.env.REACT_APP_EMAILJS_TEMPLATE_ID;
 const EMAILJS_PUBLIC_KEY = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
 
+// Primary admin email for admin panel access (specific to carl.g.bisaillon@gmail.com)
+export const PRIMARY_ADMIN_PANEL_EMAIL = 'carl.g.bisaillon@gmail.com';
+
 // Admin emails - multiple admins allowed
 const ADMIN_EMAILS = [
-  'carl.g.bisaillon@gmail.com',
+  PRIMARY_ADMIN_PANEL_EMAIL,
   'info@lasoireedurire.ca',
   process.env.REACT_APP_DASHBOARD_ADMIN_EMAIL, // From GitHub Secrets (if set)
 ].filter(Boolean); // Remove undefined values

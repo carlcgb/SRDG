@@ -2,13 +2,17 @@
 // Handles communication with Cloudflare Workers API for access requests
 
 const getApiBaseUrl = () => {
-  // In production, use the actual domain
+  // Always use the current origin to ensure we're hitting the right API
+  // This works for both development and production
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+  // Fallback for server-side rendering (shouldn't happen in this app)
   if (process.env.NODE_ENV === 'production') {
     return 'https://lasoireedurire.ca';
   }
-  // In development, use localhost or a test endpoint
-  // For now, we'll use the production URL as fallback
-  return process.env.REACT_APP_CLOUDFLARE_API_URL || 'https://lasoireedurire.ca';
+  // Development fallback
+  return process.env.REACT_APP_CLOUDFLARE_API_URL || 'http://localhost:3000';
 };
 
 /**
@@ -105,26 +109,53 @@ export const updateAccessRequestStatus = async (email, status, reviewedBy = null
   try {
     const apiUrl = `${getApiBaseUrl()}/api/access-requests`;
     
+    console.log('📡 Updating access request:', { email, status, reviewedBy, apiUrl });
+    
+    const requestBody = {
+      email,
+      status,
+      reviewedBy,
+    };
+    
+    console.log('📡 Request body:', requestBody);
+    
     const response = await fetch(apiUrl, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        email,
-        status,
-        reviewedBy,
-      }),
+      body: JSON.stringify(requestBody),
     });
 
+    console.log('📡 Response status:', response.status, response.statusText);
+    console.log('📡 Response headers:', Object.fromEntries(response.headers.entries()));
+
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ error: 'Unknown error' }));
-      throw new Error(error.error || `HTTP ${response.status}`);
+      let errorData;
+      try {
+        const text = await response.text();
+        console.error('❌ Error response text:', text);
+        errorData = JSON.parse(text);
+      } catch (parseError) {
+        console.error('❌ Could not parse error response:', parseError);
+        errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
+      }
+      
+      const errorMessage = errorData.error || errorData.message || `HTTP ${response.status}`;
+      console.error('❌ API Error:', errorMessage);
+      throw new Error(errorMessage);
     }
 
-    return await response.json();
+    const result = await response.json();
+    console.log('✅ Update successful:', result);
+    return result;
   } catch (error) {
-    console.error('Error updating access request:', error);
+    console.error('❌ Error updating access request:', error);
+    console.error('❌ Error details:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
     throw error;
   }
 };
