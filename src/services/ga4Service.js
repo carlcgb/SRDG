@@ -429,6 +429,14 @@ export const getDateRange = (range) => {
   today.setHours(0, 0, 0, 0);
   
   const ranges = {
+    today: {
+      start: today,
+      end: today,
+      previous: {
+        start: new Date(today.getTime() - 24 * 60 * 60 * 1000),
+        end: new Date(today.getTime() - 24 * 60 * 60 * 1000),
+      },
+    },
     last7days: {
       start: new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000),
       end: today,

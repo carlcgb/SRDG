@@ -216,6 +216,7 @@ const Dashboard = ({ authData, onLogout }) => {
             onChange={(e) => setDateRange(e.target.value)}
             className="date-range-select"
           >
+            <option value="today">Aujourd'hui</option>
             <option value="last7days">7 derniers jours</option>
             <option value="last30days">30 derniers jours</option>
             <option value="last90days">90 derniers jours</option>
