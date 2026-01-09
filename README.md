@@ -16,6 +16,8 @@ Site web moderne et réactif pour La Soirée du Rire de Granby, construit avec R
 - **📊 Dashboard Analytics**: Tableau de bord avec authentification Google et données GA4
 - **🗄️ Cloudflare D1**: Base de données pour gestion des permissions d'accès
 - **🌐 Sous-domaines**: Support pour `stats.lasoireedurire.ca` et `dashboard.lasoireedurire.ca`
+- **⚙️ Panel d'Administration**: Gestion complète des utilisateurs et des accès (réservé à l'admin principal)
+- **✅ Confirmation d'Accès**: Page de confirmation pour approuver/refuser les demandes d'accès
 - **📁 Organisation Avancée**: Structure de dossiers professionnelle et scalable
 - **🎨 Assets Organisés**: Images, styles et polices catégorisés
 - **📚 Documentation Complète**: Guides détaillés pour maintenance et développement
@@ -123,12 +125,15 @@ SRDG/
 │   │   ├── Dashboard.js            # Tableau de bord Analytics
 │   │   ├── DashboardApp.js         # App dashboard avec auth
 │   │   ├── Login.js                # Authentification Google
+│   │   ├── AdminPanel.js           # Panel d'administration
+│   │   ├── AdminApp.js             # App admin avec vérification
+│   │   ├── ApproveAccess.js        # Page de confirmation d'accès
 │   │   └── ...                     # Autres composants
 │   ├── 📁 hooks/                    # Hooks personnalisés
 │   ├── 📁 services/                 # Services externes
 │   │   ├── ga4Service.js           # Service Google Analytics 4
 │   │   ├── dashboardAuthService.js # Gestion permissions
-│   │   ├── cloudflareApiService.js # API Cloudflare D1
+│   │   ├── cloudflareApiService.js # API Cloudflare D1 (users, access requests)
 │   │   └── ...                     # Autres services
 │   ├── 📁 utils/                    # Utilitaires
 │   │   └── subdomainRouter.js      # Routage sous-domaines
@@ -141,7 +146,9 @@ SRDG/
 ├── 📁 functions/                    # Cloudflare Workers
 │   └── 📁 api/                     # API Workers
 │       ├── access-requests.js      # CRUD demandes d'accès
-│       └── verify-token.js         # Vérification tokens
+│       ├── users.js                # CRUD utilisateurs dashboard
+│       ├── verify-token.js         # Vérification tokens
+│       └── ...                     # Autres endpoints API
 ├── 📄 Configuration
 │   ├── package.json                 # Dépendances et scripts
 │   ├── wrangler.toml               # Configuration Cloudflare + D1
@@ -230,6 +237,10 @@ npm run build
 - **[Configuration D1](docs/CLOUDFLARE_D1_SETUP.md)** - Base de données Cloudflare D1
 - **[GitHub Secrets](docs/GITHUB_SECRETS_ONLY.md)** - Configuration des secrets
 - **[Sous-domaines](docs/SUBDOMAIN_SETUP.md)** - Configuration stats.lasoireedurire.ca
+- **Panel d'Administration** - Accessible via `/dashboard/admin` (réservé à l'admin principal)
+  - Gestion des utilisateurs (ajouter, modifier, activer/désactiver, définir admin)
+  - Gestion des demandes d'accès (approuver, refuser, supprimer)
+  - Statistiques des accès (approuvés, en attente, refusés)
 
 ### SEO & Optimisation
 - **[Optimisation SEO](docs/SEO_OPTIMIZATION_COMPLETE.md)** - Guide SEO complet
@@ -260,4 +271,20 @@ MIT - Libre d'utilisation pour projets personnels et commerciaux.
 - **✅ Assets Vérifiés** - Tous les chemins d'images et styles fonctionnels
 - **✅ Structure Organisée** - Architecture professionnelle et scalable
 - **✅ Documentation Complète** - Guides détaillés pour maintenance
+- **✅ Panel Admin** - Gestion complète des utilisateurs et accès
+- **✅ Confirmation d'Accès** - Page de confirmation pour approbations
 - **✅ Prêt pour Production** - Déploiement immédiat possible
+
+## 🆕 Nouvelles Fonctionnalités
+
+### Panel d'Administration
+- **Accès restreint** : Réservé à `carl.g.bisaillon@gmail.com`
+- **Gestion des utilisateurs** : Ajouter, modifier, activer/désactiver, définir comme admin
+- **Gestion des accès** : Approuver, refuser, supprimer les demandes d'accès
+- **Statistiques** : Vue d'ensemble des accès (approuvés, en attente, refusés)
+- **Interface intuitive** : Tableaux interactifs avec modales pour les actions
+
+### Page de Confirmation d'Accès
+- **Confirmation requise** : Les liens d'approbation/refus nécessitent une confirmation
+- **Sécurité renforcée** : Vérification du token avant affichage de la page de confirmation
+- **Interface claire** : Boutons de confirmation et d'annulation bien visibles
