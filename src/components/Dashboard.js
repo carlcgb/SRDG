@@ -14,7 +14,7 @@ import {
   getDateRange,
 } from '../services/ga4Service';
 
-const Dashboard = ({ authData, onLogout }) => {
+const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -208,59 +208,35 @@ const Dashboard = ({ authData, onLogout }) => {
                 />
               )}
               <span className="user-name">{authData.user.name}</span>
-              {(() => {
-                const isAdmin = authData.user.email && authData.user.email.toLowerCase() === 'carl.g.bisaillon@gmail.com';
-                console.log('🔍 Admin button check:', {
-                  hasEmail: !!authData.user.email,
-                  email: authData.user.email,
-                  isAdmin: isAdmin
-                });
-                
-                return isAdmin && (
-                  <button 
-                    type="button"
-                    id="admin-button"
-                    onClick={(e) => {
-                      console.log('🔧 ===== ADMIN BUTTON CLICKED =====');
-                      console.log('🔧 Event:', e);
-                      console.log('🔧 Button element:', e.target);
-                      
-                      try {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        
-                        const hostname = window.location.hostname;
-                        const currentPath = window.location.pathname;
-                        const isSubdomain = hostname.startsWith('stats.') || hostname.startsWith('dashboard.');
-                        const adminPath = isSubdomain ? '/admin' : '/dashboard/admin';
-                        
-                        console.log('🔧 Hostname:', hostname);
-                        console.log('🔧 Current pathname:', currentPath);
-                        console.log('🔧 Is subdomain:', isSubdomain);
-                        console.log('🔧 Admin path calculated:', adminPath);
-                        console.log('🔧 Current full URL:', window.location.href);
-                        
-                        // Try multiple navigation methods
-                        const fullAdminUrl = window.location.origin + adminPath;
-                        console.log('🔧 Full admin URL:', fullAdminUrl);
-                        
-                        // Method 1: Direct navigation
-                        console.log('🔧 Attempting navigation to:', adminPath);
-                        window.location.href = adminPath;
-                        
-                        // Fallback after 500ms if navigation didn't work
-                        setTimeout(() => {
-                          if (window.location.pathname !== adminPath && !window.location.pathname.includes('/admin')) {
-                            console.warn('⚠️ Navigation failed, trying alternative method');
-                            window.location.assign(adminPath);
-                          }
-                        }, 500);
-                      } catch (error) {
-                        console.error('❌ Error in admin button click:', error);
-                        console.error('❌ Error stack:', error.stack);
-                        alert('Erreur lors de la navigation. Veuillez essayer d\'accéder directement à: /dashboard/admin');
-                      }
-                    }} 
+              {authData.user.email && authData.user.email.toLowerCase() === 'carl.g.bisaillon@gmail.com' && (
+                <button 
+                  type="button"
+                  id="admin-button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    console.log('🔧 Admin button clicked');
+                    
+                    // Try callback first (if available - for inline view)
+                    if (onShowAdmin && typeof onShowAdmin === 'function') {
+                      console.log('🔧 Using callback to show admin panel');
+                      onShowAdmin();
+                      return;
+                    }
+                    
+                    // Fallback: Navigate to admin route
+                    const hostname = window.location.hostname;
+                    const isSubdomain = hostname.startsWith('stats.') || hostname.startsWith('dashboard.');
+                    const adminPath = isSubdomain ? '/admin' : '/dashboard/admin';
+                    const fullAdminUrl = window.location.origin + adminPath;
+                    
+                    console.log('🔧 Navigating to:', adminPath);
+                    console.log('🔧 Full URL:', fullAdminUrl);
+                    
+                    // Force navigation with replace to avoid back button issues
+                    window.location.replace(fullAdminUrl);
+                  }} 
                   className="btn-admin"
                   style={{
                     padding: '8px 16px',

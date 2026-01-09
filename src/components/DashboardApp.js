@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Dashboard from './Dashboard';
 import Login from './Login';
 import AccessPending from './AccessPending';
+import AdminPanel from './AdminPanel';
 import './Dashboard.css';
 import './Login.css';
 import { isEmailAuthorized, sendAccessRequestEmail, markAsPending, isPendingApproval } from '../services/dashboardAuthService';
@@ -12,6 +13,7 @@ function DashboardApp() {
   const [authData, setAuthData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [accessStatus, setAccessStatus] = useState(null); // 'authorized', 'pending', 'denied', 'request_sent'
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
 
   useEffect(() => {
     // Check if user is already authenticated
@@ -196,10 +198,33 @@ function DashboardApp() {
     return <Login onLogin={handleLogin} />;
   }
 
+  // Check if user wants to see admin panel
+  const isAdmin = authData?.user?.email?.toLowerCase() === 'carl.g.bisaillon@gmail.com';
+  
+  // Show admin panel if requested and user is admin
+  if (showAdminPanel && isAdmin && isAuthenticated && accessStatus === 'authorized') {
+    return (
+      <div className="dashboard-app">
+        <AdminPanel 
+          authData={authData} 
+          onBack={() => setShowAdminPanel(false)} 
+        />
+      </div>
+    );
+  }
+
   // Show dashboard if authenticated and authorized
   return (
     <div className="dashboard-app">
-      <Dashboard authData={authData} onLogout={handleLogout} />
+      <Dashboard 
+        authData={authData} 
+        onLogout={handleLogout}
+        onShowAdmin={() => {
+          if (isAdmin) {
+            setShowAdminPanel(true);
+          }
+        }}
+      />
     </div>
   );
 }
