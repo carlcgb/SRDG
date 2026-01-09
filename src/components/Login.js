@@ -8,6 +8,12 @@ const Login = ({ onLogin }) => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [googleScriptLoaded, setGoogleScriptLoaded] = React.useState(false);
+  const [mode, setMode] = React.useState('login'); // 'login' or 'request'
+  const [requestEmail, setRequestEmail] = React.useState('');
+  const [requestName, setRequestName] = React.useState('');
+  const [requestPassword, setRequestPassword] = React.useState('');
+  const [requestPasswordConfirm, setRequestPasswordConfirm] = React.useState('');
+  const [requestSent, setRequestSent] = React.useState(false);
 
   useEffect(() => {
     // Check if client ID is configured
@@ -221,6 +227,130 @@ const Login = ({ onLogin }) => {
     }
   };
 
+  /**
+   * Handle access request with Google OAuth
+   */
+  const handleGoogleAccessRequest = async () => {
+    if (loading || !googleScriptLoaded) return;
+
+    setLoading(true);
+    setError(null);
+
+    const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+    
+    if (!clientId || !window.google || !window.google.accounts || !window.google.accounts.oauth2) {
+      setError('Google OAuth2 n\'est pas encore chargé. Veuillez patienter quelques secondes et réessayer.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // Get OAuth token to fetch user info
+      const tokenClient = window.google.accounts.oauth2.initTokenClient({
+        client_id: clientId,
+        scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+        callback: async (tokenResponse) => {
+          if (tokenResponse.error) {
+            setError(`Erreur d'authentification: ${tokenResponse.error}`);
+            setLoading(false);
+          } else if (tokenResponse.access_token) {
+            try {
+              // Fetch user info
+              const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+                headers: {
+                  'Authorization': `Bearer ${tokenResponse.access_token}`,
+                },
+              });
+
+              if (!userInfoResponse.ok) {
+                throw new Error('Impossible de récupérer les informations utilisateur');
+              }
+
+              const userInfo = await userInfoResponse.json();
+              
+              // Send access request
+              await sendAccessRequest(userInfo.email, userInfo.name || userInfo.given_name || userInfo.email.split('@')[0], userInfo.picture || '');
+            } catch (err) {
+              console.error('Error in access request:', err);
+              setError(err.message || 'Erreur lors de la demande d\'accès. Veuillez réessayer.');
+              setLoading(false);
+            }
+          }
+        },
+      });
+
+      tokenClient.requestAccessToken({ prompt: '' });
+    } catch (error) {
+      console.error('Error initializing OAuth2 Token Client:', error);
+      setError('Erreur lors de l\'initialisation de la connexion Google: ' + error.message);
+      setLoading(false);
+    }
+  };
+
+  /**
+   * Handle access request with email
+   */
+  const handleEmailAccessRequest = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      if (!requestEmail || !requestName) {
+        throw new Error('Veuillez remplir tous les champs obligatoires');
+      }
+
+      // If password is provided, validate it
+      if (requestPassword) {
+        if (requestPassword.length < 8) {
+          throw new Error('Le mot de passe doit contenir au moins 8 caractères');
+        }
+        if (requestPassword !== requestPasswordConfirm) {
+          throw new Error('Les mots de passe ne correspondent pas');
+        }
+      }
+
+      // Send access request
+      await sendAccessRequest(requestEmail.trim(), requestName.trim(), '');
+    } catch (err) {
+      console.error('Error in email access request:', err);
+      setError(err.message || 'Erreur lors de la demande d\'accès. Veuillez réessayer.');
+      setLoading(false);
+    }
+  };
+
+  /**
+   * Send access request to admin
+   */
+  const sendAccessRequest = async (userEmail, userName, userPicture) => {
+    try {
+      const { sendAccessRequestEmail, markAsPending } = await import('../services/dashboardAuthService');
+      
+      console.log('📝 Marking user as pending:', userEmail);
+      await markAsPending(userEmail, userName);
+      console.log('✅ User marked as pending in database');
+      
+      console.log('📧 Attempting to send access request email...');
+      const emailResult = await sendAccessRequestEmail(userEmail, userName, userPicture);
+
+      console.log('📧 Email result:', emailResult);
+      
+      if (emailResult.success) {
+        console.log('✅ Email sent successfully');
+        setRequestSent(true);
+        setError(null);
+      } else {
+        console.error('❌ Email sending failed');
+        setError('Impossible d\'envoyer l\'email de demande. Veuillez contacter l\'administrateur directement.');
+      }
+    } catch (error) {
+      console.error('❌ Error sending access request:', error);
+      setError('Erreur lors de l\'envoi de la demande d\'accès. Veuillez réessayer.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   /**
    * Handle email/password login
@@ -318,10 +448,40 @@ const Login = ({ onLogin }) => {
         
         <div className="login-content">
           <div className="login-icon">📊</div>
-          <h2>Connexion requise</h2>
+          <h2>{mode === 'login' ? 'Connexion requise' : 'Demande d\'accès'}</h2>
           <p className="login-description">
-            Veuillez vous connecter pour accéder au tableau de bord Analytics.
+            {mode === 'login' 
+              ? 'Veuillez vous connecter pour accéder au tableau de bord Analytics.'
+              : 'Demandez l\'accès au tableau de bord Analytics. Vous recevrez une notification une fois votre demande approuvée.'}
           </p>
+
+          {/* Mode Toggle */}
+          <div className="login-method-toggle" style={{ marginBottom: '20px' }}>
+            <button
+              type="button"
+              className={`method-btn ${mode === 'login' ? 'active' : ''}`}
+              onClick={() => {
+                setMode('login');
+                setError(null);
+                setRequestSent(false);
+              }}
+              disabled={loading}
+            >
+              Connexion
+            </button>
+            <button
+              type="button"
+              className={`method-btn ${mode === 'request' ? 'active' : ''}`}
+              onClick={() => {
+                setMode('request');
+                setError(null);
+                setRequestSent(false);
+              }}
+              disabled={loading}
+            >
+              Demande d'accès
+            </button>
+          </div>
 
           {error && (
             <div className="login-error">
@@ -329,25 +489,46 @@ const Login = ({ onLogin }) => {
             </div>
           )}
 
-          {/* Login Method Toggle */}
-          <div className="login-method-toggle">
-            <button
-              type="button"
-              className={`method-btn ${loginMethod === 'google' ? 'active' : ''}`}
-              onClick={() => setLoginMethod('google')}
-              disabled={loading}
-            >
-              Google
-            </button>
-            <button
-              type="button"
-              className={`method-btn ${loginMethod === 'email' ? 'active' : ''}`}
-              onClick={() => setLoginMethod('email')}
-              disabled={loading}
-            >
-              Email
-            </button>
-          </div>
+          {requestSent && (
+            <div style={{
+              padding: '15px',
+              backgroundColor: '#d4edda',
+              border: '2px solid #28a745',
+              borderRadius: '10px',
+              marginBottom: '20px',
+              textAlign: 'center',
+              color: '#155724'
+            }}>
+              <div style={{ fontSize: '2rem', marginBottom: '10px' }}>✉️</div>
+              <h3 style={{ margin: '0 0 10px 0', color: '#155724' }}>Demande envoyée !</h3>
+              <p style={{ margin: '0', fontSize: '0.9rem' }}>
+                Votre demande d'accès a été envoyée à l'administrateur. 
+                Vous recevrez une notification une fois votre demande traitée.
+              </p>
+            </div>
+          )}
+
+          {mode === 'login' && (
+            <>
+              {/* Login Method Toggle */}
+              <div className="login-method-toggle">
+                <button
+                  type="button"
+                  className={`method-btn ${loginMethod === 'google' ? 'active' : ''}`}
+                  onClick={() => setLoginMethod('google')}
+                  disabled={loading}
+                >
+                  Google
+                </button>
+                <button
+                  type="button"
+                  className={`method-btn ${loginMethod === 'email' ? 'active' : ''}`}
+                  onClick={() => setLoginMethod('email')}
+                  disabled={loading}
+                >
+                  Email
+                </button>
+              </div>
 
           {/* Google OAuth Login - Single Popup */}
           {loginMethod === 'google' && (
@@ -479,6 +660,176 @@ const Login = ({ onLogin }) => {
                 )}
               </button>
             </form>
+          )}
+          )}
+
+          {mode === 'request' && (
+            <>
+              {/* Request Method Toggle */}
+              <div className="login-method-toggle">
+                <button
+                  type="button"
+                  className={`method-btn ${loginMethod === 'google' ? 'active' : ''}`}
+                  onClick={() => setLoginMethod('google')}
+                  disabled={loading}
+                >
+                  Google
+                </button>
+                <button
+                  type="button"
+                  className={`method-btn ${loginMethod === 'email' ? 'active' : ''}`}
+                  onClick={() => setLoginMethod('email')}
+                  disabled={loading}
+                >
+                  Email
+                </button>
+              </div>
+
+              {/* Google Access Request */}
+              {loginMethod === 'google' && (
+                <div className="google-signin-container">
+                  {!googleScriptLoaded && (
+                    <div style={{ 
+                      padding: '15px', 
+                      backgroundColor: '#fff3cd', 
+                      border: '2px solid #ffc107', 
+                      borderRadius: '10px', 
+                      marginBottom: '15px',
+                      textAlign: 'center',
+                      fontSize: '0.9rem',
+                      color: '#856404'
+                    }}>
+                      ⏳ Chargement de Google OAuth2...
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleGoogleAccessRequest}
+                    disabled={loading || !googleScriptLoaded || requestSent}
+                    className="btn-google-oauth"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '10px',
+                      width: '100%',
+                      padding: '12px 24px',
+                      fontSize: '16px',
+                      fontWeight: '500',
+                      color: '#333',
+                      backgroundColor: '#fff',
+                      border: '2px solid #F64A3E',
+                      borderRadius: '9999px',
+                      cursor: (loading || !googleScriptLoaded || requestSent) ? 'not-allowed' : 'pointer',
+                      opacity: (loading || !googleScriptLoaded || requestSent) ? 0.6 : 1,
+                      transition: 'all 0.3s ease',
+                    }}
+                  >
+                    {loading ? (
+                      <>
+                        <div className="spinner-login-small"></div>
+                        Envoi en cours...
+                      </>
+                    ) : !googleScriptLoaded ? (
+                      <>
+                        <div className="spinner-login-small"></div>
+                        Chargement...
+                      </>
+                    ) : (
+                      <>
+                        <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                          <g fill="#000" fillRule="evenodd">
+                            <path d="M9 3.48c1.69 0 2.83.73 3.48 1.34l2.54-2.48C13.46.89 11.43 0 9 0 5.48 0 2.44 2.02.96 4.96l2.91 2.26C4.6 5.05 6.62 3.48 9 3.48z" fill="#EA4335"/>
+                            <path d="M17.64 9.2c0-.74-.06-1.28-.19-1.84H9v3.34h4.96c-.21 1.18-.84 2.18-1.79 2.85l2.84 2.2c2.02-1.86 3.19-4.6 3.19-7.55z" fill="#4285F4"/>
+                            <path d="M3.88 10.78A5.54 5.54 0 0 1 3.58 9c0-.62.11-1.22.29-1.78L.96 4.96A9.008 9.008 0 0 0 0 9c0 1.45.35 2.82.96 4.04l2.92-2.26z" fill="#FBBC05"/>
+                            <path d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.84-2.2c-.76.53-1.78.9-3.12.9-2.38 0-4.4-1.57-5.12-3.74L.96 13.04C2.45 15.98 5.48 18 9 18z" fill="#34A853"/>
+                            <path d="M0 0h18v18H0z" fill="none"/>
+                          </g>
+                        </svg>
+                        Demander l'accès avec Google
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+
+              {/* Email Access Request Form */}
+              {loginMethod === 'email' && (
+                <form onSubmit={handleEmailAccessRequest} className="email-login-form">
+                  <div className="form-group">
+                    <label htmlFor="request-email">Email *</label>
+                    <input
+                      id="request-email"
+                      type="email"
+                      value={requestEmail}
+                      onChange={(e) => setRequestEmail(e.target.value)}
+                      placeholder="votre@email.com"
+                      required
+                      disabled={loading || requestSent}
+                      autoComplete="email"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="request-name">Nom complet *</label>
+                    <input
+                      id="request-name"
+                      type="text"
+                      value={requestName}
+                      onChange={(e) => setRequestName(e.target.value)}
+                      placeholder="Votre nom"
+                      required
+                      disabled={loading || requestSent}
+                      autoComplete="name"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="request-password">Mot de passe (optionnel)</label>
+                    <input
+                      id="request-password"
+                      type="password"
+                      value={requestPassword}
+                      onChange={(e) => setRequestPassword(e.target.value)}
+                      placeholder="••••••••"
+                      disabled={loading || requestSent}
+                      autoComplete="new-password"
+                    />
+                    <small style={{ fontSize: '0.85rem', color: '#666', marginTop: '5px', display: 'block' }}>
+                      Si vous fournissez un mot de passe, un compte sera créé pour vous.
+                    </small>
+                  </div>
+                  {requestPassword && (
+                    <div className="form-group">
+                      <label htmlFor="request-password-confirm">Confirmer le mot de passe</label>
+                      <input
+                        id="request-password-confirm"
+                        type="password"
+                        value={requestPasswordConfirm}
+                        onChange={(e) => setRequestPasswordConfirm(e.target.value)}
+                        placeholder="••••••••"
+                        disabled={loading || requestSent}
+                        autoComplete="new-password"
+                      />
+                    </div>
+                  )}
+                  <button
+                    type="submit"
+                    className="btn-login-email"
+                    disabled={loading || requestSent}
+                  >
+                    {loading ? (
+                      <>
+                        <div className="spinner-login-small"></div>
+                        Envoi en cours...
+                      </>
+                    ) : requestSent ? (
+                      'Demande envoyée ✓'
+                    ) : (
+                      'Envoyer la demande d\'accès'
+                    )}
+                  </button>
+                </form>
+              )}
+            </>
           )}
         </div>
 
