@@ -73,8 +73,8 @@ const Events = ({ onEventsLoad }) => {
         { name: "RADI", url: "https://www.instagram.com/radi_standup/" },
         { name: "FRANKY", url: "https://www.facebook.com/frankyhumoriste" }
       ],
-      isPast: false,  // Set to true to grey out this event
-      isNext: true,   // Set to true to highlight this as the next event
+      isPast: true,  // Set to true to grey out this event
+      isNext: false,   // Set to true to highlight this as the next event
       calendarDate: "2026-01-10", // Date for calendar (YYYY-MM-DD format)
       calendarTime: "20:00", // Time for calendar (24h format)
       calendarDuration: "2h" // Duration for calendar
@@ -88,12 +88,12 @@ const Events = ({ onEventsLoad }) => {
       location: "Le Social Bar et Cie",
       facebookUrl: "https://www.facebook.com/lsdrg",
       guests: [
-        { name: "À déterminer", url: "" },
-        { name: "À déterminer", url: "" },
-        { name: "À déterminer", url: "" }
+        { name: "Anthony Courcy", url: "https://www.facebook.com/anthonycourcyhumour" },
+        { name: "Alex Lapointe", url: "https://www.facebook.com/alexlapointe.tv" },
+        { name: "Ceb Aché", url: "https://www.facebook.com/cebache" }
       ],
       isPast: false,  // Set to true to grey out this event
-      isNext: false,   // Set to true to highlight this as the next event
+      isNext: true,   // Set to true to highlight this as the next event
       calendarDate: "2025-02-07", // Date for calendar (YYYY-MM-DD format)
       calendarTime: "20:00", // Time for calendar (24h format)
       calendarDuration: "2h" // Duration for calendar
