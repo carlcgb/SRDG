@@ -86,7 +86,7 @@ const Events = ({ onEventsLoad }) => {
       description: "Grosse soirée encore une fois ! 🔥 Des têtes d'affiche nationales pis des humoristes québécois de malade au Social Bar et Cie. Un événement de malade qui va vous faire péter de rire ! Pis si vous manquez ça, on va vous faire sentir coupable jusqu'à la prochaine fois !",
       time: "20h00",
       location: "Le Social Bar et Cie",
-      facebookUrl: "https://www.facebook.com/lsdrg",
+      facebookUrl: "https://www.facebook.com/share/1EsT29ZnAa/",
       guests: [
         { name: "Anthony Courcy", url: "https://www.facebook.com/anthonycourcyhumour" },
         { name: "Alex Lapointe", url: "https://www.facebook.com/alexlapointe.tv" },
