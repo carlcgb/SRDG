@@ -1,3 +1,4 @@
+# la-soiree-du-rire (SRDG) – replace .gitignore with this file
 # Dependencies
 /node_modules
 /.pnp
@@ -100,6 +101,28 @@ Thumbs.db
 # Project specific
 /Design.json
 /index.html
+
+# Dashboard & stats (do not expose when repo is public)
+app/admin/
+app/(dashboard)/
+app/dashboard/
+app/stats/
+app/analytics/
+pages/admin/
+pages/dashboard/
+pages/stats/
+pages/analytics/
+**/admin/
+**/dashboard/
+**/stats/
+**/analytics/
+**/traffic/
+app/api/admin/
+app/api/stats/
+app/api/analytics/
+pages/api/admin/
+pages/api/stats/
+pages/api/analytics/
 
 # Power BI templates
 *.pbit
