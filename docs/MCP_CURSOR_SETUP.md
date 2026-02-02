@@ -141,26 +141,27 @@ After redeploying (`npx wrangler deploy`), Cursor can call **query_ga4** with `d
 
 ## AI Insights for the dashboard
 
-The MCP server exposes an **HTTP endpoint** that returns AI-generated insights from GA4 data (same source as `query_ga4`). The dashboard can call it to show an “Insights IA” card.
+The MCP server exposes an **HTTP endpoint** that returns AI-generated insights from GA4 data (same source as `query_ga4`). The dashboard can call it to show an “Insights IA” card. The server uses **Cloudflare Workers AI** (Llama 3.1 8B); no API key is required.
 
-### 1. Set OpenAI API key (Worker)
+### 1. Workers AI binding (required for insights/chat)
 
-From the MCP server repo root:
+In the MCP server repo, ensure `wrangler.jsonc` includes the AI binding:
 
-```bash
-npx wrangler secret put OPENAI_API_KEY
-# Paste your OpenAI API key (used for gpt-4o-mini)
+```jsonc
+"ai": {
+  "binding": "AI"
+}
 ```
 
-Redeploy: `npx wrangler deploy`.
+Redeploy: `npx wrangler deploy`. Free tier: ~10,000 Neurons/day.
 
 ### 2. Insights endpoint
 
 - **URL**: `GET https://my-mcp-server.<your-subdomain>.workers.dev/insights?date_range=last30days`
 - **Query**: `date_range` optional — `today`, `last7days`, `last30days`, `last90days` (default: `last30days`).
-- **Response**: `{ "insight": "…", "dateRange": "last30days" }` or `{ "insight": "…", "error": true }` if GA4/OpenAI failed.
+- **Response**: `{ "insight": "…", "dateRange": "last30days" }` or `{ "insight": "…", "error": true }` if GA4 or Workers AI failed.
 
-The endpoint fetches GA4 overview, top pages, and traffic sources, then asks OpenAI for 3–5 short, actionable insights in French for La Soirée du Rire.
+The endpoint fetches GA4 overview, top pages, and traffic sources, then uses Workers AI for 3–5 short, actionable insights in French for La Soirée du Rire.
 
 ### 3. Connect the dashboard
 
