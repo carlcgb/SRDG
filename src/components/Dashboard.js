@@ -39,8 +39,10 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
     loadDashboardData();
   }, [dateRange]);
 
-  const insightsUrl = process.env.REACT_APP_MCP_INSIGHTS_URL;
-  const chatUrl = insightsUrl ? insightsUrl.replace(/\/insights\/?$/, '') + '/chat' : '';
+  const rawInsightsUrl = process.env.REACT_APP_MCP_INSIGHTS_URL;
+  const base = rawInsightsUrl ? rawInsightsUrl.replace(/\/insights\.?\/?$/i, '').replace(/\/$/, '') : '';
+  const insightsUrl = base ? base + '/insights' : '';
+  const chatUrl = base ? base + '/chat' : '';
 
   const sendChatMessage = () => {
     const text = chatInput.trim();
