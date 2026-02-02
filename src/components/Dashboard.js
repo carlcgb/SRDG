@@ -322,7 +322,7 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
         } else {
           errorMessage = 'GA4 Property ID not configured. Please add REACT_APP_GA4_PROPERTY_ID to your .env file and restart the server.';
         }
-      } else if (err.message && err.message.includes('Authentication failed')) {
+      } else if (err.message && (err.message.includes('Authentication failed') || err.message.includes('Credential') || err.message.includes('analytics.readonly'))) {
         errorMessage = 'Authentication failed. Please ensure your Google account has access to GA4 and the analytics.readonly scope is granted.';
       } else if (isProductionEnv) {
         // In production, be more explicit about errors
@@ -439,13 +439,15 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
 
   const handleReauthorizeGa4 = async () => {
     setReauthorizing(true);
-    setError(null);
     try {
+      await waitForGoogleScript(15000);
       const token = await requestGa4Consent();
       if (token) {
+        setError(null);
+        setLoading(true);
         await loadDashboardData();
       } else {
-        setError('Réautorisation annulée ou échouée. Réessayez ou déconnectez-vous puis reconnectez-vous avec Google.');
+        setError('Réautorisation annulée ou échouée. Cliquez sur « Se déconnecter et se reconnecter » puis reconnectez-vous avec Google en acceptant l\'accès aux données Analytics.');
       }
     } catch (e) {
       setError(e?.message || 'Réautorisation échouée. Réessayez.');
@@ -455,7 +457,7 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
   };
 
   if (error) {
-    const isGa4Error = error.includes('GA4') || error.includes('Authentication') || error.includes('Property ID');
+    const isGa4Error = error.includes('GA4') || error.includes('Authentication') || error.includes('Property ID') || error.includes('Credential') || error.includes('analytics.readonly');
     return (
       <div className="dashboard">
         <div className="dashboard-error">
@@ -495,6 +497,18 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
           <button onClick={loadDashboardData} className="btn-retry">
             Réessayer
           </button>
+        </div>
+        {floatingBotAndModal}
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="dashboard">
+        <div className="dashboard-loading">
+          <div className="spinner-dashboard"></div>
+          <p>Chargement des données...</p>
         </div>
         {floatingBotAndModal}
       </div>
