@@ -176,7 +176,7 @@ const Login = ({ onLogin }) => {
       });
 
       // Request access token - this will open ONE popup with all permissions
-      tokenClient.requestAccessToken({ prompt: '' }); // Empty prompt = only show if needed
+      tokenClient.requestAccessToken({ prompt: 'consent' }); // Force consent so we always get analytics.readonly
     } catch (error) {
       console.error('Error initializing OAuth2 Token Client:', error);
       setError('Erreur lors de l\'initialisation de la connexion Google: ' + error.message);

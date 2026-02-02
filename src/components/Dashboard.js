@@ -444,6 +444,7 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
           {isGa4Error && (
             <ul className="dashboard-error-checklist">
               <li>Vérifiez que <strong>REACT_APP_GA4_PROPERTY_ID</strong> est défini au déploiement (secrets GitHub ou variables Cloudflare Pages).</li>
+              <li>Dans Google Cloud Console, client OAuth 2.0 : ajoutez <strong>https://stats.lasoireedurire.ca</strong> aux « Origines JavaScript autorisées ».</li>
               <li>Connectez-vous avec un compte Google qui a accès à la propriété GA4 (rôle Lecteur).</li>
               <li>Lors de la connexion Google, acceptez l’accès « Voir vos données Google Analytics ».</li>
             </ul>

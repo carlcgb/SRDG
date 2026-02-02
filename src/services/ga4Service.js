@@ -93,12 +93,17 @@ const makeGA4Request = async (endpoint, body) => {
   } catch (error) {
     console.error('GA4 API Error:', error);
     
-    // Provide helpful error messages
     if (error.message.includes('Authentication failed')) {
       throw error;
     }
-    
-    throw new Error(`Failed to fetch GA4 data: ${error.message}`);
+    if (error.message.includes('Property ID not configured')) {
+      throw error;
+    }
+    // Network/CORS or other: give a hint
+    const hint = (error.message || '').toLowerCase().includes('fetch') || (error.message || '').toLowerCase().includes('load')
+      ? ' Vérifiez que https://stats.lasoireedurire.ca est dans les « Origines JavaScript autorisées » du client OAuth (Google Cloud Console) et reconnectez-vous.'
+      : '';
+    throw new Error(`Failed to fetch GA4 data: ${error.message}${hint}`);
   }
 };
 
@@ -185,7 +190,8 @@ export const getUsers = async (propertyId, startDate, endDate, previousStartDate
   });
 
   if (!currentResult.success || !previousResult.success) {
-    throw new Error('Failed to fetch users data');
+    const msg = currentResult.error || previousResult.error || 'Unknown error';
+    throw new Error(`Failed to fetch users data: ${msg}`);
   }
 
   const current = parseInt(currentResult.data?.rows?.[0]?.metricValues?.[0]?.value || '0', 10);
@@ -220,7 +226,8 @@ export const getSessions = async (propertyId, startDate, endDate, previousStartD
   });
 
   if (!currentResult.success || !previousResult.success) {
-    throw new Error('Failed to fetch sessions data');
+    const msg = currentResult.error || previousResult.error || 'Unknown error';
+    throw new Error(`Failed to fetch sessions data: ${msg}`);
   }
 
   const current = parseInt(currentResult.data?.rows?.[0]?.metricValues?.[0]?.value || '0', 10);
@@ -288,7 +295,8 @@ export const getBounceRate = async (propertyId, startDate, endDate, previousStar
   });
 
   if (!currentResult.success || !previousResult.success) {
-    throw new Error('Failed to fetch bounce rate data');
+    const msg = currentResult.error || previousResult.error || 'Unknown error';
+    throw new Error(`Failed to fetch bounce rate data: ${msg}`);
   }
 
   const current = parseFloat(currentResult.data?.rows?.[0]?.metricValues?.[0]?.value || '0');
@@ -377,7 +385,7 @@ export const getTopPages = async (propertyId, startDate, endDate, limit = 10, us
       });
 
   if (!result.success) {
-    throw new Error('Failed to fetch top pages data');
+    throw new Error(`Failed to fetch top pages data: ${result.error || 'Unknown error'}`);
   }
 
   const rows = result.data?.rows || [];
@@ -484,7 +492,7 @@ export const getDeviceBreakdown = async (propertyId, startDate, endDate, useReal
       });
 
   if (!result.success) {
-    throw new Error('Failed to fetch device breakdown data');
+    throw new Error(`Failed to fetch device breakdown data: ${result.error || 'Unknown error'}`);
   }
 
   const rows = result.data?.rows || [];
@@ -525,7 +533,7 @@ export const getRealtimeActivePages = async (limit = 10) => {
   });
 
   if (!result.success) {
-    throw new Error('Failed to fetch real-time active pages');
+    throw new Error(`Failed to fetch real-time active pages: ${result.error || 'Unknown error'}`);
   }
 
   const rows = result.data?.rows || [];
@@ -562,7 +570,7 @@ export const getRealtimeUserLocations = async (limit = 10) => {
   });
 
   if (!result.success) {
-    throw new Error('Failed to fetch real-time user locations');
+    throw new Error(`Failed to fetch real-time user locations: ${result.error || 'Unknown error'}`);
   }
 
   const rows = result.data?.rows || [];
@@ -600,7 +608,7 @@ export const getRealtimeTrafficSources = async (limit = 10) => {
   });
 
   if (!result.success) {
-    throw new Error('Failed to fetch real-time traffic sources');
+    throw new Error(`Failed to fetch real-time traffic sources: ${result.error || 'Unknown error'}`);
   }
 
   const rows = result.data?.rows || [];
