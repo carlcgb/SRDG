@@ -202,39 +202,51 @@ const makeGA4Request = async (endpoint, body) => {
 
   try {
     const accessToken = await getAccessToken();
-    const url = `${GA4_API_BASE}/properties/${propertyId}${endpoint}`;
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
+
+    // Use our API proxy in the browser to avoid CORS (Google Data API doesn't allow direct browser requests)
+    const useProxy = typeof window !== 'undefined' && window.location?.origin;
+    const url = useProxy
+      ? `${window.location.origin}/api/ga4`
+      : `${GA4_API_BASE}/properties/${propertyId}${endpoint}`;
+
+    const fetchOptions = useProxy
+      ? {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ accessToken, propertyId, endpoint, body }),
+        }
+      : {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body),
+        };
+
+    const response = await fetch(url, fetchOptions);
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       const errorMessage = errorData.error?.message || `API Error: ${response.status}`;
-      
-      // If 401/403, it's likely an authentication issue
+
       if (response.status === 401 || response.status === 403) {
         throw new Error(`Authentication failed: ${errorMessage}. Please ensure your Google account has access to GA4 property ${propertyId} and the analytics.readonly scope is granted.`);
       }
-      
+
       throw new Error(errorMessage);
     }
 
     return await response.json();
   } catch (error) {
     console.error('GA4 API Error:', error);
-    
+
     if (error.message.includes('Authentication failed')) {
       throw error;
     }
     if (error.message.includes('Property ID not configured')) {
       throw error;
     }
-    // Network/CORS or other: give a hint
     const hint = (error.message || '').toLowerCase().includes('fetch') || (error.message || '').toLowerCase().includes('load')
       ? ' Vérifiez que https://stats.lasoireedurire.ca est dans les « Origines JavaScript autorisées » du client OAuth (Google Cloud Console) et reconnectez-vous.'
       : '';
