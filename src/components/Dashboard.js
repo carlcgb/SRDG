@@ -70,13 +70,18 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
     setInsightLoading(true);
     setInsightError(null);
     fetch(`${insightsUrl}?date_range=${encodeURIComponent(range)}`)
-      .then((res) => res.json())
-      .then((body) => {
+      .then((res) => res.json().then((body) => ({ ok: res.ok, status: res.status, body })))
+      .then(({ ok, body }) => {
         setInsight(body.insight ?? body.error ?? 'Aucune insight.');
         if (body.error) setInsightError(body.insight);
+        if (!ok && body.error && !body.insight) setInsightError(body.error);
       })
       .catch((err) => {
-        setInsightError(err.message || 'Erreur lors du chargement des insights.');
+        const msg = err.message || 'Erreur lors du chargement des insights.';
+        const hint = (msg.toLowerCase().includes('fetch') || msg.toLowerCase().includes('network'))
+          ? ' Vérifiez REACT_APP_MCP_INSIGHTS_URL (URL complète avec https://) et que le Worker est déployé (npx wrangler deploy).'
+          : '';
+        setInsightError(msg + hint);
         setInsight(null);
       })
       .finally(() => setInsightLoading(false));

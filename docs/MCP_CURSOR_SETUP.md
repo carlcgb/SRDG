@@ -38,7 +38,7 @@ Open http://localhost:5173 in the browser, connect to **http://localhost:8787** 
 
 ## Deployment (manual only)
 
-The MCP server is **not** deployed by the main repo’s GitHub Actions. The main workflow (`.github/workflows/deploy.yml`) only deploys the site to Cloudflare Pages; it does not run or deploy `my-mcp-server`. Deploy the MCP Worker manually when you change it.
+The MCP server is **not** deployed by the main repo. Cloudflare Pages auto-deploys the site on push to `main`; it does not run or deploy `my-mcp-server`. Deploy the MCP Worker manually when you change it.
 
 ### Manual deploy command
 
@@ -169,13 +169,8 @@ Set **`REACT_APP_MCP_INSIGHTS_URL`** to the **full URL** (must include `https://
 
 - **`REACT_APP_MCP_INSIGHTS_URL`** = `https://my-mcp-server.<your-subdomain>.workers.dev/insights`
 
-**Where to set it:**
-
-- **If you deploy with GitHub Actions** (this repo’s `.github/workflows/deploy.yml`):  
-  **GitHub → repo → Settings → Secrets and variables → Actions** → add or edit `REACT_APP_MCP_INSIGHTS_URL` with the full URL. The workflow passes it to the build. Trigger a new deploy (push to `main` or **Actions → Deploy to Production → Run workflow**).
-
-- **If Cloudflare Pages builds the site** (Cloudflare runs the build from the repo):  
-  **Cloudflare Dashboard → Workers & Pages → your project (e.g. srdg) → Settings → Environment variables** → add `REACT_APP_MCP_INSIGHTS_URL` with the full URL for Production (and Preview if needed). Then **Deployments → Retry deployment** or push a new commit to rebuild.
+**Where to set it:**  
+**Cloudflare Dashboard → Workers & Pages → your project (e.g. srdg) → Settings → Environment variables** → add `REACT_APP_MCP_INSIGHTS_URL` with the full URL for Production (and Preview if needed). Then **Deployments → Retry deployment** or push a new commit so the build picks it up.
 
 After a successful redeploy, the dashboard uses the MCP server for insights and chat. The “🤖 Insights IA (Google Analytics)” card appears and loads insights for the selected date range.
 
