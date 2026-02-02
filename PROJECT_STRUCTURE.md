@@ -6,6 +6,7 @@
 SRDG/
 ├── 📁 docs/                          # Documentation
 │   ├── FULL_SETUP_GUIDE.md
+│   ├── MCP_CURSOR_SETUP.md           # MCP server on Cloudflare Workers + Cursor
 │   ├── INTERNAL_LINKS_OPTIMIZATION.md
 │   ├── SEO_OPTIMIZATION_COMPLETE.md
 │   └── SEO_OPTIMIZATION_REPORT.md
@@ -61,10 +62,14 @@ SRDG/
 │   ├── google-apps-script-clean.js
 │   ├── google-apps-script-form.js
 │   └── google-apps-script-simple.js
+├── 📁 my-mcp-server/                 # MCP server (Cloudflare Workers) for Cursor – manual deploy only
+│   ├── src/index.ts                  # event-data-mcp tools (query_metrics, query_ga4, /insights, /chat)
+│   ├── wrangler.jsonc
+│   └── package.json                  # Deploy: cd my-mcp-server && npx wrangler deploy (see docs/MCP_CURSOR_SETUP.md)
 ├── 📄 Configuration Files
 │   ├── package.json                 # Dependencies and scripts
 │   ├── package-lock.json           # Locked dependency versions
-│   ├── wrangler.toml               # Cloudflare Workers config
+│   ├── wrangler.toml               # Cloudflare Workers config (main app)
 │   ├── .gitignore                  # Git ignore rules
 │   └── README.md                   # Project overview
 └── 📁 node_modules/                # Dependencies (auto-generated)

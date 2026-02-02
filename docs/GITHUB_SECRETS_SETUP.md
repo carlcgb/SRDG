@@ -19,7 +19,7 @@ Ce guide vous aide à configurer tous les secrets GitHub nécessaires pour le da
 | Nom du Secret | Description | Exemple | Variable |
 |---------------|-------------|---------|----------|
 | `REACT_APP_GOOGLE_CLIENT_ID` | Client ID Google OAuth 2.0 | `417559096229-...` | `REACT_APP_GOOGLE_CLIENT_ID` |
-| `REACT_APP_GA4_PROPERTY_ID` | Property ID Google Analytics 4 | `508209424` | `REACT_APP_GA4_PROPERTY_ID` |
+| `REACT_APP_GA4_PROPERTY_ID` | Property ID Google Analytics 4 | `<YOUR_GA4_PROPERTY_ID>` | `REACT_APP_GA4_PROPERTY_ID` |
 | `REACT_APP_DASHBOARD_ADMIN_EMAIL` | Votre email Google (admin) | `votre-email@gmail.com` | `REACT_APP_DASHBOARD_ADMIN_EMAIL` |
 | `REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID` | Template EmailJS pour demandes d'accès | `template_xxxxx` | `REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID` |
 
@@ -42,7 +42,7 @@ Ce guide vous aide à configurer tous les secrets GitHub nécessaires pour le da
 #### Secret 2 : GA4 Property ID
 
 - **Name** : `REACT_APP_GA4_PROPERTY_ID`
-- **Value** : Votre Property ID GA4 (ex: `508209424`)
+- **Value** : Votre Property ID GA4 (ex: `123456789`)
 - **Description** : Property ID pour Google Analytics 4
 
 #### Secret 3 : Admin Email
@@ -150,7 +150,7 @@ Créez un fichier `.env` avec les mêmes valeurs :
 
 ```env
 REACT_APP_GOOGLE_CLIENT_ID=417559096229-odg5v7bi3glglcp2fg7d95g9ajil07pe.apps.googleusercontent.com
-REACT_APP_GA4_PROPERTY_ID=508209424
+REACT_APP_GA4_PROPERTY_ID=123456789
 REACT_APP_DASHBOARD_ADMIN_EMAIL=info@lasoireedurire.ca
 REACT_APP_EMAILJS_SERVICE_ID=your_service_id
 REACT_APP_EMAILJS_TEMPLATE_ID=your_template_id

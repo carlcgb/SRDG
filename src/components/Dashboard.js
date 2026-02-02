@@ -27,10 +27,59 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
   const [modalData, setModalData] = useState(null);
   const [modalType, setModalType] = useState(null);
   const [modalTitle, setModalTitle] = useState('');
+  const [insight, setInsight] = useState(null);
+  const [insightLoading, setInsightLoading] = useState(false);
+  const [insightError, setInsightError] = useState(null);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatInput, setChatInput] = useState('');
+  const [chatLoading, setChatLoading] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
   }, [dateRange]);
+
+  const insightsUrl = process.env.REACT_APP_MCP_INSIGHTS_URL;
+  const chatUrl = insightsUrl ? insightsUrl.replace(/\/insights\/?$/, '') + '/chat' : '';
+
+  const sendChatMessage = () => {
+    const text = chatInput.trim();
+    if (!text || !chatUrl || chatLoading) return;
+    const range = dateRange === 'last365days' ? 'last90days' : dateRange;
+    setChatMessages((prev) => [...prev, { role: 'user', content: text }]);
+    setChatInput('');
+    setChatLoading(true);
+    fetch(chatUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text, date_range: range }),
+    })
+      .then((res) => res.json())
+      .then((body) => {
+        setChatMessages((prev) => [...prev, { role: 'assistant', content: body.reply || 'Aucune réponse.' }]);
+      })
+      .catch((err) => {
+        setChatMessages((prev) => [...prev, { role: 'assistant', content: 'Erreur: ' + (err.message || 'réseau') }]);
+      })
+      .finally(() => setChatLoading(false));
+  };
+
+  useEffect(() => {
+    if (!insightsUrl || !data) return;
+    const range = dateRange === 'last365days' ? 'last90days' : dateRange;
+    setInsightLoading(true);
+    setInsightError(null);
+    fetch(`${insightsUrl}?date_range=${encodeURIComponent(range)}`)
+      .then((res) => res.json())
+      .then((body) => {
+        setInsight(body.insight ?? body.error ?? 'Aucune insight.');
+        if (body.error) setInsightError(body.insight);
+      })
+      .catch((err) => {
+        setInsightError(err.message || 'Erreur lors du chargement des insights.');
+        setInsight(null);
+      })
+      .finally(() => setInsightLoading(false));
+  }, [insightsUrl, dateRange, data]);
 
   const loadDashboardData = async () => {
     setLoading(true);
@@ -225,7 +274,6 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
 
       // Log any failures for debugging
       const failedRequests = [];
-      // Note: isProduction is already declared at the top of the function (line 41)
       
       results.forEach((result, index) => {
         if (result.status === 'rejected') {
@@ -437,6 +485,68 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
           </div>
         </div>
       </div>
+
+      {insightsUrl && (
+        <>
+          <div className="chart-card ai-insights-card">
+            <div className="chart-card-header">
+              <h2>🤖 Insights IA (Google Analytics)</h2>
+              {insightLoading && <span className="insight-loading">Chargement…</span>}
+            </div>
+            <div className="ai-insights-content">
+              {insightLoading && !insight && (
+                <div className="insight-placeholder">Analyse des données en cours…</div>
+              )}
+              {insightError && !insightLoading && (
+                <div className="insight-error">{insightError}</div>
+              )}
+              {insight && !insightLoading && (
+                <div className="insight-text">{insight}</div>
+              )}
+            </div>
+          </div>
+          <div className="chart-card ai-chat-card">
+            <div className="chart-card-header">
+              <h2>💬 Poser une question à l’IA</h2>
+            </div>
+            <p className="ai-chat-hint">Posez une question sur vos données GA4 (période sélectionnée). Réponses en français.</p>
+            <div className="ai-chat-messages">
+              {chatMessages.length === 0 && (
+                <div className="ai-chat-empty">Aucun message. Posez une question ci-dessous.</div>
+              )}
+              {chatMessages.map((msg, i) => (
+                <div key={i} className={`ai-chat-bubble ai-chat-bubble-${msg.role}`}>
+                  <div className="ai-chat-bubble-content">{msg.content}</div>
+                </div>
+              ))}
+              {chatLoading && (
+                <div className="ai-chat-bubble ai-chat-bubble-assistant">
+                  <div className="ai-chat-bubble-content">Réflexion…</div>
+                </div>
+              )}
+            </div>
+            <div className="ai-chat-input-row">
+              <input
+                type="text"
+                className="ai-chat-input"
+                placeholder="Ex: Comment améliorer le taux de rebond ?"
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendChatMessage()}
+                disabled={chatLoading}
+              />
+              <button
+                type="button"
+                className="ai-chat-send"
+                onClick={sendChatMessage}
+                disabled={!chatInput.trim() || chatLoading}
+              >
+                Envoyer
+              </button>
+            </div>
+          </div>
+        </>
+      )}
 
       <div className="dashboard-charts-grid">
         {data.isRealtime ? (

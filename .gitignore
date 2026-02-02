@@ -102,6 +102,9 @@ Thumbs.db
 /Design.json
 /index.html
 
+# MCP server (manual deploy; can live in separate repo)
+my-mcp-server/
+
 # Dashboard & stats (do not expose when repo is public)
 app/admin/
 app/(dashboard)/

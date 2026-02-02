@@ -10,7 +10,7 @@ Le dashboard utilise un système d'authentification par email avec notifications
 
 ```env
 REACT_APP_GOOGLE_CLIENT_ID=your-google-client-id
-REACT_APP_GA4_PROPERTY_ID=508209424
+REACT_APP_GA4_PROPERTY_ID=<YOUR_GA4_PROPERTY_ID>
 REACT_APP_DASHBOARD_ADMIN_EMAIL=votre-email@gmail.com
 REACT_APP_EMAILJS_SERVICE_ID=your-service-id
 REACT_APP_EMAILJS_TEMPLATE_ID=your-template-id
@@ -25,7 +25,7 @@ Ajoutez ces secrets dans **Settings** → **Secrets and variables** → **Action
 | Nom du Secret | Description | Exemple |
 |---------------|-------------|---------|
 | `REACT_APP_GOOGLE_CLIENT_ID` | Client ID Google OAuth | `417559096229-...` |
-| `REACT_APP_GA4_PROPERTY_ID` | Property ID Google Analytics 4 | `508209424` |
+| `REACT_APP_GA4_PROPERTY_ID` | Property ID Google Analytics 4 | `<YOUR_GA4_PROPERTY_ID>` |
 | `REACT_APP_DASHBOARD_ADMIN_EMAIL` | Votre email Google (admin) | `votre-email@gmail.com` |
 | `EMAILJS_SERVICE_ID` | ID du service EmailJS | `service_xxxxx` |
 | `EMAILJS_TEMPLATE_ID` | ID du template EmailJS (pour les demandes) | `template_xxxxx` |
@@ -111,7 +111,7 @@ Les permissions sont stockées dans `localStorage` du navigateur. Pour une gesti
 
 ```
 REACT_APP_GOOGLE_CLIENT_ID = 417559096229-odg5v7bi3glglcp2fg7d95g9ajil07pe.apps.googleusercontent.com
-REACT_APP_GA4_PROPERTY_ID = 508209424
+REACT_APP_GA4_PROPERTY_ID = <YOUR_GA4_PROPERTY_ID>
 REACT_APP_DASHBOARD_ADMIN_EMAIL = votre-email@gmail.com
 ```
 

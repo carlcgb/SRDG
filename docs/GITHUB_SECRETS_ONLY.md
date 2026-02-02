@@ -13,7 +13,7 @@ Dans **Settings** → **Secrets and variables** → **Actions**, ajoutez :
 | Nom du Secret | Description | Exemple |
 |---------------|-------------|---------|
 | `REACT_APP_GOOGLE_CLIENT_ID` | Client ID Google OAuth 2.0 | `417559096229-...` |
-| `REACT_APP_GA4_PROPERTY_ID` | Property ID Google Analytics 4 | `508209424` |
+| `REACT_APP_GA4_PROPERTY_ID` | Property ID Google Analytics 4 | `<YOUR_GA4_PROPERTY_ID>` |
 | `REACT_APP_DASHBOARD_ADMIN_EMAIL` | Email admin du dashboard | `info@lasoireedurire.ca` |
 | `REACT_APP_EMAILJS_SERVICE_ID` | ID du service EmailJS | `service_xxxxx` |
 | `REACT_APP_EMAILJS_TEMPLATE_ID` | ID du template EmailJS | `template_xxxxx` |

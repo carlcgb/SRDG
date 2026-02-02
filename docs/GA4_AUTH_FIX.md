@@ -39,7 +39,7 @@ Nous avons modifié le code pour obtenir un **OAuth access token** avec le scope
 ### 3. Google Analytics - Permissions
 
 1. Allez sur [Google Analytics](https://analytics.google.com/)
-2. Sélectionnez votre propriété GA4 (Property ID: `508209424`)
+2. Sélectionnez votre propriété GA4 (Property ID configuré dans REACT_APP_GA4_PROPERTY_ID)
 3. **Admin** (⚙️) → **Property Access Management**
 4. Vérifiez que votre compte Google (celui avec lequel vous vous connectez) a accès à la propriété
 5. Si ce n'est pas le cas :
@@ -87,7 +87,7 @@ Vérifiez que :
 ### Dans Google Analytics
 
 Vérifiez que :
-- ✅ Votre compte Google a accès à la propriété GA4 `508209424`
+- ✅ Votre compte Google a accès à la propriété GA4 (Property ID configuré)
 - ✅ Les permissions sont au minimum "Viewer"
 
 ## Erreurs Courantes

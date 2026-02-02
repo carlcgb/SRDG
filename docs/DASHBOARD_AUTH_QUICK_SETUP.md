@@ -18,7 +18,7 @@ Allez dans **Settings** → **Secrets and variables** → **Actions** et ajoutez
 | Secret | Valeur | Où trouver |
 |--------|--------|------------|
 | `REACT_APP_GOOGLE_CLIENT_ID` | `417559096229-odg5v7bi3glglcp2fg7d95g9ajil07pe.apps.googleusercontent.com` | Google Cloud Console |
-| `REACT_APP_GA4_PROPERTY_ID` | `508209424` | Google Analytics |
+| `REACT_APP_GA4_PROPERTY_ID` | `<YOUR_GA4_PROPERTY_ID>` | Google Analytics |
 | `REACT_APP_DASHBOARD_ADMIN_EMAIL` | `info@lasoireedurire.ca` | Votre email Google |
 
 ### 2. Configurer le Template EmailJS

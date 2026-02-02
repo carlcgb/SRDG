@@ -1,3 +1,6 @@
+# Deploys the site (React build) to Cloudflare Pages only.
+# The MCP server (my-mcp-server/) is not deployed here; deploy it manually: cd my-mcp-server && npx wrangler deploy
+# See docs/MCP_CURSOR_SETUP.md.
 name: Deploy to Production
 
 on:

@@ -143,7 +143,7 @@ if (authData && authData.accessToken) {
 - [ ] Tous les champs requis remplis dans OAuth consent screen
 
 ### Google Analytics
-- [ ] Votre compte Google a accès à la propriété GA4 `508209424`
+- [ ] Votre compte Google a accès à la propriété GA4 (Property ID configuré)
 - [ ] Permissions au minimum "Viewer" ou "Analyst"
 
 ### Test
