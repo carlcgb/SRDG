@@ -87,6 +87,30 @@ const getAccessToken = async () => {
 };
 
 /**
+ * Wait for Google GSI script to be available (e.g. after loading on dashboard).
+ * Resolves when window.google.accounts.oauth2 exists, or after timeoutMs.
+ */
+export const waitForGoogleScript = (timeoutMs = 15000) =>
+  new Promise((resolve) => {
+    if (window.google?.accounts?.oauth2) {
+      resolve();
+      return;
+    }
+    const deadline = Date.now() + timeoutMs;
+    const t = setInterval(() => {
+      if (window.google?.accounts?.oauth2) {
+        clearInterval(t);
+        resolve();
+        return;
+      }
+      if (Date.now() >= deadline) {
+        clearInterval(t);
+        resolve();
+      }
+    }, 200);
+  });
+
+/**
  * Request a new OAuth access token with GA4 scope (shows consent screen).
  * Use when the user sees "Authentication failed" to force a fresh token.
  * Updates localStorage and returns the new access token, or null on failure.

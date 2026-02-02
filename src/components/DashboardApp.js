@@ -16,9 +16,19 @@ function DashboardApp() {
   const [showAdminPanel, setShowAdminPanel] = useState(false);
 
   useEffect(() => {
-    // Check if user is already authenticated
     checkAuthentication();
   }, []);
+
+  // Load Google GSI script when user is logged in with Google so "Réautoriser l'accès GA4" works
+  useEffect(() => {
+    if (authData?.loginMethod !== 'google' || !isAuthenticated) return;
+    if (document.querySelector('script[src="https://accounts.google.com/gsi/client"]')) return;
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+  }, [authData?.loginMethod, isAuthenticated]);
 
   const checkAuthentication = async () => {
     try {

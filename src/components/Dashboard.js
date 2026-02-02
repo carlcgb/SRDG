@@ -17,6 +17,7 @@ import {
   getRealtimeUserLocations,
   getRealtimeTrafficSources,
   requestGa4Consent,
+  waitForGoogleScript,
 } from '../services/ga4Service';
 
 const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
@@ -469,15 +470,25 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
               <li>Lors de la connexion Google, acceptez l’accès « Voir vos données Google Analytics ».</li>
             </ul>
               {authData?.loginMethod === 'google' && (
-                <button
-                  type="button"
-                  onClick={handleReauthorizeGa4}
-                  disabled={reauthorizing}
-                  className="btn-retry"
-                  style={{ marginTop: '8px', marginRight: '8px' }}
-                >
-                  {reauthorizing ? 'Ouverture de Google…' : "Réautoriser l'accès Google Analytics"}
-                </button>
+                <>
+                  <button
+                    type="button"
+                    onClick={handleReauthorizeGa4}
+                    disabled={reauthorizing}
+                    className="btn-retry"
+                    style={{ marginTop: '8px', marginRight: '8px' }}
+                  >
+                    {reauthorizing ? 'Ouverture de Google…' : "Réautoriser l'accès Google Analytics"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onLogout}
+                    className="btn-retry"
+                    style={{ marginTop: '8px', backgroundColor: '#555', borderColor: '#555' }}
+                  >
+                    Se déconnecter et se reconnecter
+                  </button>
+                </>
               )}
             </>
           )}
