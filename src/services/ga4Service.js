@@ -3,32 +3,87 @@
 
 const GA4_API_BASE = 'https://analyticsdata.googleapis.com/v1beta';
 
+const OAUTH_SCOPE =
+  'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/analytics.readonly';
+
 /**
- * Get access token from Google Sign-In authentication
- * Uses OAuth access token if available, otherwise falls back to JWT (which won't work for GA4)
+ * Request a fresh OAuth access token (silent) from Google Identity Services.
+ * Returns the new token or null if refresh fails or times out.
+ */
+const refreshOAuthToken = () =>
+  new Promise((resolve) => {
+    const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+    if (
+      !clientId ||
+      !window.google ||
+      !window.google.accounts ||
+      !window.google.accounts.oauth2
+    ) {
+      resolve(null);
+      return;
+    }
+    let settled = false;
+    const done = (token) => {
+      if (settled) return;
+      settled = true;
+      resolve(token);
+    };
+    const timeout = setTimeout(() => done(null), 5000);
+    try {
+      const tokenClient = window.google.accounts.oauth2.initTokenClient({
+        client_id: clientId,
+        scope: OAUTH_SCOPE,
+        callback: (tokenResponse) => {
+          clearTimeout(timeout);
+          if (tokenResponse && tokenResponse.access_token) {
+            done(tokenResponse.access_token);
+          } else {
+            done(null);
+          }
+        },
+      });
+      tokenClient.requestAccessToken({ prompt: '' });
+    } catch {
+      clearTimeout(timeout);
+      done(null);
+    }
+  });
+
+/**
+ * Get access token: try silent refresh first, then use stored token.
+ * GA4 Data API requires a valid OAuth 2 access token (not JWT).
  */
 const getAccessToken = async () => {
-  // Get the stored auth data from localStorage
   const authData = localStorage.getItem('dashboard_auth');
   if (!authData) {
     throw new Error('Not authenticated');
   }
 
   const auth = JSON.parse(authData);
-  
-  // Use OAuth access token if available (has analytics.readonly scope)
+
+  // Try to get a fresh OAuth token (silent) so we don't use an expired one
+  const freshToken = await refreshOAuthToken();
+  if (freshToken) {
+    const updated = { ...auth, accessToken: freshToken };
+    try {
+      localStorage.setItem('dashboard_auth', JSON.stringify(updated));
+    } catch (_) {}
+    return freshToken;
+  }
+
+  // Use stored OAuth access token
   if (auth.accessToken) {
     return auth.accessToken;
   }
 
-  // Fallback to JWT token (won't work for GA4 API, but provides better error message)
+  // Fallback to JWT does not work for GA4 Data API
   if (auth.token) {
-    console.warn('⚠️ Using JWT token instead of OAuth access token. GA4 API calls may fail.');
-    console.warn('⚠️ Please ensure OAuth access token is obtained during login.');
-    return auth.token;
+    throw new Error(
+      'OAuth access token missing or expired. Please sign out and sign in again with Google, and accept "See your Google Analytics data".'
+    );
   }
 
-  throw new Error('No access token available');
+  throw new Error('No access token available. Please sign in again.');
 };
 
 /**

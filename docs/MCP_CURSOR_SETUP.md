@@ -66,7 +66,7 @@ The MCP server lives in its **own repository** (e.g. `my-mcp-server` or `mcp-ana
 1. Open **Cursor Settings → Tools & Integrations → Edit `mcp.json`** (or add/merge into your existing MCP config).
 2. Add your deployed MCP server. Use the **Streamable HTTP** URL (path `/mcp`). If Cursor only offers an “SSE” style URL, try the same base URL with path `/mcp` first; some clients use Streamable HTTP on that path.
 
-Example `mcp.json`:
+Example `mcp.json` (each server needs a **name** as key and an **object** with `url` or `command` — a bare `"url": "https://..."` under `mcpServers` is invalid and causes "Server must have either command or url"):
 
 ```json
 {
@@ -78,7 +78,7 @@ Example `mcp.json`:
 }
 ```
 
-Replace `<your-subdomain>` with your actual Workers subdomain (e.g. from `wrangler whoami` or the deploy output).
+Replace `<your-subdomain>` with your actual Workers subdomain (e.g. from `wrangler whoami` or the deploy output). You can use project-specific config: `<project-root>/.cursor/mcp.json`.
 
 3. Restart Cursor. When the server is reachable, the MCP tool should show as connected (e.g. green dot).
 4. In chat you can say: *“Using event-data, query_metrics for 'facebook' over 90 days”* and Cursor will call the tool and use the returned metrics (e.g. for Tailwind charts or copy).

@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "event-data": {
+      "url": "https://my-mcp-server.cgb.workers.dev/mcp"
+    }
+  }
+}
