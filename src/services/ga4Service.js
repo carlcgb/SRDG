@@ -163,19 +163,23 @@ const exchangeJWTForAccessToken = async (jwtToken) => {
  * Note: This requires the Google Sign-In to have the analytics.readonly scope
  * In production, you should use a backend to exchange JWT for OAuth access token
  */
+// GA4 API expects properties/{id}:runReport (colon, not slash)
+const normalizePropertyId = (id) => {
+  if (!id || typeof id !== 'string') return id;
+  return id.replace(/^properties\/?/i, '').trim();
+};
+
 const makeGA4Request = async (endpoint, body) => {
-  const propertyId = process.env.REACT_APP_GA4_PROPERTY_ID;
-  if (!propertyId) {
+  const rawId = process.env.REACT_APP_GA4_PROPERTY_ID;
+  if (!rawId) {
     throw new Error('GA4 Property ID not configured');
   }
+  const propertyId = normalizePropertyId(rawId);
 
   try {
-    // Get JWT token from Google Sign-In
-    const jwtToken = await getAccessToken();
-    
-    // Try to use JWT directly - this may work if the JWT has the right scopes
-    // If not, you'll need to implement a backend endpoint to exchange JWT for OAuth token
-    const response = await fetch(`${GA4_API_BASE}/properties/${propertyId}/${endpoint}`, {
+    const accessToken = await getAccessToken();
+    const url = `${GA4_API_BASE}/properties/${propertyId}${endpoint}`;
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${accessToken}`,
