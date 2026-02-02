@@ -11,7 +11,7 @@
 | `REACT_APP_DASHBOARD_ADMIN_EMAIL` | Admin auto-access |
 | `EMAILJS_SERVICE_ID`, `EMAILJS_TEMPLATE_ID`, `EMAILJS_PUBLIC_KEY` | Contact / forms |
 | `REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID` | Access-request emails (optional) |
-| `REACT_APP_MCP_INSIGHTS_URL` | Dashboard AI insights (optional, e.g. `https://my-mcp-server.<subdomain>.workers.dev/insights`) |
+| `REACT_APP_MCP_INSIGHTS_URL` | Dashboard AI insights (optional). **Full URL** including `https://`, e.g. `https://my-mcp-server.<subdomain>.workers.dev/insights`. After adding or changing, redeploy so the build picks it up. |
 
 ## Cloudflare D1 (dashboard access)
 

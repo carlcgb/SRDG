@@ -165,11 +165,19 @@ The endpoint fetches GA4 overview, top pages, and traffic sources, then uses Wor
 
 ### 3. Connect the dashboard
 
-In your React app (or in Cloudflare Pages env vars), set:
+Set **`REACT_APP_MCP_INSIGHTS_URL`** to the **full URL** (must include `https://`), e.g.:
 
 - **`REACT_APP_MCP_INSIGHTS_URL`** = `https://my-mcp-server.<your-subdomain>.workers.dev/insights`
 
-Rebuild and deploy the dashboard. The “🤖 Insights IA (Google Analytics)” card appears and loads insights for the selected date range.
+**Where to set it:**
+
+- **If you deploy with GitHub Actions** (this repo’s `.github/workflows/deploy.yml`):  
+  **GitHub → repo → Settings → Secrets and variables → Actions** → add or edit `REACT_APP_MCP_INSIGHTS_URL` with the full URL. The workflow passes it to the build. Trigger a new deploy (push to `main` or **Actions → Deploy to Production → Run workflow**).
+
+- **If Cloudflare Pages builds the site** (Cloudflare runs the build from the repo):  
+  **Cloudflare Dashboard → Workers & Pages → your project (e.g. srdg) → Settings → Environment variables** → add `REACT_APP_MCP_INSIGHTS_URL` with the full URL for Production (and Preview if needed). Then **Deployments → Retry deployment** or push a new commit to rebuild.
+
+After a successful redeploy, the dashboard uses the MCP server for insights and chat. The “🤖 Insights IA (Google Analytics)” card appears and loads insights for the selected date range.
 
 ### 4. Chat with the AI (ask questions)
 
