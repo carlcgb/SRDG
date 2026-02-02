@@ -1,5 +1,7 @@
 # La Soirée du Rire de Granby - Project Structure
 
+**Note:** The MCP server (event-data-mcp for Cursor and dashboard AI insights) lives in a **separate repo** and is deployed manually. See `docs/MCP_CURSOR_SETUP.md`.
+
 ## 📁 Clean Project Organization
 
 ```
@@ -62,10 +64,6 @@ SRDG/
 │   ├── google-apps-script-clean.js
 │   ├── google-apps-script-form.js
 │   └── google-apps-script-simple.js
-├── 📁 my-mcp-server/                 # MCP server (Cloudflare Workers) for Cursor – manual deploy only
-│   ├── src/index.ts                  # event-data-mcp tools (query_metrics, query_ga4, /insights, /chat)
-│   ├── wrangler.jsonc
-│   └── package.json                  # Deploy: cd my-mcp-server && npx wrangler deploy (see docs/MCP_CURSOR_SETUP.md)
 ├── 📄 Configuration Files
 │   ├── package.json                 # Dependencies and scripts
 │   ├── package-lock.json           # Locked dependency versions

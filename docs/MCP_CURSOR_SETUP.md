@@ -10,10 +10,11 @@ Deploy a custom MCP (Model Context Protocol) server to Cloudflare Workers so Cur
 
 ## Project location
 
-The MCP server lives in **`my-mcp-server/`** at the repo root. All commands below run from that directory unless noted.
+The MCP server is in a **separate repository** (e.g. `my-mcp-server` or `mcp-analytics`). Clone that repo locally; all commands below run from its root unless noted.
 
 ```bash
-cd my-mcp-server
+git clone <your-mcp-server-repo-url>
+cd <my-mcp-server>
 ```
 
 ## Install and run locally
@@ -41,10 +42,9 @@ The MCP server is **not** deployed by the main repo’s GitHub Actions. The main
 
 ### Manual deploy command
 
-From the repo root or from `my-mcp-server/`:
+From the MCP server repo root:
 
 ```bash
-cd my-mcp-server
 npm install
 npx wrangler deploy
 ```
@@ -57,26 +57,9 @@ The MCP endpoint is: **https://my-mcp-server.\<your-subdomain\>.workers.dev/mcp*
 
 (Free `*.workers.dev` subdomain; no custom domain required.)
 
-### Optional: separate repository
+### MCP server in a separate repo
 
-You can move `my-mcp-server` into its own Git repository for separate versioning and optional CI (e.g. deploy only on tag or manual workflow). Steps:
-
-1. **Create a new repo** (e.g. `my-mcp-server` on GitHub).
-2. **Copy the MCP server** (without the rest of SRDG):
-   ```bash
-   cp -r my-mcp-server /tmp/my-mcp-server-standalone
-   cd /tmp/my-mcp-server-standalone
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git remote add origin https://github.com/<your-org>/my-mcp-server.git
-   git push -u origin main
-   ```
-3. **Secrets**: In the new repo, set the same Wrangler secrets (`GA4_PROPERTY_ID`, `GA4_SERVICE_ACCOUNT_JSON`, `OPENAI_API_KEY`, etc.) via `npx wrangler secret put …` (or GitHub Actions secrets if you add a deploy workflow).
-4. **Update references** in the main SRDG repo:
-   - **Cursor** `mcp.json`: keep the same Workers URL (it doesn’t change if the Worker name and account stay the same).
-   - **Dashboard** `REACT_APP_MCP_INSIGHTS_URL`: same URL (`https://my-mcp-server.<subdomain>.workers.dev/insights`), no change unless you use a different Worker name or account.
-5. **Remove from main repo** (optional): delete `my-mcp-server/` from SRDG and add a note in the main README or `docs/MCP_CURSOR_SETUP.md` that the MCP server lives in `<repo-url>`.
+The MCP server lives in its **own repository** (e.g. `my-mcp-server` or `mcp-analytics`). You can **delete the `my-mcp-server/` folder from SRDG** if it’s still there; the dashboard and Cursor only need the **deployed Worker URL**, not the source in this repo. Set Wrangler secrets in the MCP repo; keep Cursor `mcp.json` and dashboard `REACT_APP_MCP_INSIGHTS_URL` pointing at your Worker URL (e.g. `https://my-mcp-server.<subdomain>.workers.dev/...`).
 
 ## Cursor integration
 
@@ -136,7 +119,7 @@ To use the **query_ga4** tool, the MCP server needs a **Google Cloud service acc
 
 **Security:** Never commit real API keys, Property IDs, or service account JSON to the repo. Use Wrangler secrets (or `.dev.vars` locally, which must stay gitignored).
 
-From `my-mcp-server/`:
+From the MCP server repo root:
 
 ```bash
 # GA4 Property ID (numeric, e.g. 123456789 – find it in GA Admin → Property settings)
@@ -162,7 +145,7 @@ The MCP server exposes an **HTTP endpoint** that returns AI-generated insights f
 
 ### 1. Set OpenAI API key (Worker)
 
-From `my-mcp-server/`:
+From the MCP server repo root:
 
 ```bash
 npx wrangler secret put OPENAI_API_KEY
@@ -217,7 +200,7 @@ To persist metrics in KV:
 
 1. Create a namespace:  
    `npx wrangler kv namespace create data-kv`
-2. Add the binding to **`my-mcp-server/wrangler.jsonc`** (uncomment or add):
+2. Add the binding to **`wrangler.jsonc`** in the MCP repo (uncomment or add):
 
 ```jsonc
 "kv_namespaces": [
@@ -229,7 +212,7 @@ To persist metrics in KV:
 
 ## Tips
 
-- **Updates**: Edit code in `my-mcp-server/src/index.ts`, then `npx wrangler deploy` – changes go live in seconds.
+- **Updates**: Edit code in `src/index.ts` in the MCP repo, then `npx wrangler deploy` – changes go live in seconds.
 - **Scale**: Free tier is generous (e.g. 100k requests/day); add Stripe/GitHub OAuth later if you need paid or multi-tenant access.
 - **Multiple clients**: For other clients (e.g. Plomberie Vintage), pass account or project IDs as tool parameters and branch logic in `query_metrics` (or add new tools).
 

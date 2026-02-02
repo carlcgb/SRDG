@@ -281,6 +281,28 @@
   font-size: 1.05rem;
 }
 
+.ai-insights-setup {
+  padding: 15px 0;
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.ai-insights-setup p {
+  margin: 0 0 10px 0;
+}
+
+.ai-insights-setup p:last-child {
+  margin-bottom: 0;
+}
+
+.ai-insights-setup code {
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
 /* AI Chat */
 .ai-chat-card {
   max-width: 1440px;

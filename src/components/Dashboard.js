@@ -486,29 +486,37 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
         </div>
       </div>
 
-      {insightsUrl && (
-        <>
-          <div className="chart-card ai-insights-card">
-            <div className="chart-card-header">
-              <h2>🤖 Insights IA (Google Analytics)</h2>
-              {insightLoading && <span className="insight-loading">Chargement…</span>}
+      <div className="chart-card ai-insights-card">
+        <div className="chart-card-header">
+          <h2>🤖 Insights IA (Google Analytics)</h2>
+          {insightsUrl && insightLoading && <span className="insight-loading">Chargement…</span>}
+        </div>
+        <div className="ai-insights-content">
+          {!insightsUrl ? (
+            <div className="ai-insights-setup">
+              <p>Pour afficher les insights IA et le chat, configurez la variable d’environnement <strong>REACT_APP_MCP_INSIGHTS_URL</strong> dans votre projet (ex. Cloudflare Pages).</p>
+              <p>Exemple : <code>https://my-mcp-server.&lt;votre-subdomain&gt;.workers.dev/insights</code></p>
+              <p>Après configuration, redéployez le site. Voir <code>docs/MCP_CURSOR_SETUP.md</code>.</p>
             </div>
-            <div className="ai-insights-content">
-              {insightLoading && !insight && (
-                <div className="insight-placeholder">Analyse des données en cours…</div>
-              )}
-              {insightError && !insightLoading && (
-                <div className="insight-error">{insightError}</div>
-              )}
-              {insight && !insightLoading && (
-                <div className="insight-text">{insight}</div>
-              )}
-            </div>
+          ) : insightLoading && !insight ? (
+            <div className="insight-placeholder">Analyse des données en cours…</div>
+          ) : insightError && !insightLoading ? (
+            <div className="insight-error">{insightError}</div>
+          ) : insight && !insightLoading ? (
+            <div className="insight-text">{insight}</div>
+          ) : null}
+        </div>
+      </div>
+      <div className="chart-card ai-chat-card">
+        <div className="chart-card-header">
+          <h2>💬 Poser une question à l’IA</h2>
+        </div>
+        {!insightsUrl ? (
+          <div className="ai-insights-setup">
+            <p>Même configuration que ci‑dessus : définissez <strong>REACT_APP_MCP_INSIGHTS_URL</strong> puis redéployez.</p>
           </div>
-          <div className="chart-card ai-chat-card">
-            <div className="chart-card-header">
-              <h2>💬 Poser une question à l’IA</h2>
-            </div>
+        ) : (
+          <>
             <p className="ai-chat-hint">Posez une question sur vos données GA4 (période sélectionnée). Réponses en français.</p>
             <div className="ai-chat-messages">
               {chatMessages.length === 0 && (
@@ -544,9 +552,9 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
                 Envoyer
               </button>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
 
       <div className="dashboard-charts-grid">
         {data.isRealtime ? (
