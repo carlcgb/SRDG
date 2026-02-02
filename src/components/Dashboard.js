@@ -36,6 +36,7 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
   const [chatInput, setChatInput] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
   const [chatBotModalOpen, setChatBotModalOpen] = useState(false);
+  const [insightsModalOpen, setInsightsModalOpen] = useState(false);
   const [reauthorizing, setReauthorizing] = useState(false);
 
   useEffect(() => {
@@ -392,8 +393,8 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
                       </div>
                     ))}
                     {chatLoading && (
-                      <div className="ai-chat-bubble ai-chat-bubble-assistant">
-                        <div className="ai-chat-bubble-content">Réflexion…</div>
+                      <div className="ai-chat-bubble ai-chat-bubble-assistant ai-chat-typing">
+                        <div className="ai-chat-bubble-content">Réflexion en cours…</div>
                       </div>
                     )}
                   </div>
@@ -565,6 +566,15 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
                   ⚙️ Admin
                 </button>
               )}
+              <button
+                type="button"
+                onClick={() => setInsightsModalOpen(true)}
+                className="btn-insights-info"
+                title="Insights IA (Google Analytics)"
+                aria-label="Voir les insights IA"
+              >
+                !
+              </button>
               <button onClick={onLogout} className="btn-logout">
                 Déconnexion
               </button>
@@ -648,12 +658,28 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
         </div>
       </div>
 
-      <div className="chart-card ai-insights-card">
-        <div className="chart-card-header">
-          <h2>🤖 Insights IA (Google Analytics)</h2>
-          {insightsUrl && insightLoading && <span className="insight-loading">Chargement…</span>}
-        </div>
-        <div className="ai-insights-content">
+      {insightsModalOpen && (
+        <div
+          className="ai-insights-modal-overlay"
+          onClick={() => setInsightsModalOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="insights-modal-title"
+        >
+          <div className="ai-insights-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="ai-insights-modal-header">
+              <h2 id="insights-modal-title">🤖 Insights IA (Google Analytics)</h2>
+              {insightsUrl && insightLoading && <span className="insight-loading">Chargement…</span>}
+              <button
+                type="button"
+                className="ai-insights-modal-close"
+                onClick={() => setInsightsModalOpen(false)}
+                aria-label="Fermer"
+              >
+                ×
+              </button>
+            </div>
+            <div className="ai-insights-modal-body">
           {!insightsUrl ? (
             <div className="ai-insights-setup">
               <p>Pour afficher les insights IA et le chat, configurez la variable d’environnement <strong>REACT_APP_MCP_INSIGHTS_URL</strong> dans votre projet (ex. Cloudflare Pages).</p>
@@ -667,8 +693,10 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
           ) : insight && !insightLoading ? (
             <div className="insight-text">{insight}</div>
           ) : null}
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="dashboard-charts-grid">
         {data.isRealtime ? (

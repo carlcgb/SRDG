@@ -47,31 +47,39 @@ function DashboardApp() {
         return;
       }
 
-      // Check if token is still valid (not expired)
+      // Token valid for 7 days so reload doesn't force re-login
       const tokenAge = Date.now() - auth.timestamp;
-      const tokenMaxAge = 24 * 60 * 60 * 1000; // 24 hours
+      const tokenMaxAge = 7 * 24 * 60 * 60 * 1000; // 7 days
       
       if (tokenAge >= tokenMaxAge) {
-        // Token expired, remove it
         localStorage.removeItem('dashboard_auth');
         setLoading(false);
         return;
       }
 
-      // ALWAYS check if user is authorized, regardless of login method
-      // Even admin users with email login must be explicitly authorized
-      const authorized = await isEmailAuthorized(userEmail);
+      // Check if user is authorized (retry once on failure for flaky network)
+      let authorized = false;
+      try {
+        authorized = await isEmailAuthorized(userEmail);
+      } catch (firstErr) {
+        console.warn('Auth check failed, retrying once:', firstErr);
+        try {
+          await new Promise((r) => setTimeout(r, 1000));
+          authorized = await isEmailAuthorized(userEmail);
+        } catch (secondErr) {
+          console.error('Auth check failed after retry:', secondErr);
+        }
+      }
       if (authorized) {
         setAuthData(auth);
         setIsAuthenticated(true);
         setAccessStatus('authorized');
       } else {
-        const pending = await isPendingApproval(userEmail);
+        const pending = await isPendingApproval(userEmail).catch(() => false);
         if (pending) {
           setAuthData(auth);
           setAccessStatus('pending');
         } else {
-          // User not authorized, need to request access
           setAccessStatus('not_authorized');
         }
       }

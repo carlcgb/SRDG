@@ -14,6 +14,8 @@ const Login = ({ onLogin }) => {
   const [requestPassword, setRequestPassword] = React.useState('');
   const [requestPasswordConfirm, setRequestPasswordConfirm] = React.useState('');
   const [requestSent, setRequestSent] = React.useState(false);
+  const [showConsentButton, setShowConsentButton] = React.useState(false);
+  const consentResolvedRef = React.useRef(false);
 
   useEffect(() => {
     // Check if client ID is configured
@@ -100,9 +102,34 @@ const Login = ({ onLogin }) => {
     };
   }, []);
 
+  /** Open only the Google consent popup (one modal). Used when silent token failed. */
+  const handleOpenConsentOnly = () => {
+    const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+    if (!clientId || !window.google?.accounts?.oauth2) return;
+    setLoading(true);
+    setShowConsentButton(false);
+    setError(null);
+    const scopes = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/analytics.readonly';
+    const tokenClient = window.google.accounts.oauth2.initTokenClient({
+      client_id: clientId,
+      scope: scopes,
+      callback: async (tokenResponse) => {
+        if (tokenResponse.error) {
+          setError(`Erreur: ${tokenResponse.error}`);
+          setLoading(false);
+        } else if (tokenResponse.access_token) {
+          await completeLoginWithToken(tokenResponse.access_token);
+        } else {
+          setError('Aucun token reçu');
+          setLoading(false);
+        }
+      },
+    });
+    tokenClient.requestAccessToken({ prompt: 'consent' });
+  };
+
   /**
-   * Unified OAuth2 login - gets all scopes in a single popup
-   * Uses Google OAuth2 Token Client with profile, email, and analytics.readonly scopes
+   * Unified OAuth2 login - tries silent first, then shows single "Autoriser" button if needed
    */
   const handleGoogleOAuthLogin = async () => {
     // Prevent multiple simultaneous login attempts
@@ -126,6 +153,7 @@ const Login = ({ onLogin }) => {
 
     setLoading(true);
     setError(null);
+    setShowConsentButton(false);
 
     const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
     
@@ -135,51 +163,61 @@ const Login = ({ onLogin }) => {
       return;
     }
 
+    const scopes = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/analytics.readonly';
+
     try {
-      // Check if we already have a valid token with all required scopes
+      // 1) Try existing token with all scopes (no popup)
       let existingToken = null;
       try {
         existingToken = window.google.accounts.oauth2.getTokenResponse();
-        if (existingToken && 
+        if (existingToken &&
             window.google.accounts.oauth2.hasGrantedAllScopes(
               existingToken,
               'https://www.googleapis.com/auth/userinfo.profile',
               'https://www.googleapis.com/auth/userinfo.email',
               'https://www.googleapis.com/auth/analytics.readonly'
             )) {
-          // We already have a valid token with all required scopes
           console.log('✅ Using existing OAuth token');
           await completeLoginWithToken(existingToken.access_token);
           return;
         }
       } catch (e) {
-        // No existing token, continue to request one
+        // No existing token
       }
 
-      // Initialize OAuth2 Token Client with ALL required scopes in one request
+      // 2) Try silent token (prompt: '') – no popup if already consented
+      consentResolvedRef.current = false;
       const tokenClient = window.google.accounts.oauth2.initTokenClient({
         client_id: clientId,
-        scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/analytics.readonly',
+        scope: scopes,
         callback: async (tokenResponse) => {
+          if (consentResolvedRef.current) return;
+          consentResolvedRef.current = true;
           if (tokenResponse.error) {
-            console.error('OAuth token error:', tokenResponse.error);
-            setError(`Erreur d'authentification: ${tokenResponse.error}`);
             setLoading(false);
+            setShowConsentButton(true);
+            setError(null);
           } else if (tokenResponse.access_token) {
-            console.log('✅ OAuth token obtained with all scopes');
             await completeLoginWithToken(tokenResponse.access_token);
           } else {
-            setError('Aucun token d\'accès reçu');
             setLoading(false);
+            setShowConsentButton(true);
           }
         },
       });
+      tokenClient.requestAccessToken({ prompt: '' });
 
-      // Request access token - this will open ONE popup with all permissions
-      tokenClient.requestAccessToken({ prompt: 'consent' }); // Force consent so we always get analytics.readonly
+      // If silent doesn't respond in 2.5s, show single "Autoriser" button (one consent popup)
+      setTimeout(() => {
+        if (consentResolvedRef.current) return;
+        consentResolvedRef.current = true;
+        setLoading(false);
+        setShowConsentButton(true);
+        setError(null);
+      }, 2500);
     } catch (error) {
       console.error('Error initializing OAuth2 Token Client:', error);
-      setError('Erreur lors de l\'initialisation de la connexion Google: ' + error.message);
+      setError('Erreur lors de l\'initialisation. Réessayez.');
       setLoading(false);
     }
   };
@@ -561,7 +599,7 @@ const Login = ({ onLogin }) => {
               )}
               <button
                 type="button"
-                onClick={handleGoogleOAuthLogin}
+                onClick={showConsentButton ? handleOpenConsentOnly : handleGoogleOAuthLogin}
                 disabled={loading || !googleScriptLoaded}
                 className="btn-google-oauth"
                 style={{
@@ -604,6 +642,8 @@ const Login = ({ onLogin }) => {
                     <div className="spinner-login-small"></div>
                     Chargement...
                   </>
+                ) : showConsentButton ? (
+                  'Autoriser l\'accès Google (Analytics)'
                 ) : (
                   <>
                     <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
