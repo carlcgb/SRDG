@@ -16,6 +16,7 @@ import {
   getRealtimeActivePages,
   getRealtimeUserLocations,
   getRealtimeTrafficSources,
+  requestGa4Consent,
 } from '../services/ga4Service';
 
 const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
@@ -34,6 +35,7 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
   const [chatInput, setChatInput] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
   const [chatBotModalOpen, setChatBotModalOpen] = useState(false);
+  const [reauthorizing, setReauthorizing] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
@@ -434,6 +436,23 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
     );
   }
 
+  const handleReauthorizeGa4 = async () => {
+    setReauthorizing(true);
+    setError(null);
+    try {
+      const token = await requestGa4Consent();
+      if (token) {
+        await loadDashboardData();
+      } else {
+        setError('Réautorisation annulée ou échouée. Réessayez ou déconnectez-vous puis reconnectez-vous avec Google.');
+      }
+    } catch (e) {
+      setError(e?.message || 'Réautorisation échouée. Réessayez.');
+    } finally {
+      setReauthorizing(false);
+    }
+  };
+
   if (error) {
     const isGa4Error = error.includes('GA4') || error.includes('Authentication') || error.includes('Property ID');
     return (
@@ -442,12 +461,25 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
           <h2>Erreur</h2>
           <p>{error}</p>
           {isGa4Error && (
-            <ul className="dashboard-error-checklist">
+            <>
+              <ul className="dashboard-error-checklist">
               <li>Vérifiez que <strong>REACT_APP_GA4_PROPERTY_ID</strong> est défini au déploiement (secrets GitHub ou variables Cloudflare Pages).</li>
               <li>Dans Google Cloud Console, client OAuth 2.0 : ajoutez <strong>https://stats.lasoireedurire.ca</strong> aux « Origines JavaScript autorisées ».</li>
               <li>Connectez-vous avec un compte Google qui a accès à la propriété GA4 (rôle Lecteur).</li>
               <li>Lors de la connexion Google, acceptez l’accès « Voir vos données Google Analytics ».</li>
             </ul>
+              {authData?.loginMethod === 'google' && (
+                <button
+                  type="button"
+                  onClick={handleReauthorizeGa4}
+                  disabled={reauthorizing}
+                  className="btn-retry"
+                  style={{ marginTop: '8px', marginRight: '8px' }}
+                >
+                  {reauthorizing ? 'Ouverture de Google…' : "Réautoriser l'accès Google Analytics"}
+                </button>
+              )}
+            </>
           )}
           <button onClick={loadDashboardData} className="btn-retry">
             Réessayer

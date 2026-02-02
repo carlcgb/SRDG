@@ -87,6 +87,58 @@ const getAccessToken = async () => {
 };
 
 /**
+ * Request a new OAuth access token with GA4 scope (shows consent screen).
+ * Use when the user sees "Authentication failed" to force a fresh token.
+ * Updates localStorage and returns the new access token, or null on failure.
+ */
+export const requestGa4Consent = () =>
+  new Promise((resolve) => {
+    const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+    if (
+      !clientId ||
+      !window.google ||
+      !window.google.accounts ||
+      !window.google.accounts.oauth2
+    ) {
+      resolve(null);
+      return;
+    }
+    let settled = false;
+    const done = (token) => {
+      if (settled) return;
+      settled = true;
+      resolve(token);
+    };
+    const timeout = setTimeout(() => done(null), 60000);
+    try {
+      const tokenClient = window.google.accounts.oauth2.initTokenClient({
+        client_id: clientId,
+        scope: OAUTH_SCOPE,
+        callback: (tokenResponse) => {
+          clearTimeout(timeout);
+          if (tokenResponse && tokenResponse.access_token) {
+            const authData = localStorage.getItem('dashboard_auth');
+            if (authData) {
+              try {
+                const auth = JSON.parse(authData);
+                const updated = { ...auth, accessToken: tokenResponse.access_token };
+                localStorage.setItem('dashboard_auth', JSON.stringify(updated));
+              } catch (_) {}
+            }
+            done(tokenResponse.access_token);
+          } else {
+            done(null);
+          }
+        },
+      });
+      tokenClient.requestAccessToken({ prompt: 'consent' });
+    } catch {
+      clearTimeout(timeout);
+      done(null);
+    }
+  });
+
+/**
  * Exchange JWT for OAuth access token
  * This should be done on a backend server in production
  */
@@ -126,7 +178,7 @@ const makeGA4Request = async (endpoint, body) => {
     const response = await fetch(`${GA4_API_BASE}/properties/${propertyId}/${endpoint}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${jwtToken}`,
+        'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
