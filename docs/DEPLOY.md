@@ -1,6 +1,13 @@
 # Deploy – La Soirée du Rire
 
-Cloudflare Pages is connected to this repo. **Push to `main`** → Cloudflare detects the update and auto-deploys (builds and publishes). No GitHub Actions workflow is used.
+Deploys use **Cloudflare Pages Git integration only** — no GitHub Actions workflow. Push to `main` → Cloudflare detects the commit and auto-builds/deploys.
+
+## Ensure auto-deploy on git push
+
+1. **Cloudflare Dashboard** → **Workers & Pages** → open your Pages project (e.g. srdg).
+2. **Settings** → **Builds & deployments** → under **Build configuration**, confirm **Source** is **Connect to Git** (GitHub) and points to this repo.
+3. **Production branch** should be `main` (or your chosen branch). Every push to that branch triggers a new build and deploy.
+4. Do **not** add a GitHub Actions workflow to deploy to Pages — Cloudflare’s own Git integration handles it. This repo has no `.github/workflows` deploy file.
 
 ## Environment variables (Cloudflare Pages)
 
@@ -25,7 +32,7 @@ wrangler d1 execute dashboard-access --file=./schema.sql
 
 ## Deploy site
 
-Push to `main` → Cloudflare Pages auto-builds and deploys. Dashboard: e.g. `stats.lasoireedurire.ca` (subdomain in Cloudflare Pages).
+Push to `main` → Cloudflare (via its Git integration) auto-builds and deploys. No GitHub workflow is used. Dashboard: e.g. `stats.lasoireedurire.ca` (subdomain in Cloudflare Pages).
 
 ## MCP server (AI insights)
 
