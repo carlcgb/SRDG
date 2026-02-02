@@ -298,7 +298,11 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
       const allCriticalFailed = criticalMetrics.every(metric => failedRequests.includes(metric));
       
       if (isProduction && allCriticalFailed && failedRequests.length >= 3) {
-        throw new Error('Impossible de charger les données GA4. Veuillez vérifier la configuration et les permissions.');
+        const firstRejection = results.find((r) => r.status === 'rejected');
+        const underlying = firstRejection?.reason?.message || '';
+        throw new Error(
+          underlying || 'Impossible de charger les données GA4. Veuillez vérifier la configuration et les permissions.'
+        );
       }
 
       setData(dashboardData);
@@ -431,11 +435,19 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
   }
 
   if (error) {
+    const isGa4Error = error.includes('GA4') || error.includes('Authentication') || error.includes('Property ID');
     return (
       <div className="dashboard">
         <div className="dashboard-error">
           <h2>Erreur</h2>
           <p>{error}</p>
+          {isGa4Error && (
+            <ul className="dashboard-error-checklist">
+              <li>Vérifiez que <strong>REACT_APP_GA4_PROPERTY_ID</strong> est défini au déploiement (secrets GitHub ou variables Cloudflare Pages).</li>
+              <li>Connectez-vous avec un compte Google qui a accès à la propriété GA4 (rôle Lecteur).</li>
+              <li>Lors de la connexion Google, acceptez l’accès « Voir vos données Google Analytics ».</li>
+            </ul>
+          )}
           <button onClick={loadDashboardData} className="btn-retry">
             Réessayer
           </button>

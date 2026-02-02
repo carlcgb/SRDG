@@ -38,6 +38,20 @@
   margin-bottom: 10px;
 }
 
+.dashboard-error-checklist {
+  text-align: left;
+  max-width: 480px;
+  margin: 16px 0;
+  padding-left: 1.25rem;
+  color: var(--text-secondary, #333);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.dashboard-error-checklist li {
+  margin-bottom: 8px;
+}
+
 .btn-retry {
   background: var(--primary-color, #F64A3E);
   color: var(--accent-light, #FFFFFF);
