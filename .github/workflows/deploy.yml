@@ -84,6 +84,7 @@ jobs:
         REACT_APP_EMAILJS_TEMPLATE_ID: ${{ secrets.EMAILJS_TEMPLATE_ID }}
         REACT_APP_EMAILJS_PUBLIC_KEY: ${{ secrets.EMAILJS_PUBLIC_KEY }}
         REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID: ${{ secrets.REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID }}
+        REACT_APP_MCP_INSIGHTS_URL: ${{ secrets.REACT_APP_MCP_INSIGHTS_URL }}
         
     - name: Build with environment variables
       run: |
@@ -102,6 +103,7 @@ jobs:
         REACT_APP_EMAILJS_TEMPLATE_ID: ${{ secrets.EMAILJS_TEMPLATE_ID }}
         REACT_APP_EMAILJS_PUBLIC_KEY: ${{ secrets.EMAILJS_PUBLIC_KEY }}
         REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID: ${{ secrets.REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID }}
+        REACT_APP_MCP_INSIGHTS_URL: ${{ secrets.REACT_APP_MCP_INSIGHTS_URL }}
         
     - name: Verify Cloudflare credentials
       run: |

@@ -33,6 +33,7 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
   const [chatMessages, setChatMessages] = useState([]);
   const [chatInput, setChatInput] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
+  const [chatBotModalOpen, setChatBotModalOpen] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
@@ -99,9 +100,9 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
           console.warn('⚠️ GA4 Property ID not configured. Using mock data for development only.');
           console.warn('⚠️ NOTE: Mock data will NEVER be used in production.');
           
-          // Use mock data for development
+          const useRealtimeMock = dateRange === 'today';
           let mockData;
-          if (useRealtime) {
+          if (useRealtimeMock) {
             // Real-time mock data
             mockData = {
               users: { current: 45, previous: 38, change: 18.4 },
@@ -328,6 +329,88 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
     return `${num > 0 ? '+' : ''}${num.toFixed(1)}%`;
   };
 
+  const floatingBotAndModal = (
+    <>
+      <button
+        type="button"
+        className="ai-chat-fab"
+        onClick={() => setChatBotModalOpen(true)}
+        aria-label="Ouvrir le chat IA"
+      >
+        <span className="ai-chat-fab-icon" aria-hidden>💬</span>
+      </button>
+      {chatBotModalOpen && (
+        <div
+          className="ai-chat-modal-overlay"
+          onClick={() => setChatBotModalOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Chat IA"
+        >
+          <div className="ai-chat-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="ai-chat-modal-header">
+              <h2>💬 Poser une question à l'IA</h2>
+              <button
+                type="button"
+                className="ai-chat-modal-close"
+                onClick={() => setChatBotModalOpen(false)}
+                aria-label="Fermer"
+              >
+                ×
+              </button>
+            </div>
+            <div className="ai-chat-modal-body">
+              {!insightsUrl ? (
+                <div className="ai-insights-setup">
+                  <p>Définissez <strong>REACT_APP_MCP_INSIGHTS_URL</strong> (ex. Cloudflare Pages) puis redéployez.</p>
+                  <p>Ex. <code>https://my-mcp-server.&lt;subdomain&gt;.workers.dev/insights</code></p>
+                </div>
+              ) : (
+                <>
+                  <p className="ai-chat-hint">Posez une question sur vos données GA4 (période sélectionnée). Réponses en français.</p>
+                  <div className="ai-chat-messages">
+                    {chatMessages.length === 0 && (
+                      <div className="ai-chat-empty">Aucun message. Posez une question ci-dessous.</div>
+                    )}
+                    {chatMessages.map((msg, i) => (
+                      <div key={i} className={`ai-chat-bubble ai-chat-bubble-${msg.role}`}>
+                        <div className="ai-chat-bubble-content">{msg.content}</div>
+                      </div>
+                    ))}
+                    {chatLoading && (
+                      <div className="ai-chat-bubble ai-chat-bubble-assistant">
+                        <div className="ai-chat-bubble-content">Réflexion…</div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="ai-chat-input-row">
+                    <input
+                      type="text"
+                      className="ai-chat-input"
+                      placeholder="Ex: Comment améliorer le taux de rebond ?"
+                      value={chatInput}
+                      onChange={(e) => setChatInput(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendChatMessage()}
+                      disabled={chatLoading}
+                    />
+                    <button
+                      type="button"
+                      className="ai-chat-send"
+                      onClick={sendChatMessage}
+                      disabled={!chatInput.trim() || chatLoading}
+                    >
+                      Envoyer
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+
   if (loading) {
     return (
       <div className="dashboard">
@@ -335,6 +418,7 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
           <div className="spinner-dashboard"></div>
           <p>Chargement des données...</p>
         </div>
+        {floatingBotAndModal}
       </div>
     );
   }
@@ -349,6 +433,7 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
             Réessayer
           </button>
         </div>
+        {floatingBotAndModal}
       </div>
     );
   }
@@ -506,54 +591,6 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
             <div className="insight-text">{insight}</div>
           ) : null}
         </div>
-      </div>
-      <div className="chart-card ai-chat-card">
-        <div className="chart-card-header">
-          <h2>💬 Poser une question à l’IA</h2>
-        </div>
-        {!insightsUrl ? (
-          <div className="ai-insights-setup">
-            <p>Même configuration que ci‑dessus : définissez <strong>REACT_APP_MCP_INSIGHTS_URL</strong> puis redéployez.</p>
-          </div>
-        ) : (
-          <>
-            <p className="ai-chat-hint">Posez une question sur vos données GA4 (période sélectionnée). Réponses en français.</p>
-            <div className="ai-chat-messages">
-              {chatMessages.length === 0 && (
-                <div className="ai-chat-empty">Aucun message. Posez une question ci-dessous.</div>
-              )}
-              {chatMessages.map((msg, i) => (
-                <div key={i} className={`ai-chat-bubble ai-chat-bubble-${msg.role}`}>
-                  <div className="ai-chat-bubble-content">{msg.content}</div>
-                </div>
-              ))}
-              {chatLoading && (
-                <div className="ai-chat-bubble ai-chat-bubble-assistant">
-                  <div className="ai-chat-bubble-content">Réflexion…</div>
-                </div>
-              )}
-            </div>
-            <div className="ai-chat-input-row">
-              <input
-                type="text"
-                className="ai-chat-input"
-                placeholder="Ex: Comment améliorer le taux de rebond ?"
-                value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendChatMessage()}
-                disabled={chatLoading}
-              />
-              <button
-                type="button"
-                className="ai-chat-send"
-                onClick={sendChatMessage}
-                disabled={!chatInput.trim() || chatLoading}
-              >
-                Envoyer
-              </button>
-            </div>
-          </>
-        )}
       </div>
 
       <div className="dashboard-charts-grid">
@@ -796,6 +833,8 @@ const Dashboard = ({ authData, onLogout, onShowAdmin }) => {
           </>
         )}
       </div>
+
+      {floatingBotAndModal}
 
       {/* Modal for detailed view */}
       <DashboardModal
