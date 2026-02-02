@@ -1,0 +1,45 @@
+# Deploy React build to Cloudflare Pages on push to main.
+# Requires GitHub Secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, and build env vars (REACT_APP_*, etc.).
+# If you also use Cloudflare Pages Git integration, disable automatic builds for this project to avoid double deploys.
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build:prod
+        env:
+          REACT_APP_GOOGLE_CLIENT_ID: ${{ secrets.REACT_APP_GOOGLE_CLIENT_ID }}
+          REACT_APP_GA4_PROPERTY_ID: ${{ secrets.REACT_APP_GA4_PROPERTY_ID }}
+          REACT_APP_DASHBOARD_ADMIN_EMAIL: ${{ secrets.REACT_APP_DASHBOARD_ADMIN_EMAIL }}
+          REACT_APP_MCP_INSIGHTS_URL: ${{ secrets.REACT_APP_MCP_INSIGHTS_URL }}
+          EMAILJS_SERVICE_ID: ${{ secrets.EMAILJS_SERVICE_ID }}
+          EMAILJS_TEMPLATE_ID: ${{ secrets.EMAILJS_TEMPLATE_ID }}
+          EMAILJS_PUBLIC_KEY: ${{ secrets.EMAILJS_PUBLIC_KEY }}
+          REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID: ${{ secrets.REACT_APP_EMAILJS_DASHBOARD_REQUEST_TEMPLATE_ID }}
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: srdg
+          directory: build
